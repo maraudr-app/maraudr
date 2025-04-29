@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  maraudr-stock-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./Maraudr.Stock.Endpoints:/src/Maraudr.Stock.Endpoints
+      - ./Maraudr.Stock.Application:/src/Maraudr.Stock.Application
+      - ./Maraudr.Stock.Domain:/src/Maraudr.Stock.Domain
+      - ./Maraudr.Stock.Infrastructure:/src/Maraudr.Stock.Infrastructure
+    command: ["dotnet", "watch", "run", "--project", "Maraudr.Stock.Endpoints/Maraudr.Stock.Endpoints.csproj"]
