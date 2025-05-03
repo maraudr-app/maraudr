@@ -6,10 +6,11 @@ using AutoMapper;
 using Maraudr.User.Application.DTOs.Requests;
 using Maraudr.User.Application.DTOs.Responses;
 using Maraudr.User.Application.Exceptions;
+using Maraudr.User.Domain.Entities;
 using Maraudr.User.Domain.Interfaces;
 using Maraudr.User.Domain.Interfaces.Repositories;
 
-namespace Maraudr.User.Application.Services;
+namespace Application.Services;
 
 public class UserService 
 {
@@ -22,13 +23,13 @@ public class UserService
         _mapper = mapper;
     }
 
-    public async Task<Maraudr.Domain.Entities.User?> GetUserByIdAsync(Guid id)
+    public async Task<AbstractUser?> GetUserByIdAsync(Guid id)
     {
         return await _userRepository.GetByIdAsync(id);
         
     }
 
-    public async Task<IEnumerable<Maraudr.Domain.Entities.User?>> GetAllUsersAsync()
+    public async Task<IEnumerable<AbstractUser?>> GetAllUsersAsync()
     {
         return await _userRepository.GetAllAsync();
     }
@@ -38,7 +39,7 @@ public class UserService
 
     public async Task<Guid> CreateUserAsync(CreateUserDto userCommand)
     {
-        var user = _mapper.Map<Maraudr.Domain.Entities.User>(userCommand);
+        var user = _mapper.Map<User>(userCommand);
         await _userRepository.AddAsync(user);
         return user.Id;
     }

@@ -1,43 +1,65 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Maraudr.Domain.Entities;
 using Maraudr.Domain.ValueObjects;
-
-namespace Maraudr.User.Infrastructure;
+using Maraudr.User.Domain.Entities;
 
 public class UserContext
 {
-    private readonly List<Domain.Entities.User> _users;
+    private readonly List<AbstractUser> _users;
+    private readonly List<Manager> _managers;
 
     public UserContext()
     {
-        _users = GenerateMockUsers();
+        _managers = new List<Manager>();
+        _users = new List<AbstractUser>();
+        
+        // Générer d'abord les managers
+        GenerateManagers();
+        
+        // Puis générer les utilisateurs avec des références aux managers
+        GenerateUsers();
     }
 
-    public async Task<Domain.Entities.User?> GetUserByIdAsync(Guid id)
+    public async Task<AbstractUser?> GetUserByIdAsync(Guid id)
     {
         return _users.FirstOrDefault(u => u.Id == id);
     }
 
-    public async Task<IEnumerable<Domain.Entities.User>> GetAllUsersAsync()
+    public async Task<IEnumerable<AbstractUser>> GetAllUsersAsync()
     {
         return _users.ToList();
     }
 
-    public async Task AddUserAsync(Domain.Entities.User user)
+    public async Task AddUserAsync(AbstractUser user)
     {
         _users.Add(user);
+        
+        // Si c'est un manager, l'ajouter aussi à la liste des managers
+        if (user is Manager manager)
+        {
+            _managers.Add(manager);
+        }
     }
 
-    public async Task UpdateUserAsync(Domain.Entities.User user)
+    public async Task UpdateUserAsync(AbstractUser user)
     {
         var existingUser = _users.FirstOrDefault(u => u.Id == user.Id);
         if (existingUser != null)
         {
             _users.Remove(existingUser);
             _users.Add(user);
+            
+            // Mettre à jour la liste des managers si nécessaire
+            if (existingUser is Manager existingManager)
+            {
+                _managers.Remove(existingManager);
+                if (user is Manager updatedManager)
+                {
+                    _managers.Add(updatedManager);
+                }
+            }
+            else if (user is Manager newManager)
+            {
+                _managers.Add(newManager);
+            }
         }
     }
 
@@ -47,56 +69,77 @@ public class UserContext
         if (user != null)
         {
             _users.Remove(user);
+            
+            // Supprimer de la liste des managers si nécessaire
+            if (user is Manager manager)
+            {
+                _managers.Remove(manager);
+            }
         }
     }
 
-    private List<Domain.Entities.User> GenerateMockUsers()
+    private void GenerateManagers()
     {
-        return new List<Domain.Entities.User>
-        {
-            new Domain.Entities.User(
-                Guid.Parse("8f7c2e9d-4b3a-4e5f-9c1d-8a7b6c5d4e3f"),
-                "Jean",
-                "Dupont",
-                DateTime.Now.AddYears(-2),
-                new ContactInfo("jean.dupont@example.com", "+33123456789"),
-                new Address("123 Rue de Paris", "Paris", "Île-de-France", "75001", "France"),
-                AccountType.Member,
-                null,
-                null
-            ),
-            
-            new Domain.Entities.User(
-                Guid.Parse("1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d"),
-                "Marie",
-                "Laurent",
-                DateTime.Now.AddYears(-1),
-                new ContactInfo("marie.laurent@example.com", "+33698765432"),
-                new Address("45 Avenue Victor Hugo", "Lyon", "Auvergne-Rhône-Alpes", "69002", "France"),
-                AccountType.Manager,
-                null,null
-            ),
-            
-            new Domain.Entities.User(
-                Guid.Parse("a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"),
-                "Philippe",
-                "Martin",
-                DateTime.Now.AddMonths(-6),
+        var manager1 = new Manager(
+            "Marie",
+            "Laurent",
+            DateTime.Now.AddYears(-1),
+            new ContactInfo("marie.laurent@example.com", "+33698765432"),
+            new Address("45 Avenue Victor Hugo", "Lyon", "Auvergne-Rhône-Alpes", "69002", "France"),
+            new List<Language> { Language.English },
+            new List<AbstractUser>()
+        );
+        
+        var manager2 = new Manager(
+            "Sophie",
+            "Bernard",
+            DateTime.Now.AddMonths(-3),
+            new ContactInfo("sophie.bernard@example.com", "+33687654321"),
+            new Address("12 Rue Paradis", "Marseille", "Provence-Alpes-Côte d'Azur", "13001", "France"),
+            new List<Language> { Language.French, Language.German },
+            new List<AbstractUser>()
+        );
+        
+        _managers.Add(manager1);
+        _managers.Add(manager2);
+        _users.Add(manager1);
+        _users.Add(manager2);
+    }
 
-                new ContactInfo("philippe.martin@example.com", "+33712345678"),
-                new Address("8 Boulevard de la Liberté", "Lille", "Hauts-de-France", "59000", "France"),
-                AccountType.Admin,null,null
-            ),
-            
-            new Domain.Entities.User(
-                Guid.Parse("9d8c7b6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a"),
-                "Sophie",
-                "Bernard",
-                DateTime.Now.AddMonths(-3),
-                new ContactInfo("sophie.bernard@example.com", "+33687654321"),
-                new Address("12 Rue Paradis", "Marseille", "Provence-Alpes-Côte d'Azur", "13001", "France"),
-                AccountType.Member,null,null
-            )
-        };
+    private void GenerateUsers()
+    {
+        if (_managers.Count == 0)
+        {
+            throw new InvalidOperationException("Au moins un manager doit être créé avant les utilisateurs");
+        }
+        
+        var defaultManager = _managers[0]; 
+        
+        var user1 = new User(
+            "Jean",
+            "Dupont",
+            DateTime.Now.AddYears(-2),
+            new ContactInfo("jean.dupont@example.com", "+33123456789"),
+            new Address("123 Rue de Paris", "Paris", "Île-de-France", "75001", "France"),
+            new List<Language> { Language.English, Language.German },
+            defaultManager  // Spécifier un manager existant
+        );
+        
+        var user2 = new User(
+            "Pierre",
+            "Martin",
+            DateTime.Now.AddMonths(-6),
+            new ContactInfo("pierre.martin@example.com", "+33612345678"),
+            new Address("8 Rue du Commerce", "Toulouse", "Occitanie", "31000", "France"),
+            new List<Language> { Language.French },
+            _managers[1]  // Utiliser le deuxième manager
+        );
+        
+        _users.Add(user1);
+        _users.Add(user2);
+        
+        // Ajouter les utilisateurs aux équipes de leurs managers respectifs
+        defaultManager.AddMemberToTeam(user1);
+        _managers[1].AddMemberToTeam(user2);
     }
 }

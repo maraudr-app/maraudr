@@ -1,8 +1,9 @@
 using Maraudr.Application.DTOs;
 using Maraudr.User.Application.DTOs.Requests;
 using Maraudr.User.Application.DTOs.Responses;
+using Maraudr.User.Domain.Entities;
 
-namespace Maraudr.User.Application.Mappers;
+namespace Application.Mappers;
 
 using AutoMapper;
 
@@ -10,9 +11,9 @@ using AutoMapper;
     {
         public MappingProfile()
         {
-            CreateMap<Maraudr.Domain.Entities.User, UserDto>().ReverseMap();
-            CreateMap<CreateUserDto, Maraudr.Domain.Entities.User>();
-            CreateMap<UpdateUserDto, Maraudr.Domain.Entities.User>();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<CreateUserDto,User>();
+            CreateMap<UpdateUserDto, User>();
         }
     }
 

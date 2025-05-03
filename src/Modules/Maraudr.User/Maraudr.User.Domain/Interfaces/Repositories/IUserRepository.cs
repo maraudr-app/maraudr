@@ -1,12 +1,15 @@
 
 
+using Maraudr.Domain;
+using Maraudr.User.Domain.Entities;
+
 namespace Maraudr.User.Domain.Interfaces.Repositories;
 
 public interface IUserRepository
 {
-    Task<Maraudr.Domain.Entities.AbstractUser?> GetByIdAsync(Guid id);
-    Task<IEnumerable<Maraudr.Domain.Entities.AbstractUser?>> GetAllAsync();
-    Task AddAsync(Maraudr.Domain.Entities.AbstractUser user);
+    Task<AbstractUser?> GetByIdAsync(Guid id);
+    Task<IEnumerable<AbstractUser?>> GetAllAsync();
+    Task AddAsync(AbstractUser user);
     //Task<User?> UpdateAsync(User user);
-    Task DeleteAsync(Maraudr.Domain.Entities.AbstractUser user);
+    Task DeleteAsync(AbstractUser user);
 }
