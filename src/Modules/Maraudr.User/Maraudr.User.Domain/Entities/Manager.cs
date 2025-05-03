@@ -7,7 +7,7 @@ namespace Maraudr.User.Domain.Entities;
 public class Manager:AbstractUser
 {
     
-    public override AccountType AccountType { get; protected set; } = AccountType.Manager;
+    public override Role Role { get; protected set; } = Role.Manager;
     public List<AbstractUser> Team{set; get; }
     
     public Manager( string firstname,  string lastname, DateTime createdAt,
@@ -23,6 +23,7 @@ public class Manager:AbstractUser
     {
         this.Team = teamMembers;
     }
+    public Manager() { }
 
     public AbstractUser? GetTeamMember(AbstractUser member)
     {

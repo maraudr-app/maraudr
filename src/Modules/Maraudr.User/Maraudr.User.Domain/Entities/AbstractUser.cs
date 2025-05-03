@@ -6,7 +6,7 @@ public abstract class AbstractUser
 {
    
 
-    public virtual AccountType AccountType { get; protected set; }
+    public virtual Role Role { get; protected set; }
     public Guid Id { get;  set; }
     public string Firstname { get;  set; }
     public string Lastname { get;  set; }
@@ -56,11 +56,11 @@ public abstract class AbstractUser
         Languages = languages;
     }
     
-    private AbstractUser() { }
+    protected AbstractUser() { }
 
     public bool isUserManager()
     {
-        return AccountType.Manager == AccountType;
+        return Role.Manager == Role;
     }
     // Admin section 
     public bool IsUserAdmin()
@@ -86,7 +86,7 @@ public abstract class AbstractUser
         IsAdmin = false;
     }
     
-    public AbstractUser ChangeUserRole(AbstractUser targetUser, AccountType newRole,AbstractUser newManager)
+    public AbstractUser ChangeUserRole(AbstractUser targetUser, Role newRole,AbstractUser newManager)
     {
         if (!this.IsAdmin)
             throw new UnauthorizedAccessException("Only admins can change user roles");
@@ -95,13 +95,13 @@ public abstract class AbstractUser
         if (targetUser.IsAdmin && targetUser.Id != this.Id)
             throw new UnauthorizedAccessException("Cannot change the role of another admin");
             
-        AccountType oldRole = targetUser.AccountType;
+        Role oldRole = targetUser.Role;
         
-        if (oldRole == AccountType.Member && newRole == AccountType.Manager)
+        if (oldRole == Role.Member && newRole == Role.Manager)
         {
             return ConvertUserToManager((User)targetUser);
         }
-        else if (oldRole == AccountType.Manager && newRole == AccountType.Member)
+        else if (oldRole == Role.Manager && newRole == Role.Member)
         {
             return ConvertManagerToUser((Manager)targetUser,newManager );
         }
