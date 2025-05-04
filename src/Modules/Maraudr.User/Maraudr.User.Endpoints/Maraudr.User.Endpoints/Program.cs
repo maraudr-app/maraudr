@@ -1,6 +1,9 @@
 using Application;
 using Application.DTOs.Requests;
 using Application.UseCases.User.CreateUser;
+using Application.UseCases.User.DeleteUser;
+using Application.UseCases.User.QueryAllUsers;
+using Application.UseCases.User.QueryUser;
 using Application.UseCases.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
@@ -31,7 +34,6 @@ if (app.Environment.IsDevelopment())
 
 
 // USERS
-
 app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
     IValidator<CreateUserDto> validator ) => {
     var result = validator.Validate(user);
@@ -56,19 +58,19 @@ app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler,
     {
         return Results.Problem((e.Message));
     }
-    
     return Results.Created($"/users/{id}", id);
 });
 
 
-app.MapGet("/users", () => {
-    // TODO: Return list of users (with optional filters)
-    return Results.Ok();
+app.MapGet("/users", async (IQueryAllUsersHandler handler) =>
+{
+    var users = await handler.HandleAsync();
+    return Results.Ok(users);
 });
 
-app.MapGet("/users/{id:guid}", (Guid id) => {
-    // TODO: Return specific user by id
-    return Results.Ok();
+app.MapGet("/users/{id:guid}", async (Guid id, IQueryUserHandler handler ) => {
+    var user = await handler.HandleAsync(id);
+    return user == null ? Results.NotFound() : Results.Ok(user);
 });
 
 app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
@@ -98,15 +100,23 @@ app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
     return Results.Accepted($"/users/{id}", new { id });
 });
 
-app.MapDelete("/users/{id:guid}", (Guid id) => {
-    // TODO: Delete user
-    return Results.NoContent();
-});
-
-app.MapPatch("/users/{id:guid}/activate", (Guid id) => {
-    // TODO: Toggle user active state
+app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
+{
+    try
+    {
+        await handler.HandleAsync(id);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.Message);
+    } 
     return Results.Ok();
 });
+
 
 // ADMIN PRIVILEGES
 app.MapPost("/users/{id:guid}/grant-admin", (Guid id) => {

@@ -18,7 +18,7 @@ namespace Maraudr.User.Infrastructure.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<IEnumerable<AbstractUser?>> GetAllAsync()
+        public async Task<IEnumerable<AbstractUser>> GetAllAsync()
         {
             return await _context.Users.ToListAsync();
         }

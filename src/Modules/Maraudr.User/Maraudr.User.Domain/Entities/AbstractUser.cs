@@ -58,7 +58,7 @@ public abstract class AbstractUser
     
     protected AbstractUser() { }
 
-    public bool isUserManager()
+    public bool IsUserManager()
     {
         return Role.Manager == Role;
     }
@@ -117,7 +117,7 @@ public abstract class AbstractUser
 
     private AbstractUser ConvertManagerToUser(Manager manager,AbstractUser newManager )
     {
-        if (!newManager.isUserManager())
+        if (!newManager.IsUserManager())
         {
             throw new ArgumentException("New manager should be declared manager efore");
         }
