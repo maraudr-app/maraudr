@@ -129,6 +129,40 @@ public abstract class AbstractUser
             manager.Languages,cNewManager);
         
     }
+
+    public void UpdateUserDetails(string? firstname, string? lastname,
+        string? email, string? phoneNumber, string? street, string? city, string? state, string? postalCode,
+        string? country,List<string>? languages)
+    {
+        Firstname = firstname ?? Firstname;
+        Lastname = lastname ?? Lastname;
+        
+        if (email != null || phoneNumber != null)
+        {
+            var contactInfo = new ContactInfo(
+                email ?? ContactInfo.GetEmail(),
+                phoneNumber ?? ContactInfo.GetPhoneNumber()
+            );
+            ContactInfo = contactInfo;
+        }
+        if (street != null || city != null || state != null || postalCode != null || country != null)
+        {
+            Address = new Address(
+                street ?? Address.GetStreet(),
+                city ?? Address.GetCity(),
+                state ?? Address.GetState(),
+                postalCode ?? Address.GetPostalCode(),
+                country ?? Address.GetCountry()
+            );
+        }
+        if (languages != null)
+        {
+            Languages = languages
+                .Select(l => (Language)Enum.Parse(typeof(Language), l, true))
+                .ToList();
+        }
+        
+    }
     
 
     public override bool Equals(object? obj)

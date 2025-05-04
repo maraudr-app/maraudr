@@ -1,9 +1,11 @@
 using Application;
 using Application.DTOs.Requests;
 using Application.UseCases.User.CreateUser;
+using Application.UseCases.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
 using Maraudr.User.Application;
+using Maraudr.User.Application.DTOs.Requests;
 using Maraudr.User.Infrastructure;
 
 
@@ -30,7 +32,8 @@ if (app.Environment.IsDevelopment())
 
 // USERS
 
-app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, IValidator<CreateUserDto> validator ) => {
+app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
+    IValidator<CreateUserDto> validator ) => {
     var result = validator.Validate(user);
 
     if (!result.IsValid)
@@ -39,10 +42,22 @@ app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, IVa
             .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
         return Results.BadRequest(messages);
     }
+
+    Guid id;
+    try
+    {
+        id = await handler.HandleAsync(user);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem((e.Message));
+    }
     
-    var id = await handler.HandleAsync(user);
-    
-    return Results.Created($"/stock/{id}", new { id });    return Results.Created("/users/{newId}", null);
+    return Results.Created($"/users/{id}", id);
 });
 
 
@@ -56,9 +71,31 @@ app.MapGet("/users/{id:guid}", (Guid id) => {
     return Results.Ok();
 });
 
-app.MapPut("/users/{id:guid}", (Guid id, HttpContext context) => {
-    // TODO: Update user info
-    return Results.NoContent();
+app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
+    IUpdateUserHandler handler, IValidator<UpdateUserDto> validator) => {
+    var result = validator.Validate(user);
+
+    if (!result.IsValid)
+    {
+        var messages = result.Errors
+            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
+        return Results.BadRequest(messages);
+    }
+    
+    try
+    {
+        await handler.HandleAsync(id, user);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.Message);
+    }
+    return Results.Accepted($"/users/{id}", new { id });
 });
 
 app.MapDelete("/users/{id:guid}", (Guid id) => {

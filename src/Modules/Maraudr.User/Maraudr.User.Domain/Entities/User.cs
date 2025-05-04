@@ -47,6 +47,7 @@ namespace Maraudr.User.Domain.Entities
         }
         //TODO : réflechir aux règles metiers 
         //TODO: QU'est ce qu'un bénévole a de plus ?
+        
     }
 
 }

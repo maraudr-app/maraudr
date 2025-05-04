@@ -39,6 +39,16 @@ public class ContactInfo
         var digitsOnly = new string(phoneNumber.Where(char.IsDigit).ToArray());
         return digitsOnly.Length >= 7 && digitsOnly.Length <= 15;
     }
+
+    public string GetEmail()
+    {
+        return Email;
+    }
+    
+    public string GetPhoneNumber()
+    {
+        return PhoneNumber;
+    }
     public override bool Equals(object? obj)
     {
         if (obj is null) return false;

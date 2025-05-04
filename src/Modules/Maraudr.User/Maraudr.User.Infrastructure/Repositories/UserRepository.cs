@@ -34,5 +34,10 @@ namespace Maraudr.User.Infrastructure.Repositories
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateAsync(AbstractUser user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -11,4 +11,6 @@ public interface IUserRepository
     Task AddAsync(AbstractUser user);
     //Task<User?> UpdateAsync(User user);
     Task DeleteAsync(AbstractUser user);
+
+    Task UpdateAsync(AbstractUser user);
 }

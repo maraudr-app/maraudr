@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
 ################################################################################
 
@@ -7,7 +7,11 @@
 /src/Modules/Maraudr.User/Maraudr.User.Application/bin/Debug/net8.0
 /src/Modules/Maraudr.User/Maraudr.User.Domain/bin/Debug/net8.0
 /src/Modules/Maraudr.User/Maraudr.User.Domain/obj
+/src/Modules/Maraudr.User/Maraudr.User.Domain/bin
 /src/Modules/Maraudr.User/Maraudr.User.Application/obj
+/src/Modules/Maraudr.User/Maraudr.User.Application/bin
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/obj
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/bin
 /src/Modules/Maraudr.User/Maraudr.User.Infrastructure/bin/Debug/net9.0
 /src/Modules/Maraudr.User/Maraudr.User.Infrastructure/obj
+

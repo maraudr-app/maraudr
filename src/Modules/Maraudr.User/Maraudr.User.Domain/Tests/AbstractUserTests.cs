@@ -234,5 +234,52 @@ namespace Domain
 
             Assert.True(user1.Equals(user2));
         }
+        
+        [Fact]
+        public void UpdateDetails_WithMixOfNullAndNonNullValues_UpdatesOnlyNonNullProperties()
+        {
+            var user = CreateUser();
+            var originalFirstname = user.Firstname;
+            var originalLastname = user.Lastname;
+            var originalEmail = user.ContactInfo.GetEmail();
+            var originalPhoneNumber = user.ContactInfo.GetPhoneNumber();
+            var originalStreet = user.Address.GetStreet();
+            var originalCity = user.Address.GetCity();
+            var originalState = user.Address.GetState();
+            var originalPostalCode = user.Address.GetPostalCode();
+            var originalCountry = user.Address.GetCountry();
+            var originalLanguages = new List<string> { "French","Spanish" };
+            
+            var newLastname = "NouveauNom";
+            var newEmail = "nouveau@example.com";
+            var newCity = "NouvelleVille";
+            var newCountry = "NouveauPays";
+            var newLanguages = new List<string> { "French","German" };;
+            
+            // Act
+            user.UpdateUserDetails(
+                firstname: null, 
+                lastname: newLastname, 
+                email: newEmail,
+                phoneNumber: null,
+                street: null,
+                city: newCity,
+                state: null,
+                postalCode: null,
+                country: newCountry,
+                languages: newLanguages
+            );
+            
+                // Assert
+                Assert.Equal(originalFirstname, user.Firstname); // inchangé
+                Assert.Equal(newLastname, user.Lastname); // mis à jour
+                Assert.Equal(newEmail, user.ContactInfo.GetEmail()); // mis à jour
+                Assert.Equal(originalPhoneNumber, user.ContactInfo.GetPhoneNumber()); // inchangé
+                Assert.Equal(originalStreet, user.Address.GetStreet()); // inchangé
+                Assert.Equal(newCity, user.Address.GetCity()); // mis à jour
+                Assert.Equal(originalState, user.Address.GetState()); // inchangé
+                Assert.Equal(originalPostalCode, user.Address.GetPostalCode()); // inchangé
+                Assert.Equal(newCountry, user.Address.GetCountry()); // mis à jour
+            }
     }
 }
