@@ -1,6 +1,5 @@
 
 
-using Maraudr.Domain;
 using Maraudr.User.Domain.Entities;
 
 namespace Maraudr.User.Domain.Interfaces.Repositories;

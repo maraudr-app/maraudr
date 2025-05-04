@@ -1,11 +1,11 @@
-using Maraudr.Domain;
-using Maraudr.Domain.ValueObjects;
 using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.ValueObjects;
 
 namespace Maraudr.User.Domain.Entities;
 
 public class Manager:AbstractUser
 {
+    
     
     public override Role Role { get; protected set; } = Role.Manager;
     public List<AbstractUser> Team{set; get; }
@@ -60,7 +60,7 @@ public class Manager:AbstractUser
         }   
         Team.Add(member);
     }
-    
+    //TODO : tester
     public void AddMembersToTeam(List<AbstractUser> members)
     {
         if (members == null) throw new ArgumentNullException(nameof(members));

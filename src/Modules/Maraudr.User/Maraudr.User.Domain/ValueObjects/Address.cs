@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace Maraudr.Domain.ValueObjects;
+namespace Maraudr.User.Domain.ValueObjects;
 
 public class Address
 {

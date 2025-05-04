@@ -1,5 +1,5 @@
-using Maraudr.Domain.ValueObjects;
 using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 

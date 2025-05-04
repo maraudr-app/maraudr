@@ -1,4 +1,4 @@
-namespace Maraudr.Domain.ValueObjects;
+namespace Maraudr.User.Domain.ValueObjects;
 
 public enum Language
 {

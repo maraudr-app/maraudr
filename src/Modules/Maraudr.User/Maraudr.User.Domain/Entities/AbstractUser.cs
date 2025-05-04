@@ -1,4 +1,4 @@
-using Maraudr.Domain.ValueObjects;
+using Maraudr.User.Domain.ValueObjects;
 
 namespace Maraudr.User.Domain.Entities;
 
@@ -135,9 +135,12 @@ public abstract class AbstractUser
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        return obj.GetType() == this.GetType() && Equals((AbstractUser)obj);
+        if (obj.GetType() != this.GetType()) return false;
+    
+        // Cast and compare by ID
+        var other = (AbstractUser)obj;
+        return Id.Equals(other.Id);
     }
-
     public override int GetHashCode()
     {
         return Id.GetHashCode();

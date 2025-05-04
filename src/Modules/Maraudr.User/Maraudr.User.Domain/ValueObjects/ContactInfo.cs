@@ -1,7 +1,6 @@
-using System;
 using System.Text.RegularExpressions;
 
-namespace Maraudr.Domain.ValueObjects;
+namespace Maraudr.User.Domain.ValueObjects;
 
 public class ContactInfo 
 {

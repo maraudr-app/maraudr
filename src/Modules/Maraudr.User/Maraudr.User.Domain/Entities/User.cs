@@ -1,8 +1,7 @@
 
-using Maraudr.Domain;
-using Maraudr.Domain.ValueObjects;
 using Maraudr.User.Domain;
 using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.ValueObjects;
 
 namespace Maraudr.User.Domain.Entities
 {
@@ -41,7 +40,7 @@ namespace Maraudr.User.Domain.Entities
             if (manager == null) throw new ArgumentNullException(nameof(manager));
             if (manager.Role != Role.Manager)
                 throw new ArgumentException("The user should already be a manager");
-            Manager cManager = Manager;
+            Manager cManager = (Manager)manager;
             Manager.RemoveMemberFromTeam(this);
             cManager.AddMemberToTeam(this);
             Manager = cManager;
