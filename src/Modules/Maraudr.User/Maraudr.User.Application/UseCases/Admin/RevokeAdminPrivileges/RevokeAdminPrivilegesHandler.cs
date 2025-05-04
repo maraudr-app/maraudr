@@ -1,6 +1,6 @@
 namespace Application.Services.Admin;
 
-public class RevokeAdminPrivileges
+public class RevokeAdminPrivilegesHandler
 {
     
 }

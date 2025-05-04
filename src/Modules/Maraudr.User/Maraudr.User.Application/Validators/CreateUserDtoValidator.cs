@@ -22,8 +22,10 @@ namespace Application.Validators
             RuleFor(user => user.Country).NotEmpty().WithMessage("Le pays est obligatoire");
             
             RuleFor(user => user.Languages).NotNull().WithMessage("La liste des langues ne peut pas être null");
-            RuleFor(user => user.ManagerId).NotNull().WithMessage("Un manager doit être défini");
 
+            RuleFor(user => user.ManagerId)
+                .NotNull().When(user => !user.IsManager)
+                .WithMessage("Un manager doit être défini pour les utilisateurs non-managers");
             
         }
     }

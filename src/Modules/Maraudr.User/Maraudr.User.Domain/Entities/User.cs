@@ -18,7 +18,7 @@ namespace Maraudr.User.Domain.Entities
             AbstractUser manager)
             : base( firstname, lastname, createdAt, contactInfo, address, languages)
         {
-            if (!manager.isUserManager())
+            if (!manager.IsUserManager())
             {
                 throw new ArgumentException("User role should be manager");
             }

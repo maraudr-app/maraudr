@@ -1,6 +1,6 @@
 namespace Application.Services.Admin;
 
-public class GrantAdminPrivileges
+public interface IPromoteUserToManagerHandler
 {
     
 }

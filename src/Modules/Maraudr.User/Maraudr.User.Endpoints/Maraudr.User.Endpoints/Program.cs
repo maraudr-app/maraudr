@@ -31,8 +31,6 @@ if (app.Environment.IsDevelopment())
 
 }
 
-
-
 // USERS
 app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
     IValidator<CreateUserDto> validator ) => {

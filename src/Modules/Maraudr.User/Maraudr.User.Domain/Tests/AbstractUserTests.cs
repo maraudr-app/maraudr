@@ -66,14 +66,14 @@ namespace Domain
         {
             var user = CreateUser();
 
-            Assert.False(user.isUserManager());
+            Assert.False(user.IsUserManager());
         }
 
         [Fact]
         public void IsUserManager_ForManager_ReturnsTrue()
         {
             var manager = CreateManager();
-            Assert.True(manager.isUserManager());
+            Assert.True(manager.IsUserManager());
         }
 
         [Fact]

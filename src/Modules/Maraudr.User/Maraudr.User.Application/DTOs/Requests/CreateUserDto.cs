@@ -18,5 +18,8 @@ public class CreateUserDto
     
     public List<string> Languages { get; set; } = new();
     
-    public Guid ManagerId { get; set; }
+    public Guid? ManagerId { get; set; }
+
+    public bool IsManager { get; set; } 
+
 }
