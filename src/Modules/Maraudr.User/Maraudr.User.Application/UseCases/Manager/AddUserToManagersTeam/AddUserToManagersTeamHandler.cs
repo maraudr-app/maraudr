@@ -7,6 +7,10 @@ public class AddUserToManagersTeamHandler(IUserRepository repository):IAddUserTo
 {
     public async Task HandleAsync(Guid id, Guid userId)
     {
+        
+        //TODO : factoriuser verif en fonction qui retourne couple(manager,user)
+        
+        
         var manager = await repository.GetByIdAsync(id);
         var user = await repository.GetByIdAsync(userId);
         

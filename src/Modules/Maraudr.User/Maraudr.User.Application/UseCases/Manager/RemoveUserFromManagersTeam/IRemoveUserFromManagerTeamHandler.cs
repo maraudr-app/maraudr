@@ -1,6 +1,6 @@
-namespace Application.Services.User;
+namespace Application.UseCases.Manager.RemoveUserFromManagersTEam;
 
-public class IRemoveUserFromManagerTeamHandler
+public interface IRemoveUserFromManagerTeamHandler
 {
-    
+    public Task HandleAsync(Guid managerId, Guid userId);
 }

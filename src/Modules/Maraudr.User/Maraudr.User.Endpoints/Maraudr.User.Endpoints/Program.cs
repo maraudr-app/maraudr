@@ -4,6 +4,7 @@ using Application.DTOs.Requests;
 using Application.Services.User;
 using Application.UseCases.Manager.AddUserToManagersTeam;
 using Application.UseCases.Manager.QueryManagersTeam;
+using Application.UseCases.Manager.RemoveUserFromManagersTEam;
 using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
 using Application.UseCases.User.QueryAllUsers;
@@ -151,6 +152,7 @@ app.MapGet("/managers/team", async (
     })
     .RequireAuthorization(); 
 
+
 app.MapPost("/managers/team/add-user", async (
         [FromBody] UserIdRequest request, 
         IAddUserToManagersTeamHandler handler,
@@ -175,9 +177,9 @@ app.MapPost("/managers/team/add-user", async (
         {
             return Results.Forbid();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return Results.Problem("Une erreur est survenue lors de l'ajout de l'utilisateur à l'équipe.");
+            return Results.Problem($"Une erreur est survenue lors de l'ajout de l'utilisateur à l'équipe. {ex.Message}");
         }
     })
     .RequireAuthorization(); 
@@ -189,10 +191,35 @@ app.MapPost("/managers/team", (Guid id,Guid userId, IAddUserToManagersTeamHandle
 });
 
 
-app.MapDelete("/managers/{id:guid}/team/{memberId:guid}", (Guid id, Guid memberId) => {
-    // TODO: Remove member from manager's team
-    return Results.Ok();
-});
+app.MapDelete("/managers/remove-from-team", async ([FromBody] UserIdRequest request, 
+        IRemoveUserFromManagerTeamHandler handler,
+        ClaimsPrincipal user) =>
+    {
+        var managerId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+    
+        if (string.IsNullOrEmpty(managerId) || !Guid.TryParse(managerId, out var managerGuid))
+        {
+            return Results.Unauthorized();
+        }
+        try
+        {
+            await handler.HandleAsync(managerGuid, request.UserId);
+            return Results.Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Forbid();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem($"Une erreur est survenue lors de l'ajout de l'utilisateur à l'équipe.{ex.Message}" );
+        }
+    })
+    .RequireAuthorization(); 
 
 app.MapPut("/users/{id:guid}/change-manager", (Guid id, HttpContext context) => {
     // TODO: Change manager of a user
