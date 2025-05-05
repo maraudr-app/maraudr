@@ -1,5 +1,6 @@
 using Application;
 using Application.DTOs.Requests;
+using Application.UseCases.Manager.QueryManagersTeam;
 using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
 using Application.UseCases.User.QueryAllUsers;
@@ -7,8 +8,8 @@ using Application.UseCases.User.QueryUser;
 using Application.UseCases.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
-using Maraudr.User.Application;
 using Maraudr.User.Application.DTOs.Requests;
+using Maraudr.User.Domain.Entities;
 using Maraudr.User.Infrastructure;
 
 
@@ -116,27 +117,24 @@ app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
 });
 
 
-// ADMIN PRIVILEGES
-app.MapPost("/users/{id:guid}/grant-admin", (Guid id) => {
-    // TODO: Grant admin privileges
-    return Results.Ok();
-});
-
-app.MapPost("/users/{id:guid}/revoke-admin", (Guid id) => {
-    // TODO: Revoke admin privileges
-    return Results.Ok();
-});
-
-// ROLE MANAGEMENT
-app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
-    // TODO: Change user role
-    return Results.Ok();
-});
 
 // MANAGER TEAM
-app.MapGet("/managers/{id:guid}/team", (Guid id) => {
-    // TODO: Get manager team members
-    return Results.Ok();
+app.MapGet("/managers/{id:guid}/team", async (Guid id,IQueryManagersTeamHandler handler) =>
+{
+    IEnumerable<AbstractUser> team; 
+    try
+    {
+        team  = await handler.HandleAsync(id);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+    catch (ArgumentException e1)
+    {
+        return Results.NotFound(e1.Message);
+    }
+    return Results.Ok(team);
 });
 
 app.MapPost("/managers/{id:guid}/team", (Guid id, HttpContext context) => {
@@ -167,6 +165,27 @@ app.MapGet("/stats/users", () => {
 
 app.MapGet("/me", () => {
     // TODO: Return currently authenticated user
+    return Results.Ok();
+});
+
+
+
+
+
+// ADMIN PRIVILEGES
+app.MapPost("/users/{id:guid}/grant-admin", (Guid id) => {
+    // TODO: Grant admin privileges
+    return Results.Ok();
+});
+
+app.MapPost("/users/{id:guid}/revoke-admin", (Guid id) => {
+    // TODO: Revoke admin privileges
+    return Results.Ok();
+});
+
+// ROLE MANAGEMENT
+app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
+    // TODO: Change user role
     return Results.Ok();
 });
 

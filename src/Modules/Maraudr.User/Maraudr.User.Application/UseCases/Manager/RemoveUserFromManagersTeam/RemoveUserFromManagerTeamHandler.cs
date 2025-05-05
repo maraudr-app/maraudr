@@ -1,6 +1,6 @@
 namespace Application.Services.User;
 
-public class RemoveUserFromManagerTeam
+public class RemoveUserFromManagerTeamHandler
 {
     
 }

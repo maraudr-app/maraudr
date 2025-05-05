@@ -1,6 +1,6 @@
 namespace Application.Services.User;
 
-public class ListManagerTeam
+public class QueryManagersHandler
 {
     
 }
