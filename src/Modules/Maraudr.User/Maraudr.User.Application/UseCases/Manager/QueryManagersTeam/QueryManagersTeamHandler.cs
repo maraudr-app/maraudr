@@ -20,6 +20,5 @@ public class QueryManagersTeamHandler(IUserRepository repository) : IQueryManage
         }
         var manager = (Maraudr.User.Domain.Entities.Manager)user;
         return manager.Team;
-        
     }
 }

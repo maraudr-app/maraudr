@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using Application;
 using Application.DTOs.Requests;
+using Application.Services.User;
+using Application.UseCases.Manager.AddUserToManagersTeam;
 using Application.UseCases.Manager.QueryManagersTeam;
 using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
@@ -11,11 +14,12 @@ using Maraudr.User.Endpoints;
 using Maraudr.User.Application.DTOs.Requests;
 using Maraudr.User.Domain.Entities;
 using Maraudr.User.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 
+// TODO : many endpoints require auth -> doit être impléménté assez vite 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -119,28 +123,71 @@ app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
 
 
 // MANAGER TEAM
-app.MapGet("/managers/{id:guid}/team", async (Guid id,IQueryManagersTeamHandler handler) =>
+app.MapGet("/managers/team", async (
+        IQueryManagersTeamHandler handler,
+        ClaimsPrincipal currentUser) =>
+    {
+        var currentUserId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+    
+        if (string.IsNullOrEmpty(currentUserId) || !Guid.TryParse(currentUserId, out var managerGuid))
+        {
+            return Results.Unauthorized();
+        }
+    
+        IEnumerable<AbstractUser> team; 
+        try
+        {
+            team = await handler.HandleAsync(managerGuid);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        catch (ArgumentException e1)
+        {
+            return Results.NotFound(e1.Message);
+        }
+        return Results.Ok(team);
+    })
+    .RequireAuthorization(); 
+
+app.MapPost("/managers/team/add-user", async (
+        [FromBody] UserIdRequest request, 
+        IAddUserToManagersTeamHandler handler,
+        ClaimsPrincipal user) =>
+    {
+        var managerId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+    
+        if (string.IsNullOrEmpty(managerId) || !Guid.TryParse(managerId, out var managerGuid))
+        {
+            return Results.Unauthorized();
+        }
+        try
+        {
+            await handler.HandleAsync(managerGuid, request.UserId);
+            return Results.Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Forbid();
+        }
+        catch (Exception)
+        {
+            return Results.Problem("Une erreur est survenue lors de l'ajout de l'utilisateur à l'équipe.");
+        }
+    })
+    .RequireAuthorization(); 
+
+
+app.MapPost("/managers/team", (Guid id,Guid userId, IAddUserToManagersTeamHandler handler) =>
 {
-    IEnumerable<AbstractUser> team; 
-    try
-    {
-        team  = await handler.HandleAsync(id);
-    }
-    catch (InvalidOperationException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-    catch (ArgumentException e1)
-    {
-        return Results.NotFound(e1.Message);
-    }
-    return Results.Ok(team);
+    //todo : add multiple users 
 });
 
-app.MapPost("/managers/{id:guid}/team", (Guid id, HttpContext context) => {
-    // TODO: Add members to manager's team
-    return Results.Ok();
-});
 
 app.MapDelete("/managers/{id:guid}/team/{memberId:guid}", (Guid id, Guid memberId) => {
     // TODO: Remove member from manager's team

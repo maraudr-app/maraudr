@@ -23,7 +23,6 @@ public class UpdateUserHandler(IUserRepository repository):IUpdateUserHandler
             updateUserDto.Languages);
         
         await repository.UpdateAsync(user);
-
         return user.Id;
     }
 

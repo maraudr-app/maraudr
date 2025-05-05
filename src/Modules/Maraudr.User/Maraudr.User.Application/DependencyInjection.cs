@@ -1,3 +1,4 @@
+using Application.UseCases.Manager.AddUserToManagersTeam;
 using Application.UseCases.Manager.QueryManagersTeam;
 using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
@@ -19,5 +20,6 @@ public static class DependencyInjection
         services.AddScoped<IQueryUserHandler, QueryUserHandler>();
         services.AddScoped<IDeleteUserHandler, DeleteUserHandler>();
         services.AddScoped<IQueryManagersTeamHandler, QueryManagersTeamHandler>();
+        services.AddScoped<IAddUserToManagersTeamHandler, AddUserToManagersTeamHandler>();
     }
 }

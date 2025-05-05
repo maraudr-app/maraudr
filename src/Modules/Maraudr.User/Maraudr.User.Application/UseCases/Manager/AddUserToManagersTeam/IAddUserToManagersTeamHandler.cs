@@ -1,6 +1,6 @@
-namespace Application.Services.User;
+namespace  Application.UseCases.Manager.AddUserToManagersTeam;
 
-public class IAddUserToManagersTeamHandler
+public interface IAddUserToManagersTeamHandler
 {
-    
+    public Task HandleAsync(Guid id,Guid userId);
 }
