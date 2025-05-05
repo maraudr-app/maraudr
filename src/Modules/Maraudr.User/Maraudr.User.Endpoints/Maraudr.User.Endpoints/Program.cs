@@ -9,6 +9,7 @@ using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
 using Application.UseCases.User.QueryAllUsers;
 using Application.UseCases.User.QueryUser;
+using Application.UseCases.User.SearchByNameUser;
 using Application.UseCases.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
@@ -18,6 +19,7 @@ using Maraudr.User.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 // TODO : many endpoints require auth -> doit être impléménté assez vite 
+// TODO : verifeir unicité via email aussi & numéro de telephone aussi  
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -185,10 +187,6 @@ app.MapPost("/managers/team/add-user", async (
     .RequireAuthorization(); 
 
 
-app.MapPost("/managers/team", (Guid id,Guid userId, IAddUserToManagersTeamHandler handler) =>
-{
-    //todo : add multiple users 
-});
 
 
 app.MapDelete("/managers/remove-from-team", async ([FromBody] UserIdRequest request, 
@@ -221,20 +219,26 @@ app.MapDelete("/managers/remove-from-team", async ([FromBody] UserIdRequest requ
     })
     .RequireAuthorization(); 
 
+
+
+// SEARCH / STATS / SELF
+app.MapGet("/users/search", async (string? name, ISearchByNameUserHandler handler) => {
+    if (string.IsNullOrWhiteSpace(name))
+        return Results.BadRequest("Le terme de recherche est requis");
+        
+    var results = await handler.HandleAsync(name);
+    return Results.Ok(results);
+});
+
+
+/*
 app.MapPut("/users/{id:guid}/change-manager", (Guid id, HttpContext context) => {
     // TODO: Change manager of a user
     return Results.Ok();
 });
-
-// SEARCH / STATS / SELF
-app.MapGet("/users/search", (string? name, string? role) => {
-    // TODO: Search users by name and/or role
-    return Results.Ok();
-});
-
-app.MapGet("/stats/users", () => {
-    // TODO: Return user statistics
-    return Results.Ok();
+app.MapPost("/managers/team", (Guid id,Guid userId, IAddUserToManagersTeamHandler handler) =>
+{
+    //todo : add multiple users 
 });
 
 app.MapGet("/me", () => {
@@ -261,6 +265,6 @@ app.MapPost("/users/{id:guid}/revoke-admin", (Guid id) => {
 app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
     // TODO: Change user role
     return Results.Ok();
-});
+});*/
 
 app.Run();

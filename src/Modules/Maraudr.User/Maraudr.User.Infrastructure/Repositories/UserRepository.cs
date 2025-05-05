@@ -39,5 +39,13 @@ namespace Maraudr.User.Infrastructure.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<AbstractUser>> SearchByNameAsync(string searchTerm)
+        {
+            return _context.Users
+                .Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                            u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        
     }
 }

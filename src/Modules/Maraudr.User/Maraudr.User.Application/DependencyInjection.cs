@@ -5,6 +5,7 @@ using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
 using Application.UseCases.User.QueryAllUsers;
 using Application.UseCases.User.QueryUser;
+using Application.UseCases.User.SearchByNameUser;
 using Application.UseCases.User.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,5 +24,6 @@ public static class DependencyInjection
         services.AddScoped<IQueryManagersTeamHandler, QueryManagersTeamHandler>();
         services.AddScoped<IAddUserToManagersTeamHandler, AddUserToManagersTeamHandler>();
         services.AddScoped<IRemoveUserFromManagerTeamHandler, RemoveUserFromManagerTeamHandler>();
+        services.AddScoped<ISearchByNameUserHandler, SearchByNameUserHandler>();
     }
 }
