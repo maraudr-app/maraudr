@@ -7,4 +7,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Responses\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="UseCases\Authentication\" />
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Maraudr.User\Maraudr.User.Domain\Maraudr.User.Domain.csproj" />
+    <ProjectReference Include="..\Maraudr.Authentication.Domain\Maraudr.Authentication.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

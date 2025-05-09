@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Maraudr.Authentication.Application.DTOs.Responses
 {
-    public class RegisterResponseDTO
+    public class RegisterResponse
     {
 
        
@@ -14,13 +14,13 @@ namespace Maraudr.Authentication.Application.DTOs.Responses
             public Guid? UserId { get; private set; }
             public IEnumerable<string> Errors { get; private set; } = Array.Empty<string>();
 
-            private RegisterResponseDTO() { }
+            private RegisterResponse() { }
 
-            public static RegisterResponseDTO Successful(Guid userId)
-                => new RegisterResponseDTO { Success = true, UserId = userId };
+            public static RegisterResponse Successful(Guid userId)
+                => new RegisterResponse { Success = true, UserId = userId };
 
-            public static RegisterResponseDTO Failed(params string[] errors)
-                => new RegisterResponseDTO { Success = false, Errors = errors };
+            public static RegisterResponse Failed(params string[] errors)
+                => new RegisterResponse { Success = false, Errors = errors };
         
     }
 }

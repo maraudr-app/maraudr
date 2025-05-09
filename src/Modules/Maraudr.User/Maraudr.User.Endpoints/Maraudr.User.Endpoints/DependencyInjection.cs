@@ -1,7 +1,6 @@
 using Application.DTOs.Requests;
 using Application.Validators;
 using FluentValidation;
-using Maraudr.Stock.Application.Validation;
 using Maraudr.User.Application.DTOs.Requests;
 using Maraudr.User.Application.Validators;
 

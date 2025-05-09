@@ -20,8 +20,4 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Maraudr.Stock\Maraudr.Stock.Application\Maraudr.Stock.Application.csproj" />
-    </ItemGroup>
-
 </Project>

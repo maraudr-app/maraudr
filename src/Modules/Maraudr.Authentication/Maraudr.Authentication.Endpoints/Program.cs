@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using FluentValidation;
+using Maraudr.Authentication.Application.DTOs.Requests;
+using Maraudr.Authentication.Application.UseCases.AuthenticateUser;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Configuration des services
 builder.Services.AddAuthentication(options => {
@@ -24,14 +28,14 @@ var app = builder.Build();
 // Endpoints d'authentification de base
 app.MapPost("/auth/login", async (
     [FromBody] LoginRequestDto request, 
-    IAuthService authService,
+    IAuthenticateUserHandler handler,
     IValidator<LoginRequestDto> validator) =>
 {
     var validationResult = validator.Validate(request);
     if (!validationResult.IsValid)
         return Results.BadRequest(validationResult.Errors);
     
-    var result = await authService.AuthenticateUserAsync(request.Email, request.Password);
+    var result = await handler.handleAsync(request.Email, request.Password);
     if (!result.Success)
         return Results.Unauthorized();
         

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maraudr.Authentication.Application.DTOs.Responses
+﻿
+namespace Maraudr.Authentication.Domain.ValueObjects
 {
-    public class AuthResponseDTO
+    public class AuthResponse
     {
        
             public bool Success { get; private set; }
@@ -15,10 +10,10 @@ namespace Maraudr.Authentication.Application.DTOs.Responses
             public int ExpiresIn { get; private set; }
             public IEnumerable<string> Errors { get; private set; } = Array.Empty<string>();
 
-            private AuthResponseDTO() { }
+            private AuthResponse() { }
 
-            public static AuthResponseDTO Successful(string accessToken, string refreshToken, int expiresIn)
-                => new AuthResponseDTO
+            public static AuthResponse Successful(string accessToken, string refreshToken, int expiresIn)
+                => new AuthResponse
                 {
                     Success = true,
                     AccessToken = accessToken,
@@ -26,12 +21,12 @@ namespace Maraudr.Authentication.Application.DTOs.Responses
                     ExpiresIn = expiresIn
                 };
 
-            public static AuthResponseDTO Failed(params string[] errors)
-                => new AuthResponseDTO
+            public static AuthResponse Failed(params string[] errors)
+                => new AuthResponse
                 {
                     Success = false,
                     Errors = errors
                 };
         }
-    }
+    
 }
