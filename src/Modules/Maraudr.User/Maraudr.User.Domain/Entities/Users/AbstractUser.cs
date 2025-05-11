@@ -1,0 +1,182 @@
+using Maraudr.User.Domain.ValueObjects.Users;
+
+namespace Maraudr.User.Domain.Entities.Users;
+
+public abstract class AbstractUser
+{
+   
+
+    public virtual Role Role { get; protected set; }
+    public Guid Id { get;  set; }
+    public string Firstname { get;  set; }
+    public string Lastname { get;  set; }
+    
+    public DateTime CreatedAt { get; private set; } // TODO : comment ? 
+    public DateTime LastLoggedIn { get;  set; }
+    public bool IsActive { get;  set; }
+    public ContactInfo ContactInfo { get;  set; }
+    public Address Address { get;  set; } 
+    
+    private bool IsAdmin {
+        get;
+        set;
+    }
+    
+    public string? Biography { get; set; }
+
+    
+    
+    public List<Language> Languages { get; set; }
+
+
+    protected AbstractUser( string firstname, string lastname, DateTime createdAt,
+        ContactInfo contactInfo, Address address,List<Language> languages)
+    {
+        Id = new Guid();
+        Firstname = firstname;
+        Lastname = lastname;
+        LastLoggedIn = DateTime.Now;
+        CreatedAt = createdAt;
+        IsActive = true;
+        ContactInfo = contactInfo;
+        Address = address;
+        Languages = languages;
+    }
+    protected AbstractUser( Guid id,string firstname, string lastname, DateTime createdAt,
+        ContactInfo contactInfo, Address address,List<Language> languages)
+    {
+        Id = id;
+        Firstname = firstname;
+        Lastname = lastname;
+        LastLoggedIn = DateTime.Now;
+        CreatedAt = createdAt;
+        IsActive = true;
+        ContactInfo = contactInfo;
+        Address = address;
+        Languages = languages;
+    }
+    
+    protected AbstractUser() { }
+
+    public bool IsUserManager()
+    {
+        return Role.Manager == Role;
+    }
+    // Admin section 
+    public bool IsUserAdmin()
+    {
+        return IsAdmin;
+    }
+    public void GrantAdminPrivileges(AbstractUser grantedBy)
+    {
+        if (!grantedBy.IsAdmin)
+            throw new UnauthorizedAccessException("Only admins can grant admin privileges");
+            
+        IsAdmin = true;
+    }
+    
+    public void RevokeAdminPrivileges(AbstractUser revokedBy)
+    {
+        if (!revokedBy.IsAdmin)
+            throw new UnauthorizedAccessException("Only admins can revoke admin privileges");
+            
+        // TODO : Get Association Admins : If Admins. count = 0 can't remove 
+        // 
+        
+        IsAdmin = false;
+    }
+    
+    public AbstractUser ChangeUserRole(AbstractUser targetUser, Role newRole,AbstractUser newManager)
+    {
+        if (!this.IsAdmin)
+            throw new UnauthorizedAccessException("Only admins can change user roles");
+            
+        // TODO : peut on changer le rôle d'un autre admin? 
+        if (targetUser.IsAdmin && targetUser.Id != this.Id)
+            throw new UnauthorizedAccessException("Cannot change the role of another admin");
+            
+        Role oldRole = targetUser.Role;
+        
+        if (oldRole == Role.Member && newRole == Role.Manager)
+        {
+            return ConvertUserToManager((User)targetUser);
+        }
+        else if (oldRole == Role.Manager && newRole == Role.Member)
+        {
+            return ConvertManagerToUser((Manager)targetUser,newManager );
+        }
+        
+        return targetUser;
+    }
+    
+    private AbstractUser ConvertUserToManager(User user )
+    {
+        return new Manager(user.Id,user.Firstname, user.Lastname, user.CreatedAt, user.ContactInfo, user.Address,
+            user.Languages, new List<AbstractUser>());
+    }
+
+    private AbstractUser ConvertManagerToUser(Manager manager,AbstractUser newManager )
+    {
+        if (!newManager.IsUserManager())
+        {
+            throw new ArgumentException("New manager should be declared manager efore");
+        }
+
+        var cNewManager = (Manager)newManager;
+        List<AbstractUser> team = cNewManager.Team;
+        cNewManager.AddMembersToTeam(team);
+        return new User(manager.Id,manager.Firstname, manager.Lastname, manager.CreatedAt, manager.ContactInfo, manager.Address,
+            manager.Languages,cNewManager);
+        
+    }
+
+    public void UpdateUserDetails(string? firstname, string? lastname,
+        string? email, string? phoneNumber, string? street, string? city, string? state, string? postalCode,
+        string? country,List<string>? languages)
+    {
+        Firstname = firstname ?? Firstname;
+        Lastname = lastname ?? Lastname;
+        
+        if (email != null || phoneNumber != null)
+        {
+            var contactInfo = new ContactInfo(
+                email ?? ContactInfo.GetEmail(),
+                phoneNumber ?? ContactInfo.GetPhoneNumber()
+            );
+            ContactInfo = contactInfo;
+        }
+        if (street != null || city != null || state != null || postalCode != null || country != null)
+        {
+            Address = new Address(
+                street ?? Address.GetStreet(),
+                city ?? Address.GetCity(),
+                state ?? Address.GetState(),
+                postalCode ?? Address.GetPostalCode(),
+                country ?? Address.GetCountry()
+            );
+        }
+        if (languages != null)
+        {
+            Languages = languages
+                .Select(l => (Language)Enum.Parse(typeof(Language), l, true))
+                .ToList();
+        }
+        
+    }
+    
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+    
+        // Cast and compare by ID
+        var other = (AbstractUser)obj;
+        return Id.Equals(other.Id);
+    }
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
+}

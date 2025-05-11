@@ -1,7 +1,7 @@
+using Application.DTOs.UsersQueriesDtos.Requests;
 using FluentValidation;
-using Maraudr.User.Application.DTOs.Requests;
 
-namespace Maraudr.User.Application.Validators;
+namespace Application.Validators;
 
 public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDto>
 {

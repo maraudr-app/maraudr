@@ -1,7 +1,6 @@
-using Application.DTOs.Requests;
-using Maraudr.User.Application.DTOs.Requests;
-using Maraudr.User.Domain.Entities;
-using Maraudr.User.Domain.ValueObjects;
+using Application.DTOs.UsersQueriesDtos.Requests;
+using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Application.Mappers;
 

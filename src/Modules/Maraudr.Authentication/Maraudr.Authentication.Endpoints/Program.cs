@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using FluentValidation;
-using Maraudr.Authentication.Application.DTOs.Requests;
 using Maraudr.Authentication.Application.UseCases.AuthenticateUser;
+using Maraudr.Authentication.Domain.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +35,7 @@ app.MapPost("/auth/login", async (
     if (!validationResult.IsValid)
         return Results.BadRequest(validationResult.Errors);
     
-    var result = await handler.handleAsync(request.Email, request.Password);
+    var result = await handler.HandleAsync(request);
     if (!result.Success)
         return Results.Unauthorized();
         

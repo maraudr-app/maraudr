@@ -1,9 +1,7 @@
-using Application.DTOs.Requests;
+using Application.DTOs.AuthenticationQueriesDto.Requests;
+using Application.DTOs.UsersQueriesDtos.Requests;
 using Application.Validators;
 using FluentValidation;
-using Maraudr.User.Application.DTOs.Requests;
-using Maraudr.User.Application.Validators;
-
 namespace Maraudr.User.Endpoints;
 
 public static class DependencyInjection
@@ -12,5 +10,6 @@ public static class DependencyInjection
     {
         services.AddScoped<IValidator<CreateUserDto>, CreateUserDtoValidator>();
         services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+        services.AddScoped<IValidator<LoginRequestDto>, LoginRequestDtoValidator>();
     }
 }

@@ -1,22 +1,24 @@
 using System.Security.Claims;
 using Application;
-using Application.DTOs.Requests;
-using Application.Services.User;
-using Application.UseCases.Manager.AddUserToManagersTeam;
-using Application.UseCases.Manager.QueryManagersTeam;
-using Application.UseCases.Manager.RemoveUserFromManagersTEam;
-using Application.UseCases.User.CreateUser;
-using Application.UseCases.User.DeleteUser;
-using Application.UseCases.User.QueryAllUsers;
-using Application.UseCases.User.QueryUser;
-using Application.UseCases.User.QueryUserByEmail;
-using Application.UseCases.User.SearchByNameUser;
-using Application.UseCases.User.UpdateUser;
+using Application.DTOs.AuthenticationQueriesDto.Requests;
+using Application.DTOs.UsersQueriesDtos.Requests;
+using Application.UseCases.Tokens.Authentication.AuthenticateUser;
+using Application.UseCases.Users.Manager.AddUserToManagersTeam;
+using Application.UseCases.Users.Manager.QueryManagersTeam;
+using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
+using Application.UseCases.Users.User.CreateUser;
+using Application.UseCases.Users.User.DeleteUser;
+using Application.UseCases.Users.User.QueryAllUsers;
+using Application.UseCases.Users.User.QueryUser;
+using Application.UseCases.Users.User.QueryUserByEmail;
+using Application.UseCases.Users.User.SearchByNameUser;
+using Application.UseCases.Users.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
-using Maraudr.User.Application.DTOs.Requests;
-using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // TODO : many endpoints require auth -> doit être impléménté assez vite 
@@ -284,4 +286,137 @@ app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
     return Results.Ok();
 });*/
 
+
+
+// AUTHENTICATION MANAGEMENT
+
+
+app.MapPost("/auth/login", async (
+    [FromBody] LoginRequestDto request, 
+    IAuthenticateUserHandler handler,
+    IValidator<LoginRequestDto> validator) =>
+{
+    var validationResult = validator.Validate(request);
+    if (!validationResult.IsValid)
+        return Results.BadRequest(validationResult.Errors);
+    
+    var result = await handler.HandleAsync(request);
+    if (!result.Success)
+        return Results.Unauthorized();
+        
+    return Results.Ok(new { 
+        AccessToken = result.AccessToken,
+        RefreshToken = result.RefreshToken,
+        ExpiresIn = result.ExpiresIn
+    });
+});
+
+/*app.MapPost("/auth/register", async (
+    [FromBody] RegisterRequestDto request,
+    IAuthService authService,
+    IValidator<RegisterRequestDto> validator) =>
+{
+    var validationResult = validator.Validate(request);
+    if (!validationResult.IsValid)
+        return Results.BadRequest(validationResult.Errors);
+
+    var result = await authService.RegisterUserAsync(request);
+    if (!result.Success)
+        return Results.BadRequest(result.Errors);
+        
+    return Results.Created($"/users/{result.UserId}", new { UserId = result.UserId });
+});
+
+app.MapPost("/auth/refresh", async (
+    [FromBody] RefreshTokenRequestDto request,
+    IAuthService authService) =>
+{
+    var result = await authService.RefreshTokenAsync(request.RefreshToken);
+    if (!result.Success)
+        return Results.Unauthorized();
+        
+    return Results.Ok(new { 
+        AccessToken = result.AccessToken,
+        RefreshToken = result.RefreshToken,
+        ExpiresIn = result.ExpiresIn
+    });
+});
+
+app.MapPost("/auth/logout", [Authorize] async (
+    ClaimsPrincipal user,
+    IAuthService authService) =>
+{
+    var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+    await authService.LogoutUserAsync(userId);
+    return Results.Ok();
+});
+
+// Vérification du token
+app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
+{
+    var claims = user.Claims.Select(c => new { Type = c.Type, Value = c.Value });
+    return Results.Ok(claims);
+});
+
+// Authentification externe
+app.MapGet("/auth/google", async (HttpContext context) =>
+{
+    await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
+    {
+        RedirectUri = "/auth/google-callback"
+    });
+});
+
+app.MapGet("/auth/google-callback", async (
+    HttpContext context,
+    IAuthService authService) =>
+{
+    var result = await authService.HandleGoogleAuthCallbackAsync(context);
+    if (!result.Success)
+        return Results.Redirect("/login?error=google-auth-failed");
+        
+    // Rediriger vers l'application front-end avec le token
+    return Results.Redirect($"/login/success?token={result.AccessToken}");
+});
+
+// Gestion des mots de passe
+app.MapPost("/auth/forgot-password", async (
+    [FromBody] ForgotPasswordRequestDto request,
+    IAuthService authService) =>
+{
+    await authService.SendPasswordResetLinkAsync(request.Email);
+    return Results.Ok(new { Message = "Si cette adresse est associée à un compte, un email de réinitialisation a été envoyé." });
+});
+
+app.MapPost("/auth/reset-password", async (
+    [FromBody] ResetPasswordRequestDto request,
+    IAuthService authService,
+    IValidator<ResetPasswordRequestDto> validator) =>
+{
+    var validationResult = validator.Validate(request);
+    if (!validationResult.IsValid)
+        return Results.BadRequest(validationResult.Errors);
+        
+    var result = await authService.ResetPasswordAsync(request.Token, request.Password);
+    if (!result.Success)
+        return Results.BadRequest(new { Message = "Impossible de réinitialiser le mot de passe." });
+        
+    return Results.Ok(new { Message = "Mot de passe réinitialisé avec succès." });
+});
+
+// Routes administratives d'authentification
+app.MapPost("/auth/revoke/{userId}", [Authorize(Roles = "Admin")] async (
+    Guid userId,
+    IAuthService authService) =>
+{
+    await authService.RevokeUserTokensAsync(userId);
+    return Results.Ok();
+});
+
+app.MapGet("/auth/active-sessions", [Authorize(Roles = "Admin")] async (
+    IAuthService authService) =>
+{
+    var sessions = await authService.GetActiveSessionsAsync();
+    return Results.Ok(sessions);
+});*/
 app.Run();

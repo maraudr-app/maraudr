@@ -8,9 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\Requests\" />
     <Folder Include="DTOs\Responses\" />
     <Folder Include="Mappers\" />
     <Folder Include="UseCases\Authentication\" />
+    <Folder Include="UseCases\Authentication\AuthenticateUser\" />
+    <Folder Include="UseCases\Authentication\LogoutUser\" />
+    <Folder Include="UseCases\Authentication\RefreshToken\" />
+    <Folder Include="UseCases\Authentication\RegisterUser\" />
+    <Folder Include="UseCases\Authentication\ResetPassword\" />
+    <Folder Include="UseCases\Authentication\RevokeUserTokens\" />
+    <Folder Include="UseCases\Authentication\SendPasswordResetLink\" />
+    <Folder Include="UseCases\JwtManagement\GenerateAccessToken\" />
+    <Folder Include="UseCases\JwtManagement\GenerateRefreshToken\" />
+    <Folder Include="UseCases\JwtManagement\GetUserInfoFromToken\" />
+    <Folder Include="UseCases\JwtManagement\ValidateToken\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 

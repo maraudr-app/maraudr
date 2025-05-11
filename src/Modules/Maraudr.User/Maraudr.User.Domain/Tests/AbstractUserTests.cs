@@ -1,5 +1,5 @@
-using Maraudr.User.Domain.Entities;
-using Maraudr.User.Domain.ValueObjects;
+using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Domain
 

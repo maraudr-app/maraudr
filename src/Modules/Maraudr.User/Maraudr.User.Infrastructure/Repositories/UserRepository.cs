@@ -1,4 +1,4 @@
-using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
