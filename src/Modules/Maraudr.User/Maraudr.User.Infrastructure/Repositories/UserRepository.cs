@@ -41,10 +41,18 @@ namespace Maraudr.User.Infrastructure.Repositories
         }
         public async Task<IEnumerable<AbstractUser>> SearchByNameAsync(string searchTerm)
         {
-            return _context.Users
+             return await _context.Users
                 .Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
                             u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+                .ToListAsync();
+        }
+        
+        public async Task<AbstractUser?> GetByEmailAsync(string email)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(u => u.ContactInfo.Email.ToLower() == email.ToLower())
+                .FirstOrDefaultAsync();
         }
         
     }

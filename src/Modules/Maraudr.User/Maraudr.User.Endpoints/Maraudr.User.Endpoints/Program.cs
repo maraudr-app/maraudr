@@ -9,6 +9,7 @@ using Application.UseCases.User.CreateUser;
 using Application.UseCases.User.DeleteUser;
 using Application.UseCases.User.QueryAllUsers;
 using Application.UseCases.User.QueryUser;
+using Application.UseCases.User.QueryUserByEmail;
 using Application.UseCases.User.SearchByNameUser;
 using Application.UseCases.User.UpdateUser;
 using FluentValidation;
@@ -123,6 +124,22 @@ app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
     return Results.Ok();
 });
 
+
+app.MapGet("users/email/{email}", async (string email, IQueryUserByEmailHandler handler) => {
+    if (string.IsNullOrWhiteSpace(email))
+        return Results.BadRequest("L'adresse e-mail est requise");
+
+    try {
+        var user = await handler.HandleAsync(email);
+        return user == null ? Results.NotFound() : Results.Ok(user);
+    }
+    catch (ArgumentException e) {
+        return Results.BadRequest(e.Message);
+    }
+    catch (Exception e) {
+        return Results.Problem(e.Message);
+    }
+});
 
 
 // MANAGER TEAM

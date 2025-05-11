@@ -1,6 +1,7 @@
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Maraudr.User.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace Maraudr.User.Infrastructure;
 

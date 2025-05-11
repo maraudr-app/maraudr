@@ -4,8 +4,8 @@ namespace Maraudr.User.Domain.ValueObjects;
 
 public class ContactInfo 
 {
-    private string Email { get;  set; } = null!;
-    private string PhoneNumber { get;  set; } = null!;
+    public string Email { get; } = null!;
+    private string PhoneNumber { get; } = null!;
 
     public ContactInfo(string email, string phoneNumber)
     {
