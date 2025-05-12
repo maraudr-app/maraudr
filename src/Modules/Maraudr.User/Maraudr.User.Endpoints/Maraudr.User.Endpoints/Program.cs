@@ -43,32 +43,6 @@ if (app.Environment.IsDevelopment())
 }
 
 // USERS
-app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
-    IValidator<CreateUserDto> validator ) => {
-    var result = validator.Validate(user);
-
-    if (!result.IsValid)
-    {
-        var messages = result.Errors
-            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
-        return Results.BadRequest(messages);
-    }
-
-    Guid id;
-    try
-    {
-        id = await handler.HandleAsync(user);
-    }
-    catch (InvalidOperationException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-    catch (Exception e)
-    {
-        return Results.Problem((e.Message));
-    }
-    return Results.Created($"/users/{id}", id);
-});
 
 
 app.MapGet("/users", async (IQueryAllUsersHandler handler) =>
@@ -288,7 +262,7 @@ app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
 
 
 
-// AUTHENTICATION MANAGEMENT
+// AUTHENTICATION 
 
 
 app.MapPost("/auth/login", async (
@@ -311,22 +285,36 @@ app.MapPost("/auth/login", async (
     });
 });
 
-/*app.MapPost("/auth/register", async (
-    [FromBody] RegisterRequestDto request,
-    IAuthService authService,
-    IValidator<RegisterRequestDto> validator) =>
-{
-    var validationResult = validator.Validate(request);
-    if (!validationResult.IsValid)
-        return Results.BadRequest(validationResult.Errors);
+    
+    
+app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
+    IValidator<CreateUserDto> validator ) => {
+    var result = validator.Validate(user);
 
-    var result = await authService.RegisterUserAsync(request);
-    if (!result.Success)
-        return Results.BadRequest(result.Errors);
-        
-    return Results.Created($"/users/{result.UserId}", new { UserId = result.UserId });
+    if (!result.IsValid)
+    {
+        var messages = result.Errors
+            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
+        return Results.BadRequest(messages);
+    }
+
+    Guid id;
+    try
+    {
+        id = await handler.HandleAsync(user);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem((e.Message));
+    }
+    return Results.Created($"/users/{id}", id);
 });
-
+    ;
+/*
 app.MapPost("/auth/refresh", async (
     [FromBody] RefreshTokenRequestDto request,
     IAuthService authService) =>

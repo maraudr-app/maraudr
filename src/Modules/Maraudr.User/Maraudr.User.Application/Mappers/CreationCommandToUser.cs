@@ -1,12 +1,13 @@
 using Application.DTOs.UsersQueriesDtos.Requests;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.ValueObjects.Users;
+using Maraudr.User.Infrastructure.Security;
 
 namespace Application.Mappers;
 
 public static class CreationCommandToUser
 {
-    public static User MapCreationCommandToUser(CreateUserDto createUserDto, AbstractUser manager)
+    public static User MapCreationCommandToUser(CreateUserDto createUserDto, AbstractUser manager,IPasswordManager passwordManager)
     {
         var contact = new ContactInfo(createUserDto.Email, createUserDto.PhoneNumber);
         var address = new Address(createUserDto.Street,
@@ -28,7 +29,10 @@ public static class CreationCommandToUser
             contact,
             address,
             domainLanguages,
-            manager 
+            manager ,
+            passwordManager.HashPassword(createUserDto.Password) 
+            
+            
         );
     }
 }

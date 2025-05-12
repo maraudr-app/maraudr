@@ -10,8 +10,8 @@ public class Manager:AbstractUser
     public List<AbstractUser> Team{set; get; }
     
     public Manager( string firstname,  string lastname, DateTime createdAt,
-                ContactInfo contactInfo, Address address, List<Language> languages,List<AbstractUser> teamMembers)
-                : base(firstname, lastname, createdAt, contactInfo, address, languages)
+                ContactInfo contactInfo, Address address, List<Language> languages,List<AbstractUser> teamMembers,string passwordHash)
+                : base(firstname, lastname, createdAt, contactInfo, address, languages,passwordHash)
     {
         this.Team = teamMembers;
     }

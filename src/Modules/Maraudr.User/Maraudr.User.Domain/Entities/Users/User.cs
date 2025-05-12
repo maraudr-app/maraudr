@@ -12,8 +12,8 @@ namespace Maraudr.User.Domain.Entities.Users
 
         public User(string firstname, string lastname, DateTime createdAt,
             ContactInfo contactInfo, Address address, List<Language> languages,
-            AbstractUser manager)
-            : base( firstname, lastname, createdAt, contactInfo, address, languages)
+            AbstractUser manager, string passwordHash)
+            : base( firstname, lastname, createdAt, contactInfo, address, languages,passwordHash)
         {
             if (!manager.IsUserManager())
             {

@@ -49,10 +49,12 @@ namespace Maraudr.User.Infrastructure.Repositories
         
         public async Task<AbstractUser?> GetByEmailAsync(string email)
         {
+            var lowerEmail = email.ToLower();
             return await _context.Users
                 .AsNoTracking()
-                .Where(u => u.ContactInfo.Email.ToLower() == email.ToLower())
-                .FirstOrDefaultAsync();
+                .ToListAsync() 
+                .ContinueWith(t => t.Result
+                    .FirstOrDefault(u => u.ContactInfo.Email.ToLower() == lowerEmail));
         }
         
     }

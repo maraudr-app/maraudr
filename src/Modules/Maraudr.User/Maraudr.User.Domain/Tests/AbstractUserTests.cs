@@ -21,13 +21,13 @@ namespace Domain
 
         private User CreateUser(string firstName = "John", string lastName = "Doe")
         {
-            var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>());
-            return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager);
+            var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>(),"string");
+            return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
         }
 
         private Manager CreateManager(string firstName = "Manager", string lastName = "Test")
         {
-            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>());
+            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>(),"sting");
         }
 
         [Fact]

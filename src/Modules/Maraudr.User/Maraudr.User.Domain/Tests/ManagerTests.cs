@@ -25,13 +25,13 @@ public class ManagerTests
         List<AbstractUser> team = null)
     {
         return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages,
-            team ?? new List<AbstractUser>());
+            team ?? new List<AbstractUser>(),"sting");
     }
 
     private User CreateUser(string firstName = "John", string lastName = "Doe")
     {
         var manager = CreateManager("Another", "Manager");
-        return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager);
+        return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class ManagerTests
         var teamMembers = new List<AbstractUser> { CreateUser() };
 
         var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages,
-            teamMembers);
+            teamMembers,"sting");
 
         Assert.Equal("Manager", manager.Firstname);
         Assert.Equal("Test", manager.Lastname);

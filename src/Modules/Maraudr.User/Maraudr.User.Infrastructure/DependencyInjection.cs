@@ -1,5 +1,6 @@
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Maraudr.User.Infrastructure.Repositories;
+using Maraudr.User.Infrastructure.Security;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,5 +14,7 @@ public static class DependencyInjection
             options.UseInMemoryDatabase("UserDatabase"));
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPasswordManager, PasswordManager>();
+
     }
 }

@@ -29,6 +29,5 @@ public static class DependencyInjection
         services.AddScoped<ISearchByNameUserHandler, SearchByNameUserHandler>();
         services.AddScoped<IQueryUserByEmailHandler, QueryUserByEmailHandler>();
         services.AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>();
-
     }
 }

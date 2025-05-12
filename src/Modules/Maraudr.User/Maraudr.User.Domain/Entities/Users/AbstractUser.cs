@@ -16,6 +16,7 @@ public abstract class AbstractUser
     public bool IsActive { get;  set; }
     public ContactInfo ContactInfo { get;  set; }
     public Address Address { get;  set; } 
+    public String ? PasswordHash { get; set; }
     
     private bool IsAdmin {
         get;
@@ -30,7 +31,7 @@ public abstract class AbstractUser
 
 
     protected AbstractUser( string firstname, string lastname, DateTime createdAt,
-        ContactInfo contactInfo, Address address,List<Language> languages)
+        ContactInfo contactInfo, Address address,List<Language> languages,string passwordHash)
     {
         Id = new Guid();
         Firstname = firstname;
@@ -41,6 +42,7 @@ public abstract class AbstractUser
         ContactInfo = contactInfo;
         Address = address;
         Languages = languages;
+        PasswordHash = passwordHash;
     }
     protected AbstractUser( Guid id,string firstname, string lastname, DateTime createdAt,
         ContactInfo contactInfo, Address address,List<Language> languages)
@@ -62,6 +64,7 @@ public abstract class AbstractUser
     {
         return Role.Manager == Role;
     }
+    
     // Admin section 
     public bool IsUserAdmin()
     {
