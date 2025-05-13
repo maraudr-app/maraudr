@@ -50,6 +50,6 @@ public class GenerateAccessTokenHandler(IConfiguration configuration): IGenerate
 
     public Task<DateTime> GetAccessTokenExpirationTime()
     {
-        var expirationMinutes = Convert.ToInt32(configuration["JwtSettings:AccessTokenExpirationMinutes"]);
+        var expirationMinutes = Convert.ToInt32(configuration["JWT:AccessTokenExpirationMinutes"]);
         return Task.FromResult(DateTime.UtcNow.AddMinutes(expirationMinutes));    }
 }

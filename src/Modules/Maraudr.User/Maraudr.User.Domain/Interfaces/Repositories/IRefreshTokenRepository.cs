@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Maraudr.Authentication.Domain.Entities;
+﻿using Maraudr.Authentication.Domain.Entities;
+using Maraudr.User.Domain.Entities.Tokens;
 
-namespace Maraudr.Authentication.Domain.Interfaces
+namespace Maraudr.User.Domain.Interfaces.Repositories
 {
-    internal interface IRefreshTokenRepository
+    public interface IRefreshTokenRepository
     {
-        Task<PasswordResetToken> CreateAsync(PasswordResetToken token);
-        Task<PasswordResetToken?> GetByTokenAsync(string token);
-        Task<bool> MarkAsUsedAsync(string token);
+        public Task AddRefreshTokenAsync(RefreshToken refreshToken);
+
+
+        public Task UpdateRefreshTokenAsync(RefreshToken refreshToken);
+
+
+        public Task<RefreshToken?> GetRefreshTokenByTokenAsync(string token);
+
+
+        public Task<List<RefreshToken>> GetActiveRefreshTokensByUserIdAsync(Guid userId);
+
+
+        public Task RevokeAllUserRefreshTokensAsync(Guid userId, string reason = "Révocation par mesure de sécurité");
+
+        public Task DeleteExpiredRefreshTokensAsync();
+
     }
 }

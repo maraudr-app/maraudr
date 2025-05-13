@@ -1,3 +1,5 @@
+using Maraudr.Authentication.Domain.Entities;
+using Maraudr.User.Domain.Entities.Tokens;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.ValueObjects.Users;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,8 @@ public class UserContext : DbContext
 
     public DbSet<AbstractUser> Users { get; set; }
     public DbSet<Manager> Managers { get; set; }
+    public DbSet<RefreshToken?> RefreshTokens { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,6 +40,28 @@ public class UserContext : DbContext
         modelBuilder.Entity<Manager>()
             .Property(m => m.Languages)
             .HasConversion(languageConverter);
+        modelBuilder.Entity<RefreshToken>()
+            .HasKey(r => r.Id);
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.Token)
+            .IsRequired();
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.ExpiresAt)
+            .IsRequired();
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.UserId)
+            .IsRequired();
+        
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne<AbstractUser>() 
+            .WithMany() // Un utilisateur peut avoir plusieurs refresh tokens
+            .HasForeignKey(r => r.UserId) // Clé étrangère
+            .OnDelete(DeleteBehavior.Cascade); 
+    
+        
         
     }
 }

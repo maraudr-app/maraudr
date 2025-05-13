@@ -1,47 +1,42 @@
+using Maraudr.Authentication.Domain.Entities;
+using Maraudr.User.Domain.Entities.Tokens;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Maraudr.User.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(UserContext context) : IUserRepository
     {
-        private readonly UserContext _context;
-
-        public UserRepository(UserContext context)
-        {
-            _context = context;
-        }
-
         public async Task<AbstractUser?> GetByIdAsync(Guid id)
         {
-            return await _context.Users.FindAsync(id);
+            return await context.Users.FindAsync(id);
         }
 
         public async Task<IEnumerable<AbstractUser>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await context.Users.ToListAsync();
         }
 
         public async Task AddAsync(AbstractUser user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(AbstractUser user)
         {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            context.Users.Remove(user);
+            await context.SaveChangesAsync();
         }
         public async Task UpdateAsync(AbstractUser user)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
         }
         public async Task<IEnumerable<AbstractUser>> SearchByNameAsync(string searchTerm)
         {
-             return await _context.Users
+             return await context.Users
                 .Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
                             u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                 .ToListAsync();
@@ -50,11 +45,18 @@ namespace Maraudr.User.Infrastructure.Repositories
         public async Task<AbstractUser?> GetByEmailAsync(string email)
         {
             var lowerEmail = email.ToLower();
-            return await _context.Users
+            return await context.Users
                 .AsNoTracking()
                 .ToListAsync() 
                 .ContinueWith(t => t.Result
                     .FirstOrDefault(u => u.ContactInfo.Email.ToLower() == lowerEmail));
+        }
+        
+        public async Task<RefreshToken?> GetRefreshTokenByUserIdAsync(Guid id)
+        {
+            return await context.RefreshTokens
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.UserId == id);
         }
         
     }

@@ -10,8 +10,8 @@ namespace Application.UseCases.Tokens.Authentication.AuthenticateUser;
 public class AuthenticateUserHandler(
     IUserRepository userRepository
     ,IPasswordManager passwordManager,
-    IGenerateAccessTokenHandler generateAccessTokenHandler
-    //IGenerateRefreshTokenHandler generateRefreshTokenHandler
+    IGenerateAccessTokenHandler generateAccessTokenHandler,
+    IGenerateRefreshTokenHandler generateRefreshTokenHandler
     )
     : IAuthenticateUserHandler
 {
@@ -31,13 +31,12 @@ public class AuthenticateUserHandler(
             return AuthResponse.Failed(["Email ou mot de passe incorrect"]);
         }
 
-        // 4. Générer le token JWT
         var token = await generateAccessTokenHandler.HandleAsync(user);
-       // var refreshToken = await  generateRefreshTokenHandler.HandleAsync(user);
+        var refreshToken = await  generateRefreshTokenHandler.HandleAsync(user);
         var expiresIn = await generateAccessTokenHandler.GetAccessTokenExpirationTime();
 
- //       return AuthResponse.Successful(token,refreshToken,expiresIn);
-        return AuthResponse.Successful(token,"dfdlfdl",2);
+    // return AuthResponse.Successful(token,refreshToken,expiresIn);
+        return AuthResponse.Successful(token,refreshToken,10);
 
         return null;
 

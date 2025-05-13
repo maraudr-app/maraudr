@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Maraudr.Authentication.Domain.Entities;
 
-namespace Maraudr.Authentication.Domain.Entities
+namespace Maraudr.User.Domain.Entities.Tokens
 {
     public class RefreshToken:AbstractToken
     {
@@ -13,7 +14,7 @@ namespace Maraudr.Authentication.Domain.Entities
         public string? RevokedReason { get; private set; }
 
 
-        public RefreshToken(Guid userId, string token, DateTime expiresAt) :
+        public RefreshToken(Guid userId, string token, DateTime expiresAt) : 
             base(userId, token, expiresAt) => IsRevoked = false;
         // Add EF spec
 

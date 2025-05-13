@@ -1,5 +1,8 @@
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
+using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
+using Application.UseCases.Tokens.JwtManagement.GenerateRefreshToken;
+using Application.UseCases.Tokens.JwtManagement.RefreshToken;
 using Application.UseCases.Users.Manager.AddUserToManagersTeam;
 using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
@@ -31,5 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IQueryUserByEmailHandler, QueryUserByEmailHandler>();
         services.AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>();
         services.AddScoped<IGenerateAccessTokenHandler, GenerateAccessTokenHandler>();
+        services.AddScoped<IGenerateRefreshTokenHandler, GenerateRefreshTokenHandler>();
+        services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
     }
 }

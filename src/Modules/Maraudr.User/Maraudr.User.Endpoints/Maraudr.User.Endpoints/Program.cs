@@ -3,6 +3,7 @@ using Application;
 using Application.DTOs.AuthenticationQueriesDto.Requests;
 using Application.DTOs.UsersQueriesDtos.Requests;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
+using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Users.Manager.AddUserToManagersTeam;
 using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
@@ -314,22 +315,21 @@ app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler,
     return Results.Created($"/users/{id}", id);
 });
     ;
-/*
 app.MapPost("/auth/refresh", async (
-    [FromBody] RefreshTokenRequestDto request,
-    IAuthService authService) =>
+    [FromBody] string request,
+    IRefreshTokenHandler handler) =>
 {
-    var result = await authService.RefreshTokenAsync(request.RefreshToken);
+    var result = await handler.HandleAsync(request);
     if (!result.Success)
-        return Results.Unauthorized();
+        return Results.Problem("Token invalide ou expiré, veuilelz vous reconnecter");
         
     return Results.Ok(new { 
         AccessToken = result.AccessToken,
-        RefreshToken = result.RefreshToken,
-        ExpiresIn = result.ExpiresIn
+        RefreshToken = request,
+        ExpiresIn = result.AccessToken
     });
 });
-
+/*
 app.MapPost("/auth/logout", [Authorize] async (
     ClaimsPrincipal user,
     IAuthService authService) =>
