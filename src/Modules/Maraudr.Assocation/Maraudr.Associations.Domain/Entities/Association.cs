@@ -2,16 +2,40 @@
 
 namespace Maraudr.Associations.Domain.Entities;
 
-public class Association(string name, string city, string country, List<Guid> members, SiretNumber? siret = null)
+public class Association
 {
-    private Guid Id { get; } = Guid.NewGuid();
-    public DateTime CreationDate { get; } = DateTime.Now;
-    public List<Guid> Members { get; } = members;
-    public string Country { get; } = country ?? throw new ArgumentNullException(nameof(country));
-    public string City { get; } = city ?? throw new ArgumentNullException(nameof(city));
-    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
-    public SiretNumber? Siret { get; } = siret;
-    public bool IsValidSiret { get; } = siret is not null;
+    public Guid Id { get; init; } = Guid.NewGuid();
+    public List<Guid> Members { get; init; } = [];
+    public string? Country { get; init; }
+    public string? City { get; init; }
+    public string Name { get; init; }
+    public SiretNumber? Siret { get; init; }
+    public bool IsVerified { get; set; }
+
+    public Association(string name, string city, string country)
+    {
+        Country = country;
+        City = city;
+        Name = name ?? throw new ArgumentNullException(nameof(name), "Un nom d'association est requis");
+    }
+    
+    public Association(string name, string city, string country, SiretNumber? siret)
+    {
+        Country = country;
+        City = city;
+        Name = name ?? throw new ArgumentNullException(nameof(name), "Un nom d'association est requis");
+        Siret = siret;
+    }
+
+    public void ValidateAssociationVerification()
+    {
+        IsVerified = true;
+    }
+
+    public void AddMembers(List<Guid> members)
+    {
+        Members.AddRange(members);
+    }
 
     private bool Equals(Association other)
     {

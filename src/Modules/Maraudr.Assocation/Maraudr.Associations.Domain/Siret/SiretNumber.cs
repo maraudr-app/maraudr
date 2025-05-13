@@ -2,9 +2,10 @@
 
 namespace Maraudr.Associations.Domain.Siret;
 
-public readonly struct SiretNumber
+public sealed class SiretNumber
 {
-    public string Value { get; }
+    public string Value { get; } = null!;
+    private SiretNumber() {}
 
     public SiretNumber(string value)
     {
@@ -37,19 +38,7 @@ public readonly struct SiretNumber
         return sum % 10 == 0;
     }
 
-    private bool Equals(SiretNumber other)
-    {
-        return Value == other.Value;
-    }
+    public override bool Equals(object? obj) => obj is SiretNumber other && Value == other.Value;
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        return obj.GetType() == GetType() && Equals((SiretNumber)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return Value.GetHashCode();
-    }
+    public override int GetHashCode() => Value.GetHashCode();
 }
