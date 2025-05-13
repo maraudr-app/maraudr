@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Q3yE8VQG/MQVHa/HhG587yyZRdhnIfEFOjs41EnfWcU=",
+  "Source": "Maraudr.Associations.Endpoints",
+  "BasePath": "_content/Maraudr.Associations.Endpoints",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

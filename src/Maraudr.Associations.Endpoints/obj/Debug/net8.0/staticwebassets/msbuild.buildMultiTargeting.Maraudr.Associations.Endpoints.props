@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Maraudr.Associations.Endpoints.props" />
+</Project>
