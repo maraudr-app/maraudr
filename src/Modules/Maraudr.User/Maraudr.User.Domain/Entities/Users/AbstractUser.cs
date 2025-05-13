@@ -16,7 +16,7 @@ public abstract class AbstractUser
     public bool IsActive { get;  set; }
     public ContactInfo ContactInfo { get;  set; }
     public Address Address { get;  set; } 
-    public String ? PasswordHash { get; set; }
+    public string PasswordHash { get; set; }
     
     private bool IsAdmin {
         get;
@@ -143,8 +143,8 @@ public abstract class AbstractUser
         if (email != null || phoneNumber != null)
         {
             var contactInfo = new ContactInfo(
-                email ?? ContactInfo.GetEmail(),
-                phoneNumber ?? ContactInfo.GetPhoneNumber()
+                email ?? ContactInfo.Email,
+                phoneNumber ?? ContactInfo.PhoneNumber
             );
             ContactInfo = contactInfo;
         }

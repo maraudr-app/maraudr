@@ -276,7 +276,7 @@ app.MapPost("/auth/login", async (
     
     var result = await handler.HandleAsync(request);
     if (!result.Success)
-        return Results.Unauthorized();
+        return Results.BadRequest(result.Errors);
         
     return Results.Ok(new { 
         AccessToken = result.AccessToken,
