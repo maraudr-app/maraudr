@@ -36,5 +36,6 @@ public static class DependencyInjection
         services.AddScoped<IGenerateAccessTokenHandler, GenerateAccessTokenHandler>();
         services.AddScoped<IGenerateRefreshTokenHandler, GenerateRefreshTokenHandler>();
         services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
+
     }
 }

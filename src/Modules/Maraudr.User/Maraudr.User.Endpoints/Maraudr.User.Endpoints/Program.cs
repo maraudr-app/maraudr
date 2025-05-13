@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text;
 using Application;
 using Application.DTOs.AuthenticationQueriesDto.Requests;
 using Application.DTOs.UsersQueriesDtos.Requests;
@@ -19,8 +20,11 @@ using Maraudr.User.Endpoints;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 // TODO : many endpoints require auth -> doit être impléménté assez vite 
 // TODO : verifeir unicité via email aussi & numéro de telephone aussi  
@@ -34,16 +38,41 @@ builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddValidation();
 
-var app = builder.Build();
 
+
+//todo : dependency injection 
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        var jwtSection = builder.Configuration.GetSection("JWT");
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSection["Secret"])),
+            ValidateIssuer = true,
+            ValidIssuer = jwtSection["ValidIssuer"],
+            ValidateAudience = true,
+            ValidAudience = jwtSection["ValidAudience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 
 }
-
-// USERS
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapGet("/users", async (IQueryAllUsersHandler handler) =>
@@ -329,6 +358,14 @@ app.MapPost("/auth/refresh", async (
         ExpiresIn = result.AccessToken
     });
 });
+
+
+
+app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
+{
+    var claims = user.Claims.Select(c => new { Type = c.Type, Value = c.Value });
+    return Results.Ok(claims);
+});
 /*
 app.MapPost("/auth/logout", [Authorize] async (
     ClaimsPrincipal user,
@@ -340,11 +377,7 @@ app.MapPost("/auth/logout", [Authorize] async (
 });
 
 // Vérification du token
-app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
-{
-    var claims = user.Claims.Select(c => new { Type = c.Type, Value = c.Value });
-    return Results.Ok(claims);
-});
+
 
 // Authentification externe
 app.MapGet("/auth/google", async (HttpContext context) =>
