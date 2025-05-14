@@ -1,10 +1,11 @@
 ﻿using Maraudr.Associations.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Maraudr.Associations.Infrastructure.Repository;
 
 public class AssocationsRepository(AssociationsContext context) : IAssociations
 {
-    public async Task<Association> RegisterAssociation(Association association)
+    public async Task<Association?> RegisterAssociation(Association? association)
     {
         await context.Associations.AddAsync(association);
         await context.SaveChangesAsync();
@@ -36,4 +37,9 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
         return asso;
     }
 
+    public async Task<Association?> GetAssociationBySiret(string siret)
+    {
+        var association = await context.Associations.Where(s => s!.Siret!.Value == siret).FirstOrDefaultAsync();
+        return association;
+    }
 }

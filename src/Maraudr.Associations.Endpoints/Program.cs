@@ -31,11 +31,16 @@ app.MapPost("/association", async (CreateAssociationCommand asso, ICreateAssocia
     return Results.Ok(new { Id = result});
 });
 
-app.MapGet("/association/verify", async (string siret, IHttpClientFactory factory) =>
+app.MapGet("/association/verify", async (string siret, IVerifyAssociationBySiret handler, IHttpClientFactory factory) =>
 {
-    var fetch = new VerifyAssociationBySiret(factory);
-    var result = await fetch.HandleAsync(siret);
+    var result = await handler.HandleAsync(siret, factory);
     return Results.Ok(result);
+});
+
+app.MapDelete("/association", async (Guid id, IUnregisterAssociation handler) =>
+{
+    await handler.HandleAsync(id);
+    return Results.Ok();    
 });
 
 app.UseHttpsRedirection();

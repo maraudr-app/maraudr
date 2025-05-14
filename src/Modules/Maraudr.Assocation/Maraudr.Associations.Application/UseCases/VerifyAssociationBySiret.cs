@@ -1,13 +1,34 @@
-﻿namespace Maraudr.Associations.Application;
+﻿using Maraudr.Associations.Domain.Entities;
 
-public class VerifyAssociationBySiret(IHttpClientFactory factory)
+namespace Maraudr.Associations.Application.UseCases;
+
+public interface IVerifyAssociationBySiret
 {
-    public async Task<bool> HandleAsync(string siret)
+    Task<bool> HandleAsync(string siret, IHttpClientFactory factory);
+}
+
+public class VerifyAssociationBySiret(IAssociations repository) : IVerifyAssociationBySiret
+{
+    public async Task<bool> HandleAsync(string siret, IHttpClientFactory factory)
     {
         using var client =  factory.CreateClient("siret");
-        var response = await client.GetAsync(siret);
+        using var response = await client.GetAsync(siret);
+        
         Console.WriteLine(response.StatusCode);
         Console.WriteLine(await response.Content.ReadAsStringAsync());
-        return response.IsSuccessStatusCode;
+        
+        var content =  await response.Content.ReadAsStringAsync();
+
+        var association = await repository.GetAssociationBySiret(siret);
+
+        if (!content.Contains("statusCode: 404") && association != null)
+        {
+            association.IsVerified = true;
+            await repository.UpdateAssociation(association);
+            return true;
+        }
+
+        return false;
+
     }
 }

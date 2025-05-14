@@ -2,8 +2,9 @@
 
 public interface IAssociations
 {
-    Task<Association> RegisterAssociation(Association association);
+    Task<Association?> RegisterAssociation(Association? association);
     Task UnregisterAssociation(Guid id);
     Task<Association?> GetAssociation(Guid id);
     Task<Association?> UpdateAssociation(Association association);
+    Task<Association?> GetAssociationBySiret(string siret);
 }

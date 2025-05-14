@@ -15,5 +15,7 @@ public static class DependencyInjection
 
         services.AddScoped<ICreateAssociationHandler, CreateAssociation>();
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
+        services.AddScoped<IVerifyAssociationBySiret, VerifyAssociationBySiret>();
+        services.AddScoped<IUnregisterAssociation, UnregisterAssociation>();
     }
 }

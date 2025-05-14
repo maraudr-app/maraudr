@@ -1,4 +1,5 @@
-﻿using Maraudr.Associations.Domain.Entities;
+﻿using Maraudr.Associations.Domain;
+using Maraudr.Associations.Domain.Entities;
 using Maraudr.Associations.Domain.Siret;
 
 namespace Maraudr.Associations.Application.UseCases;
@@ -12,10 +13,16 @@ public record CreateAssociationCommand(string Name, string City, string Country,
 
 public class CreateAssociation(IAssociations associations) : ICreateAssociationHandler
 {
-    public async Task<Guid> HandleAsync(CreateAssociationCommand association)
+    public async Task<Guid> HandleAsync(CreateAssociationCommand command)
     {
-        var asso = !string.IsNullOrWhiteSpace(association.Siret) ? new Association(association.Name, association.City, association.Country, new SiretNumber(association.Siret)) : new Association(association.Name, association.City, association.Country);
-        var result = await associations.RegisterAssociation(asso);
+        AssociationCreator factory = !string.IsNullOrWhiteSpace(command.Siret)
+            ? new AssociationWithSiretCreator(command.Name, command.City, command.Country, new SiretNumber(command.Siret))
+            : new BasicAssociationCreator(command.Name, command.City, command.Country);
+
+        var association = factory.CreateAssociation();
+        
+        var result = await associations.RegisterAssociation(association);
+        
         return result.Id;
     }
 }
