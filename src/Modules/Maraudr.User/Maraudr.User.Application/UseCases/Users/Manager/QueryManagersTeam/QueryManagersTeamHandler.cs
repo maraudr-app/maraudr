@@ -1,3 +1,4 @@
+using Application.Security;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Maraudr.User.Domain.ValueObjects.Users;
@@ -7,9 +8,15 @@ namespace Application.UseCases.Users.Manager.QueryManagersTeam;
 
 public class QueryManagersTeamHandler(IUserRepository repository) : IQueryManagersTeamHandler
 {
-    public async Task<IEnumerable<AbstractUser>> HandleAsync(Guid id)
+    public async Task<IEnumerable<AbstractUser>> HandleAsync(Guid id,Guid currentUserId)
     {
+        var currentUser = await repository.GetByIdAsync(currentUserId);
+        if(SecurityChecks.CheckIfUsersMatch(id, currentUserId) || SecurityChecks.CheckIfUserIsAdmin(currentUser))
+        {
+            throw new InvalidOperationException("Internal error : Can't update user");
+        }
         var user = await repository.GetByIdAsync(id);
+      
         if (user == null)
         {
             throw new ArgumentException($"User with ID {id} does not exist.");

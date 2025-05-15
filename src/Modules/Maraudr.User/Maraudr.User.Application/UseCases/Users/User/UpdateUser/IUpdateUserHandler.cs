@@ -4,6 +4,6 @@ namespace Application.UseCases.Users.User.UpdateUser;
 
 public interface IUpdateUserHandler
 {
-    Task<Guid> HandleAsync(Guid id, UpdateUserDto updateUserDto);
+    Task<Guid> HandleAsync(Guid id, UpdateUserDto updateUserDto, Guid currentUserId);
 
 }

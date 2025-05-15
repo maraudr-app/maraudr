@@ -4,6 +4,6 @@ namespace Application.UseCases.Users.User.QueryUserByEmail;
 
 public interface IQueryUserByEmailHandler
 {
-    public Task<AbstractUser?> HandleAsync(string email);
+    public Task<AbstractUser?> HandleAsync(string email,string currentUserEmail);
 
 }

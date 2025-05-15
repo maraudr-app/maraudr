@@ -21,6 +21,7 @@ namespace Maraudr.User.Infrastructure.Repositories
         public async Task AddAsync(AbstractUser user)
         {
             await context.Users.AddAsync(user);
+            
             await context.SaveChangesAsync();
         }
 
@@ -45,11 +46,10 @@ namespace Maraudr.User.Infrastructure.Repositories
         public async Task<AbstractUser?> GetByEmailAsync(string email)
         {
             var lowerEmail = email.ToLower();
+    
             return await context.Users
                 .AsNoTracking()
-                .ToListAsync() 
-                .ContinueWith(t => t.Result
-                    .FirstOrDefault(u => u.ContactInfo.Email.ToLower() == lowerEmail));
+                .FirstOrDefaultAsync(u => u.ContactInfo.Email.ToLower() == lowerEmail);
         }
         
         public async Task<RefreshToken?> GetRefreshTokenByUserIdAsync(Guid id)

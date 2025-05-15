@@ -4,5 +4,5 @@ namespace Application.UseCases.Users.Manager.QueryManagersTeam;
 
 public interface IQueryManagersTeamHandler
 {
-    public Task<IEnumerable<AbstractUser>> HandleAsync(Guid id);
+    public Task<IEnumerable<AbstractUser>> HandleAsync(Guid id,Guid currentUserId);
 }

@@ -18,6 +18,7 @@ using Application.UseCases.Users.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Endpoints;
 using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Endpoints.Identity;
 using Maraudr.User.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -75,18 +76,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.MapGet("/users", async (IQueryAllUsersHandler handler) =>
+app.MapGet("/users", [Authorize] async (IQueryAllUsersHandler handler) =>
 {
     var users = await handler.HandleAsync();
     return Results.Ok(users);
 });
 
-app.MapGet("/users/{id:guid}", async (Guid id, IQueryUserHandler handler ) => {
+app.MapGet("/users/{id:guid}", [Authorize] async (Guid id, IQueryUserHandler handler ) => {
     var user = await handler.HandleAsync(id);
     return user == null ? Results.NotFound() : Results.Ok(user);
 });
 
-app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
+//update user info
+app.MapPut("/users/{id:guid}", [Authorize] async (ClaimsPrincipal userClaim,Guid id, UpdateUserDto user,
     IUpdateUserHandler handler, IValidator<UpdateUserDto> validator) => {
     var result = validator.Validate(user);
 
@@ -96,10 +98,12 @@ app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
             .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
         return Results.BadRequest(messages);
     }
+
+    var currentUserId = userClaim.GetUserId();
     
     try
     {
-        await handler.HandleAsync(id, user);
+        await handler.HandleAsync(id, user,currentUserId);
     }
     catch (InvalidOperationException e)
     {
@@ -113,11 +117,12 @@ app.MapPut("/users/{id:guid}", async (Guid id, UpdateUserDto user,
     return Results.Accepted($"/users/{id}", new { id });
 });
 
-app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
+app.MapDelete("/users/{id:guid}",[Authorize] async (ClaimsPrincipal userClaim, Guid id,IDeleteUserHandler handler) =>
 {
+    var currentUserId = userClaim.GetUserId();
     try
     {
-        await handler.HandleAsync(id);
+        await handler.HandleAsync(id, currentUserId);
     }
     catch (InvalidOperationException e)
     {
@@ -131,12 +136,13 @@ app.MapDelete("/users/{id:guid}", async (Guid id,IDeleteUserHandler handler) =>
 });
 
 
-app.MapGet("users/email/{email}", async (string email, IQueryUserByEmailHandler handler) => {
+app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,string email, IQueryUserByEmailHandler handler) => {
     if (string.IsNullOrWhiteSpace(email))
         return Results.BadRequest("L'adresse e-mail est requise");
-
+    var currentUserEmail = userClaim.GetEmail();
+    
     try {
-        var user = await handler.HandleAsync(email);
+        var user = await handler.HandleAsync(email,currentUserEmail);
         return user == null ? Results.NotFound() : Results.Ok(user);
     }
     catch (ArgumentException e) {
@@ -149,21 +155,16 @@ app.MapGet("users/email/{email}", async (string email, IQueryUserByEmailHandler 
 
 
 // MANAGER TEAM
-app.MapGet("/managers/team", async (
-        IQueryManagersTeamHandler handler,
+app.MapGet("/managers/{managerGuid:guid}/team", async (
+Guid managerGuid, IQueryManagersTeamHandler handler,
         ClaimsPrincipal currentUser) =>
     {
-        var currentUserId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-    
-        if (string.IsNullOrEmpty(currentUserId) || !Guid.TryParse(currentUserId, out var managerGuid))
-        {
-            return Results.Unauthorized();
-        }
+        var currentUserId = currentUser.GetUserId();
     
         IEnumerable<AbstractUser> team; 
         try
         {
-            team = await handler.HandleAsync(managerGuid);
+            team = await handler.HandleAsync(managerGuid,currentUserId);
         }
         catch (InvalidOperationException e)
         {
@@ -178,20 +179,16 @@ app.MapGet("/managers/team", async (
     .RequireAuthorization(); 
 
 
-app.MapPost("/managers/team/add-user", async (
+app.MapPost("/managers/team/add-user", [Authorize] async (
+        ClaimsPrincipal currentUser,
         [FromBody] UserIdRequest request, 
         IAddUserToManagersTeamHandler handler,
         ClaimsPrincipal user) =>
     {
-        var managerId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-    
-        if (string.IsNullOrEmpty(managerId) || !Guid.TryParse(managerId, out var managerGuid))
-        {
-            return Results.Unauthorized();
-        }
+        var managerId = currentUser.GetUserId();     
         try
         {
-            await handler.HandleAsync(managerGuid, request.UserId);
+            await handler.HandleAsync(managerId, request.UserId);
             return Results.Ok();
         }
         catch (ArgumentException ex)

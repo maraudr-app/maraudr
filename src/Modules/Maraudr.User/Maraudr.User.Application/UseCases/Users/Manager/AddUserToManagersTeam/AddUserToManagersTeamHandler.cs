@@ -24,9 +24,9 @@ public class AddUserToManagersTeamHandler(IUserRepository repository):IAddUserTo
             throw new ArgumentException($"User with ID {id} does not exist.");
             
         }
-        if (manager.Role != Role.Manager)
+        if (manager.Role != Role.Manager || manager.IsUserAdmin())
         {
-            throw new InvalidOperationException($"User with ID {id} is not a manager.");
+            throw new InvalidOperationException($"User with ID {id} doesn't have the rights to add a user to his team.");
         }
 
         var cManager = (Maraudr.User.Domain.Entities.Users.Manager)manager;

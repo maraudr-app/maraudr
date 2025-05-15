@@ -7,7 +7,7 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(UserContext context)
     {
-        if (!context.Managers.Any())
+        if (!context.Users.Any())
         {
             var managers = new List<Manager>
             {
@@ -25,7 +25,7 @@ public static class DbSeeder
                 )
             };
 
-            context.Managers.AddRange(managers);
+            context.Users.AddRange(managers);
             await context.SaveChangesAsync();
         }
     }

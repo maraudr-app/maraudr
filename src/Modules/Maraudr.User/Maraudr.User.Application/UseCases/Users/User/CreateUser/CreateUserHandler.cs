@@ -12,20 +12,16 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
 
     public async Task<Guid> HandleAsync(CreateUserDto createUserDto)
     {
-        if(repository.GetByEmailAsync(createUserDto.Email).Result != null)
+        if(await repository.GetByEmailAsync(createUserDto.Email) != null)
         {
             throw new InvalidOperationException($"L'email {createUserDto.Email} est déjà utilisé.");
         }
-        
         if (createUserDto.IsManager)
         {
             var manager = CreationCommandToManager.MapCreationCommandToManager(createUserDto,passwordManager);
             await repository.AddAsync(manager);
             return manager.Id;
-        }
-        
-        else
-        {
+        }else{
             
             if (!createUserDto.ManagerId.HasValue)
             { 
@@ -38,6 +34,10 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             }
 
             var user = CreationCommandToUser.MapCreationCommandToUser(createUserDto,manager,passwordManager);
+            if (user == null)
+            {
+                throw new InvalidOperationException("Erreur lors de la création de l'utilisateur.");
+            }
             await repository.AddAsync(user);
             return user.Id;
         }
