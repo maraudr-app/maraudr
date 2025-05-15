@@ -10,7 +10,7 @@ public class QueryUserByEmailHandler(IUserRepository repository): IQueryUserByEm
     {
         var currentUser = await repository.GetByEmailAsync(email);
         
-        if(SecurityChecks.CheckIfEmailsMatch(email, currentUserEmail) || SecurityChecks.CheckIfUserIsAdmin(currentUser))
+        if(!SecurityChecks.CheckIfEmailsMatch(email, currentUserEmail) && !SecurityChecks.CheckIfUserIsAdmin(currentUser))
         {
             throw new InvalidOperationException("Internal error : Can't update user");
         }

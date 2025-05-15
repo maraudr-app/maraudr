@@ -7,7 +7,7 @@ public class Manager:AbstractUser
     
     
     public override Role Role { get; protected set; } = Role.Manager;
-    public List<AbstractUser> Team{set; get; }
+    public List<AbstractUser> Team { set; get; } = [];
     
     public Manager( string firstname,  string lastname, DateTime createdAt,
                 ContactInfo contactInfo, Address address, List<Language> languages,List<AbstractUser> teamMembers,string passwordHash)

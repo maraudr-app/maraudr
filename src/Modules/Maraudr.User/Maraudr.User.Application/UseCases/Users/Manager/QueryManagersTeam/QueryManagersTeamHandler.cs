@@ -11,10 +11,7 @@ public class QueryManagersTeamHandler(IUserRepository repository) : IQueryManage
     public async Task<IEnumerable<AbstractUser>> HandleAsync(Guid id,Guid currentUserId)
     {
         var currentUser = await repository.GetByIdAsync(currentUserId);
-        if(SecurityChecks.CheckIfUsersMatch(id, currentUserId) || SecurityChecks.CheckIfUserIsAdmin(currentUser))
-        {
-            throw new InvalidOperationException("Internal error : Can't update user");
-        }
+      
         var user = await repository.GetByIdAsync(id);
       
         if (user == null)
@@ -24,6 +21,10 @@ public class QueryManagersTeamHandler(IUserRepository repository) : IQueryManage
         if (user.Role != Role.Manager)
         {
             throw new InvalidOperationException($"User with ID {id} is not a manager.");
+        }
+        if(!SecurityChecks.CheckIfUsersMatch(id, currentUserId) && !SecurityChecks.CheckIfUserIsAdmin(currentUser)  )
+        {
+            throw new InvalidOperationException("Internal error : Can't query managers team user");
         }
         var manager = (Maraudr.User.Domain.Entities.Users.Manager)user;
         return manager.Team;

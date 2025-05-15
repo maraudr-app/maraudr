@@ -1,3 +1,4 @@
+using Application.Security;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 
@@ -7,6 +8,8 @@ public class QueryAllUsersHandler(IUserRepository repository):IQueryAllUsersHand
 {
     public async Task<IEnumerable<AbstractUser>> HandleAsync()
     {
+        
+      
         return await repository.GetAllAsync();
      
     }

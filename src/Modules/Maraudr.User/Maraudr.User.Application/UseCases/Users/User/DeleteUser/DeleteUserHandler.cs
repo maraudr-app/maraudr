@@ -9,7 +9,7 @@ public class DeleteUserHandler(IUserRepository repository): IDeleteUserHandler
     {
         var currentUser = await repository.GetByIdAsync(currentUserId);
 
-        if(SecurityChecks.CheckIfUsersMatch(id, currentUserId) || SecurityChecks.CheckIfUserIsAdmin(currentUser))
+        if(!SecurityChecks.CheckIfUsersMatch(id, currentUserId) && !SecurityChecks.CheckIfUserIsAdmin(currentUser))
         {
             throw new InvalidOperationException("Internal error : Can't delete user");
         }

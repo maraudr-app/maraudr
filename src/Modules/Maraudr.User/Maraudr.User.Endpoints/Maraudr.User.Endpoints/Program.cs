@@ -88,6 +88,7 @@ app.MapGet("/users/{id:guid}", [Authorize] async (Guid id, IQueryUserHandler han
 });
 
 //update user info
+//tésté
 app.MapPut("/users/{id:guid}", [Authorize] async (ClaimsPrincipal userClaim,Guid id, UpdateUserDto user,
     IUpdateUserHandler handler, IValidator<UpdateUserDto> validator) => {
     var result = validator.Validate(user);
@@ -116,7 +117,7 @@ app.MapPut("/users/{id:guid}", [Authorize] async (ClaimsPrincipal userClaim,Guid
     }
     return Results.Accepted($"/users/{id}", new { id });
 });
-
+//tésté
 app.MapDelete("/users/{id:guid}",[Authorize] async (ClaimsPrincipal userClaim, Guid id,IDeleteUserHandler handler) =>
 {
     var currentUserId = userClaim.GetUserId();
@@ -135,10 +136,12 @@ app.MapDelete("/users/{id:guid}",[Authorize] async (ClaimsPrincipal userClaim, G
     return Results.Ok();
 });
 
+// doesnt work yet
 
 app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,string email, IQueryUserByEmailHandler handler) => {
     if (string.IsNullOrWhiteSpace(email))
         return Results.BadRequest("L'adresse e-mail est requise");
+    
     var currentUserEmail = userClaim.GetEmail();
     
     try {
@@ -155,7 +158,7 @@ app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,s
 
 
 // MANAGER TEAM
-app.MapGet("/managers/{managerGuid:guid}/team", async (
+app.MapGet("/managers/{managerGuid:guid}/team", [Authorize] async (
 Guid managerGuid, IQueryManagersTeamHandler handler,
         ClaimsPrincipal currentUser) =>
     {

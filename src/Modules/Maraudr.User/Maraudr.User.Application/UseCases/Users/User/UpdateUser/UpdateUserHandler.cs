@@ -8,7 +8,7 @@ public class UpdateUserHandler(IUserRepository repository):IUpdateUserHandler
     public async Task<Guid> HandleAsync(Guid id, UpdateUserDto updateUserDto,Guid currentUserId)
     {
         var currentUser = await repository.GetByIdAsync(currentUserId);
-        if(SecurityChecks.CheckIfUsersMatch(id, currentUserId) || SecurityChecks.CheckIfUserIsAdmin(currentUser))
+        if(!SecurityChecks.CheckIfUsersMatch(id, currentUserId) && !SecurityChecks.CheckIfUserIsAdmin(currentUser))
         {
             throw new InvalidOperationException("Internal error : Can't update user");
         }
