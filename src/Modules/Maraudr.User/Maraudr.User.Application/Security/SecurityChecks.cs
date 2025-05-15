@@ -6,6 +6,7 @@ public static class SecurityChecks
 {
     public static bool CheckIfUserIsAdmin(AbstractUser user)
     {
+        ArgumentNullException.ThrowIfNull(user);
         return user.IsUserAdmin();
     }
     

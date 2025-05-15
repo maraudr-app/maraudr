@@ -10,7 +10,12 @@ namespace Maraudr.User.Infrastructure.Repositories
     {
         public async Task<AbstractUser?> GetByIdAsync(Guid id)
         {
-            return await context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
+            if (user is Manager)
+            {
+                await context.Entry(user).Collection("Team").LoadAsync();
+            }
+            return user;
         }
 
         public async Task<IEnumerable<AbstractUser>> GetAllAsync()

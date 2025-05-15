@@ -23,6 +23,11 @@ public class UserContext : DbContext
             .HasDiscriminator<string>("UserType")
             .HasValue<Manager>("Manager")
             .HasValue<Domain.Entities.Users.User>("User");
+        
+        modelBuilder.Entity<Manager>()
+            .HasMany<AbstractUser>("Team")
+            .WithOne()
+            .OnDelete(DeleteBehavior.NoAction);
         // --- Value Objects ---
         modelBuilder.Entity<AbstractUser>().OwnsOne(m => m.Address);
         modelBuilder.Entity<AbstractUser>().OwnsOne(m => m.ContactInfo);

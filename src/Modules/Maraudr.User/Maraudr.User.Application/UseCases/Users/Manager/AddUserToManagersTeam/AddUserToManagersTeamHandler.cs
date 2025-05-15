@@ -32,7 +32,7 @@ public class AddUserToManagersTeamHandler(IUserRepository repository):IAddUserTo
         var cManager = (Maraudr.User.Domain.Entities.Users.Manager)manager;
         
         cManager.AddMemberToTeam(user);
-        await repository.UpdateAsync(manager);
+        await repository.UpdateAsync(cManager);
        
     }
 }

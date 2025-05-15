@@ -32,6 +32,7 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             {
                 throw new InvalidOperationException($"Le manager avec l'ID {createUserDto.ManagerId} n'existe pas.");
             }
+            
 
             var user = CreationCommandToUser.MapCreationCommandToUser(createUserDto,manager,passwordManager);
             if (user == null)
@@ -39,6 +40,9 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
                 throw new InvalidOperationException("Erreur lors de la création de l'utilisateur.");
             }
             await repository.AddAsync(user);
+            var cManager = (Maraudr.User.Domain.Entities.Users.Manager)manager;
+            cManager.AddMemberToTeam(user);
+            await repository.UpdateAsync(cManager);
             return user.Id;
         }
         
