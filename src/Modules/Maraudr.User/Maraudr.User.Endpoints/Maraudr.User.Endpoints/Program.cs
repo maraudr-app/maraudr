@@ -182,16 +182,16 @@ Guid managerGuid, IQueryManagersTeamHandler handler,
     .RequireAuthorization(); 
 
 
-app.MapPost("/managers/team/add-user", [Authorize] async (
-        ClaimsPrincipal currentUser,
+app.MapPost("/managers/team/add-user/{managerId:guid}", [Authorize] async (
+Guid managerId, ClaimsPrincipal currentUser,
         [FromBody] UserIdRequest request, 
         IAddUserToManagersTeamHandler handler,
         ClaimsPrincipal user) =>
     {
-        var managerId = currentUser.GetUserId();     
+        var currentUserId = currentUser.GetUserId();     
         try
         {
-            await handler.HandleAsync(managerId, request.UserId);
+            await handler.HandleAsync(managerId,currentUserId, request.UserId);
             return Results.Ok();
         }
         catch (ArgumentException ex)
