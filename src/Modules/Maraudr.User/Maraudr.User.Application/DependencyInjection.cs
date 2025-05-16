@@ -10,6 +10,7 @@ using Application.UseCases.Users.User.CreateUser;
 using Application.UseCases.Users.User.DeleteUser;
 using Application.UseCases.Users.User.LogoutUser;
 using Application.UseCases.Users.User.QueryAllUsers;
+using Application.UseCases.Users.User.QueryConnectedUsers;
 using Application.UseCases.Users.User.QueryUser;
 using Application.UseCases.Users.User.QueryUserByEmail;
 using Application.UseCases.Users.User.SearchByNameUser;
@@ -38,6 +39,7 @@ public static class DependencyInjection
         services.AddScoped<IGenerateRefreshTokenHandler, GenerateRefreshTokenHandler>();
         services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
         services.AddScoped<ILogoutUserHandler, LogoutUserHandler>();
+        services.AddScoped<IQueryConnectedUsersHandler, QueryConnectedUsersHandler>();
 
     }
 }

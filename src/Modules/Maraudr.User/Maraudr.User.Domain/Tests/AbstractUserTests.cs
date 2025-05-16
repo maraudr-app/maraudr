@@ -40,7 +40,7 @@ namespace Domain
             Assert.Equal("John", user.Firstname);
             Assert.Equal("Doe", user.Lastname);
             Assert.Equal(_createdAt, user.CreatedAt);
-            Assert.True(user.IsActive);
+            Assert.False(user.IsActive);
             Assert.Equal(_validContactInfo, user.ContactInfo);
             Assert.Equal(_validAddress, user.Address);
             Assert.Equal(_validLanguages, user.Languages);

@@ -45,7 +45,7 @@ public class ManagerTests
         Assert.Equal("Manager", manager.Firstname);
         Assert.Equal("Test", manager.Lastname);
         Assert.Equal(_createdAt, manager.CreatedAt);
-        Assert.True(manager.IsActive);
+        Assert.False(manager.IsActive);
         Assert.Equal(_validContactInfo, manager.ContactInfo);
         Assert.Equal(_validAddress, manager.Address);
         Assert.Equal(_validLanguages, manager.Languages);

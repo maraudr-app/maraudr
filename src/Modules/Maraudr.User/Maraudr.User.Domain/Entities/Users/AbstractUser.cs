@@ -38,7 +38,7 @@ public abstract class AbstractUser
         Lastname = lastname;
         LastLoggedIn = DateTime.Now;
         CreatedAt = createdAt;
-        IsActive = true;
+        IsActive = false;
         ContactInfo = contactInfo;
         Address = address;
         Languages = languages;
@@ -166,7 +166,18 @@ public abstract class AbstractUser
         }
         
     }
-    
+
+    public void SetUserStatus(bool isConnected)
+    {
+        if (isConnected)
+        {
+            LastLoggedIn = DateTime.Now;
+
+        }
+
+        IsActive = isConnected;
+    }
+
 
     public override bool Equals(object? obj)
     {

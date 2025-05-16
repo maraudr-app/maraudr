@@ -9,12 +9,16 @@
         public async Task HandleAsync(Guid currentUserId)
         {
             var refreshTokens = await refreshRepository.GetActiveRefreshTokensByUserIdAsync(currentUserId);
-            repository.GetByIdAsync(currentUserId).Result.IsActive = false;
+            var currentUser = await repository.GetByIdAsync(currentUserId);
+            currentUser.SetUserStatus(false);
+            await repository.UpdateAsync(currentUser);
+
             foreach(var r in refreshTokens)
             {
                 r.Revoke("Logout");
                 refreshRepository.UpdateAsync(r);
             }
+            
 
             
         }

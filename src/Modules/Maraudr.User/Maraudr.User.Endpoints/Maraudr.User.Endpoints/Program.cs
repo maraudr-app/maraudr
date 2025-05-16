@@ -12,6 +12,7 @@ using Application.UseCases.Users.User.CreateUser;
 using Application.UseCases.Users.User.DeleteUser;
 using Application.UseCases.Users.User.LogoutUser;
 using Application.UseCases.Users.User.QueryAllUsers;
+using Application.UseCases.Users.User.QueryConnectedUsers;
 using Application.UseCases.Users.User.QueryUser;
 using Application.UseCases.Users.User.QueryUserByEmail;
 using Application.UseCases.Users.User.SearchByNameUser;
@@ -163,7 +164,12 @@ app.MapDelete("/users/{id:guid}",[Authorize] async (ClaimsPrincipal userClaim, G
     } 
     return Results.Ok();
 });
+app.MapGet("users/signedIn", [Authorize] async (IQueryConnectedUsersHandler handler) =>
+{
+    var connectedUsers = await handler.HanleAsync();
+    return connectedUsers;
 
+});
 // doesnt work yet
 
 app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,string email, IQueryUserByEmailHandler handler) => {
@@ -335,6 +341,8 @@ app.MapGet("users/me", [Authorize] async (ClaimsPrincipal currentUser,IQueryUser
     var user = await handler.HandleAsync(currentUserId);
     return Results.Ok(user);
 });
+
+
 
 /*
 
