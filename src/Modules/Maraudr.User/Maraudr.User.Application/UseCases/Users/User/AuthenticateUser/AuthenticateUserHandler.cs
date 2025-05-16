@@ -30,7 +30,9 @@ public class AuthenticateUserHandler(
         {
             return AuthResponse.Failed(["Email ou mot de passe incorrect"]);
         }
-
+        user.LastLoggedIn = DateTime.Now;
+        user.IsActive = true;
+        
         var token = await generateAccessTokenHandler.HandleAsync(user);
         var refreshToken = await  generateRefreshTokenHandler.HandleAsync(user);
         var expiresIn = await generateAccessTokenHandler.GetAccessTokenExpirationTime();

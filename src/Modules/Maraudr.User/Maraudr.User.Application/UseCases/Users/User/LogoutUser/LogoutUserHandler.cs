@@ -9,6 +9,7 @@
         public async Task HandleAsync(Guid currentUserId)
         {
             var refreshTokens = await refreshRepository.GetActiveRefreshTokensByUserIdAsync(currentUserId);
+            repository.GetByIdAsync(currentUserId).Result.IsActive = false;
             foreach(var r in refreshTokens)
             {
                 r.Revoke("Logout");
