@@ -330,22 +330,16 @@ app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
     return Results.Ok(claims);
 });
 
-
+app.MapGet("users/me", [Authorize] async (ClaimsPrincipal currentUser,IQueryUserHandler handler) => {
+    var currentUserId = currentUser.GetUserId();
+    var user = await handler.HandleAsync(currentUserId);
+    return Results.Ok(user);
+});
 
 /*
-app.MapPut("/users/{id:guid}/change-manager", (Guid id, HttpContext context) => {
-    // TODO: Change manager of a user
-    return Results.Ok();
-});
-app.MapPost("/managers/team", (Guid id,Guid userId, IAddUserToManagersTeamHandler handler) =>
-{
-    //todo : add multiple users 
-});
 
-app.MapGet("/me", () => {
-    // TODO: Return currently authenticated user
-    return Results.Ok();
-});
+
+
 
 
 
@@ -356,25 +350,6 @@ app.MapGet("/me", () => {
 // AUTHENTICATION 
 
 
-app.MapPost("/auth/login", async (
-    [FromBody] LoginRequestDto request, 
-    IAuthenticateUserHandler handler,
-    IValidator<LoginRequestDto> validator) =>
-{
-    var validationResult = validator.Validate(request);
-    if (!validationResult.IsValid)
-        return Results.BadRequest(validationResult.Errors);
-    
-    var result = await handler.HandleAsync(request);
-    if (!result.Success)
-        return Results.BadRequest(result.Errors);
-        
-    return Results.Ok(new { 
-        AccessToken = result.AccessToken,
-        RefreshToken = result.RefreshToken,
-        ExpiresIn = result.ExpiresIn
-    });
-});
 
     
 
