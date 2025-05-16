@@ -35,10 +35,9 @@ public class AuthenticateUserHandler(
         var refreshToken = await  generateRefreshTokenHandler.HandleAsync(user);
         var expiresIn = await generateAccessTokenHandler.GetAccessTokenExpirationTime();
 
-    // return AuthResponse.Successful(token,refreshToken,expiresIn);
+    // todo : check expiration time 
         return AuthResponse.Successful(token,refreshToken,10);
 
-        return null;
 
     }
 }

@@ -10,6 +10,7 @@ using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
 using Application.UseCases.Users.User.CreateUser;
 using Application.UseCases.Users.User.DeleteUser;
+using Application.UseCases.Users.User.LogoutUser;
 using Application.UseCases.Users.User.QueryAllUsers;
 using Application.UseCases.Users.User.QueryUser;
 using Application.UseCases.Users.User.QueryUserByEmail;
@@ -74,6 +75,33 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
+    IValidator<CreateUserDto> validator ) => {
+    var result = validator.Validate(user);
+
+    if (!result.IsValid)
+    {
+        var messages = result.Errors
+            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
+        return Results.BadRequest(messages);
+    }
+
+    Guid id;
+    try
+    {
+        id = await handler.HandleAsync(user);
+    }
+    catch (InvalidOperationException e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem((e.Message));
+    }
+    return Results.Created($"/users/{id}", id);
+});
 
 
 app.MapGet("/users", [Authorize] async (IQueryAllUsersHandler handler) =>
@@ -155,7 +183,43 @@ app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,s
         return Results.Problem(e.Message);
     }
 });
+// Permet uniquement de revoke ler refresh token 
+// LA suppression du bearer doit se faire côté client 
+app.MapPost("/auth/logout", [Authorize] async (
+    ClaimsPrincipal currentUserClaim,
+    ILogoutUserHandler handler) =>
+{
+    var currentUserId = currentUserClaim.GetUserId();
+    await handler.HandleAsync(currentUserId);
+    return Results.Ok();
+});
 
+app.MapPost("/auth/login", async (
+    [FromBody] LoginRequestDto request, 
+    IAuthenticateUserHandler handler,
+    IValidator<LoginRequestDto> validator) =>
+{
+    var validationResult = validator.Validate(request);
+    if (!validationResult.IsValid)
+        return Results.BadRequest(validationResult.Errors);
+    
+    var result = await handler.HandleAsync(request);
+    if (!result.Success)
+        return Results.BadRequest(result.Errors);
+        
+    return Results.Ok(new { 
+        AccessToken = result.AccessToken,
+        RefreshToken = result.RefreshToken,
+        ExpiresIn = result.ExpiresIn
+    });
+});
+app.MapGet("/users/search", async (string? name, ISearchByNameUserHandler handler) => {
+    if (string.IsNullOrWhiteSpace(name))
+        return Results.BadRequest("Le terme de recherche est requis");
+        
+    var results = await handler.HandleAsync(name);
+    return Results.Ok(results);
+});
 
 // MANAGER TEAM
 app.MapGet("/managers/team/{managerGuid:guid}", [Authorize] async (
@@ -241,14 +305,31 @@ app.MapDelete("/managers/team/{managerId:guid}", async ([FromBody] UserIdRequest
 
 
 
-// SEARCH / STATS / SELF
-app.MapGet("/users/search", async (string? name, ISearchByNameUserHandler handler) => {
-    if (string.IsNullOrWhiteSpace(name))
-        return Results.BadRequest("Le terme de recherche est requis");
+// RefreshToken
+
+app.MapPost("/auth/refresh", async (
+    [FromBody] string request,
+    IRefreshTokenHandler handler) =>
+{
+    var result = await handler.HandleAsync(request);
+    if (!result.Success)
+        return Results.Problem("Token invalide ou expiré, veuillez vous reconnecter");
         
-    var results = await handler.HandleAsync(name);
-    return Results.Ok(results);
+    return Results.Ok(new { 
+        AccessToken = result.AccessToken,
+        RefreshToken = request,
+        ExpiresIn = result.AccessToken
+    });
 });
+
+
+
+app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
+{
+    var claims = user.Claims.Select(c => new { Type = c.Type, Value = c.Value });
+    return Results.Ok(claims);
+});
+
 
 
 /*
@@ -269,23 +350,6 @@ app.MapGet("/me", () => {
 
 
 
-
-// ADMIN PRIVILEGES
-app.MapPost("/users/{id:guid}/grant-admin", (Guid id) => {
-    // TODO: Grant admin privileges
-    return Results.Ok();
-});
-
-app.MapPost("/users/{id:guid}/revoke-admin", (Guid id) => {
-    // TODO: Revoke admin privileges
-    return Results.Ok();
-});
-
-// ROLE MANAGEMENT
-app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
-    // TODO: Change user role
-    return Results.Ok();
-});*/
 
 
 
@@ -313,65 +377,11 @@ app.MapPost("/auth/login", async (
 });
 
     
-    
-app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
-    IValidator<CreateUserDto> validator ) => {
-    var result = validator.Validate(user);
-
-    if (!result.IsValid)
-    {
-        var messages = result.Errors
-            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
-        return Results.BadRequest(messages);
-    }
-
-    Guid id;
-    try
-    {
-        id = await handler.HandleAsync(user);
-    }
-    catch (InvalidOperationException e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-    catch (Exception e)
-    {
-        return Results.Problem((e.Message));
-    }
-    return Results.Created($"/users/{id}", id);
-});
-    ;
-app.MapPost("/auth/refresh", async (
-    [FromBody] string request,
-    IRefreshTokenHandler handler) =>
-{
-    var result = await handler.HandleAsync(request);
-    if (!result.Success)
-        return Results.Problem("Token invalide ou expiré, veuilelz vous reconnecter");
-        
-    return Results.Ok(new { 
-        AccessToken = result.AccessToken,
-        RefreshToken = request,
-        ExpiresIn = result.AccessToken
-    });
-});
 
 
 
-app.MapGet("/auth/validate", [Authorize] (ClaimsPrincipal user) =>
-{
-    var claims = user.Claims.Select(c => new { Type = c.Type, Value = c.Value });
-    return Results.Ok(claims);
-});
 /*
-app.MapPost("/auth/logout", [Authorize] async (
-    ClaimsPrincipal user,
-    IAuthService authService) =>
-{
-    var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-    await authService.LogoutUserAsync(userId);
-    return Results.Ok();
-});
+
 
 // Vérification du token
 
@@ -436,5 +446,26 @@ app.MapGet("/auth/active-sessions", [Authorize(Roles = "Admin")] async (
 {
     var sessions = await authService.GetActiveSessionsAsync();
     return Results.Ok(sessions);
-});*/
+});
+
+
+// ADMIN PRIVILEGES
+app.MapPost("/users/{id:guid}/grant-admin", (Guid id) => {
+    // TODO: Grant admin privileges
+    return Results.Ok();
+});
+
+app.MapPost("/users/{id:guid}/revoke-admin", (Guid id) => {
+    // TODO: Revoke admin privileges
+    return Results.Ok();
+});
+
+// ROLE MANAGEMENT
+app.MapPost("/users/{id:guid}/change-role", (Guid id, HttpContext context) => {
+    // TODO: Change user role
+    return Results.Ok();
+});* /
+
+
+*/
 app.Run();

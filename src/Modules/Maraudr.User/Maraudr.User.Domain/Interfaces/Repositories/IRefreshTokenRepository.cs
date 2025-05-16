@@ -20,6 +20,8 @@ namespace Maraudr.User.Domain.Interfaces.Repositories
         public Task RevokeAllUserRefreshTokensAsync(Guid userId, string reason = "Révocation par mesure de sécurité");
 
         public Task DeleteExpiredRefreshTokensAsync();
+        public Task UpdateAsync(RefreshToken token);
+
 
     }
 }

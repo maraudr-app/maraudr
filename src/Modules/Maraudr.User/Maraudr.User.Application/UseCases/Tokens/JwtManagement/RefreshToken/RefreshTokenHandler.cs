@@ -8,15 +8,16 @@ namespace Application.UseCases.Tokens.JwtManagement.RefreshToken;
 public class RefreshTokenHandler(
     IRefreshTokenRepository refreshTokenRepository,
     IGenerateAccessTokenHandler generateAccessTokenHandler,
-    IUserRepository userRepository)
+    IUserRepository userRepository) 
     : IRefreshTokenHandler
 {
     
 
     public async Task<RefreshTokenResponse> HandleAsync(string refreshToken)
     {
+        
         var storedToken = await refreshTokenRepository.GetRefreshTokenByTokenAsync(refreshToken);
-
+        
         if (storedToken == null || storedToken.IsRevoked || !storedToken.IsActive)
             return RefreshTokenResponse.Failed(["Token invalide ou expiré"]);
 

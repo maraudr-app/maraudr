@@ -8,6 +8,7 @@ using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
 using Application.UseCases.Users.User.CreateUser;
 using Application.UseCases.Users.User.DeleteUser;
+using Application.UseCases.Users.User.LogoutUser;
 using Application.UseCases.Users.User.QueryAllUsers;
 using Application.UseCases.Users.User.QueryUser;
 using Application.UseCases.Users.User.QueryUserByEmail;
@@ -36,6 +37,7 @@ public static class DependencyInjection
         services.AddScoped<IGenerateAccessTokenHandler, GenerateAccessTokenHandler>();
         services.AddScoped<IGenerateRefreshTokenHandler, GenerateRefreshTokenHandler>();
         services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
+        services.AddScoped<ILogoutUserHandler, LogoutUserHandler>();
 
     }
 }

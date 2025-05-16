@@ -55,4 +55,10 @@ public class RefreshTokenRepository(UserContext context):IRefreshTokenRepository
         context.RefreshTokens.RemoveRange(expiredTokens);
         await context.SaveChangesAsync();
     }
+
+    public async Task UpdateAsync(RefreshToken token)
+    {
+        context.RefreshTokens.Update(token);
+        await context.SaveChangesAsync();
+    }
 }
