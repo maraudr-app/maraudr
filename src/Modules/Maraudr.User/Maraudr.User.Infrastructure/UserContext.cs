@@ -1,5 +1,7 @@
-using Maraudr.User.Domain.Entities;
-using Maraudr.User.Domain.ValueObjects;
+using Maraudr.Authentication.Domain.Entities;
+using Maraudr.User.Domain.Entities.Tokens;
+using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Domain.ValueObjects.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -10,15 +12,25 @@ public class UserContext : DbContext
     public UserContext(DbContextOptions<UserContext> options) : base(options) { }
 
     public DbSet<AbstractUser> Users { get; set; }
-    public DbSet<Manager> Managers { get; set; }
+    public DbSet<RefreshToken?> RefreshTokens { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
+        modelBuilder.Entity<AbstractUser>()
+            .HasDiscriminator<string>("UserType")
+            .HasValue<Manager>("Manager")
+            .HasValue<Domain.Entities.Users.User>("User");
+        
+        modelBuilder.Entity<Manager>()
+            .HasMany<AbstractUser>("Team")
+            .WithOne()
+            .OnDelete(DeleteBehavior.NoAction);
         // --- Value Objects ---
-        modelBuilder.Entity<Manager>().OwnsOne(m => m.Address);
-        modelBuilder.Entity<Manager>().OwnsOne(m => m.ContactInfo);
+        modelBuilder.Entity<AbstractUser>().OwnsOne(m => m.Address);
+        modelBuilder.Entity<AbstractUser>().OwnsOne(m => m.ContactInfo);
 
         // --- Enum List Conversion ---
         var languageConverter = new ValueConverter<List<Language>, string>(
@@ -32,10 +44,37 @@ public class UserContext : DbContext
             v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(e => Enum.Parse<Role>(e))
                 .ToList());
-
-        modelBuilder.Entity<Manager>()
+                        // Pour déboguer, enlevez le .FirstOrDefault() et vérifiez si des utilisateurs sont retournés
+        modelBuilder.Entity<AbstractUser>().OwnsOne(u => u.ContactInfo);
+    
+                        // Configuration spécifique aux managers
+        modelBuilder.Entity<AbstractUser>().OwnsOne(m => m.Address);
+        
+        modelBuilder.Entity<AbstractUser>()
             .Property(m => m.Languages)
             .HasConversion(languageConverter);
+        modelBuilder.Entity<RefreshToken>()
+            .HasKey(r => r.Id);
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.Token)
+            .IsRequired();
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.ExpiresAt)
+            .IsRequired();
+            
+        modelBuilder.Entity<RefreshToken>()
+            .Property(r => r.UserId)
+            .IsRequired();
+        
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne<AbstractUser>() 
+            .WithMany() // Un utilisateur peut avoir plusieurs refresh tokens
+            .HasForeignKey(r => r.UserId) // Clé étrangère
+            .OnDelete(DeleteBehavior.Cascade); 
+    
+        
         
     }
 }

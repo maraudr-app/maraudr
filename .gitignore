@@ -15,3 +15,20 @@
 /src/Modules/Maraudr.User/Maraudr.User.Infrastructure/bin/Debug/net9.0
 /src/Modules/Maraudr.User/Maraudr.User.Infrastructure/obj
 
+/src/Maraudr.Authentication.Infrastructure/obj
+/src/Modules/Maraudr.Authentication/Maraudr.Authentication.Application/obj
+/src/Modules/Maraudr.Authentication/Maraudr.Authentication.Domain/obj/Debug/net8.0
+/src/Modules/Maraudr.Authentication/Maraudr.Authentication.Domain/obj
+/src/Modules/Maraudr.Authentication/Maraudr.Authentication.Endpoints/obj
+/src/Modules/Maraudr.Authentication/Maraudr.Authentication.Infrastructure/obj
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Debug/net8.0
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Maraudr.User.Endpoints.csproj.nuget.dgspec.json
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Maraudr.User.Endpoints.csproj.nuget.g.props
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Maraudr.User.Endpoints.csproj.nuget.g.targets
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.assets.json
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.nuget.cache
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.packagespec.json
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/rider.project.model.nuget.info
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/rider.project.restore.info
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.nuget.cache
+/src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.nuget.cache

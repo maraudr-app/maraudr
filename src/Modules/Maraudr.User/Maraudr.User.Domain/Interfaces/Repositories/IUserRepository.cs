@@ -1,6 +1,6 @@
 
 
-using Maraudr.User.Domain.Entities;
+using Maraudr.User.Domain.Entities.Users;
 
 namespace Maraudr.User.Domain.Interfaces.Repositories;
 
@@ -14,5 +14,6 @@ public interface IUserRepository
 
     Task UpdateAsync(AbstractUser user);
     Task<IEnumerable<AbstractUser>> SearchByNameAsync(string searchTerm);
+    Task<AbstractUser?> GetByEmailAsync(string email);
 
 }

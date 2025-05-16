@@ -1,0 +1,1 @@
+namespace Application.UseCases.Users.Admin.DemoteManagerToUser;

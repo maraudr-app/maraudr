@@ -1,5 +1,5 @@
-using Maraudr.User.Domain.Entities;
-using Maraudr.User.Domain.ValueObjects;
+using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Domain
 
@@ -21,13 +21,13 @@ namespace Domain
 
         private User CreateUser(string firstName = "John", string lastName = "Doe")
         {
-            var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>());
-            return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager);
+            var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>(),"string");
+            return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
         }
 
         private Manager CreateManager(string firstName = "Manager", string lastName = "Test")
         {
-            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>());
+            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>(),"sting");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Domain
             Assert.Equal("John", user.Firstname);
             Assert.Equal("Doe", user.Lastname);
             Assert.Equal(_createdAt, user.CreatedAt);
-            Assert.True(user.IsActive);
+            Assert.False(user.IsActive);
             Assert.Equal(_validContactInfo, user.ContactInfo);
             Assert.Equal(_validAddress, user.Address);
             Assert.Equal(_validLanguages, user.Languages);
@@ -241,8 +241,8 @@ namespace Domain
             var user = CreateUser();
             var originalFirstname = user.Firstname;
             var originalLastname = user.Lastname;
-            var originalEmail = user.ContactInfo.GetEmail();
-            var originalPhoneNumber = user.ContactInfo.GetPhoneNumber();
+            var originalEmail = user.ContactInfo.Email;
+            var originalPhoneNumber = user.ContactInfo.PhoneNumber;
             var originalStreet = user.Address.GetStreet();
             var originalCity = user.Address.GetCity();
             var originalState = user.Address.GetState();
@@ -273,8 +273,8 @@ namespace Domain
                 // Assert
                 Assert.Equal(originalFirstname, user.Firstname); // inchangé
                 Assert.Equal(newLastname, user.Lastname); // mis à jour
-                Assert.Equal(newEmail, user.ContactInfo.GetEmail()); // mis à jour
-                Assert.Equal(originalPhoneNumber, user.ContactInfo.GetPhoneNumber()); // inchangé
+                Assert.Equal(newEmail, user.ContactInfo.Email); // mis à jour
+                Assert.Equal(originalPhoneNumber, user.ContactInfo.PhoneNumber); // inchangé
                 Assert.Equal(originalStreet, user.Address.GetStreet()); // inchangé
                 Assert.Equal(newCity, user.Address.GetCity()); // mis à jour
                 Assert.Equal(originalState, user.Address.GetState()); // inchangé
