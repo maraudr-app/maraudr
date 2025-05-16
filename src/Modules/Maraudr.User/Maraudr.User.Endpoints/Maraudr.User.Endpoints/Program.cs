@@ -158,7 +158,7 @@ app.MapGet("users/email/{email}", [Authorize] async (ClaimsPrincipal userClaim,s
 
 
 // MANAGER TEAM
-app.MapGet("/managers/{managerGuid:guid}/team", [Authorize] async (
+app.MapGet("/managers/team/{managerGuid:guid}", [Authorize] async (
 Guid managerGuid, IQueryManagersTeamHandler handler,
         ClaimsPrincipal currentUser) =>
     {
@@ -182,7 +182,7 @@ Guid managerGuid, IQueryManagersTeamHandler handler,
     .RequireAuthorization(); 
 
 
-app.MapPost("/managers/team/add-user/{managerId:guid}", [Authorize] async (
+app.MapPost("/managers/team/{managerId:guid}", [Authorize] async (
 Guid managerId, ClaimsPrincipal currentUser,
         [FromBody] UserIdRequest request, 
         IAddUserToManagersTeamHandler handler,
@@ -212,19 +212,16 @@ Guid managerId, ClaimsPrincipal currentUser,
 
 
 
-app.MapDelete("/managers/remove-from-team", async ([FromBody] UserIdRequest request, 
+app.MapDelete("/managers/team/{managerId:guid}", async ([FromBody] UserIdRequest request, 
         IRemoveUserFromManagerTeamHandler handler,
-        ClaimsPrincipal user) =>
+        ClaimsPrincipal currentUser, Guid managerId) =>
     {
-        var managerId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        var currentUserId = currentUser.GetUserId();     
     
-        if (string.IsNullOrEmpty(managerId) || !Guid.TryParse(managerId, out var managerGuid))
-        {
-            return Results.Unauthorized();
-        }
+        
         try
         {
-            await handler.HandleAsync(managerGuid, request.UserId);
+            await handler.HandleAsync(managerId,currentUserId, request.UserId);
             return Results.Ok();
         }
         catch (ArgumentException ex)

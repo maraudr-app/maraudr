@@ -15,7 +15,7 @@ public class AddUserToManagersTeamHandler(IUserRepository repository):IAddUserTo
         
         if(!SecurityChecks.CheckIfUsersMatch(managerId, currentUserId) && !SecurityChecks.CheckIfUserIsAdmin(currentUser))
         {
-            throw new InvalidOperationException("Internal error : Can't delete user");
+            throw new InvalidOperationException("Internal error : Can't add user");
         }
         var manager = await repository.GetByIdAsync(managerId);
         var user = await repository.GetByIdAsync(userId);
