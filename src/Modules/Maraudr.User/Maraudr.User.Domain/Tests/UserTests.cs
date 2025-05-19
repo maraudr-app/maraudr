@@ -1,6 +1,5 @@
-
-using Maraudr.User.Domain.Entities;
-using Maraudr.User.Domain.ValueObjects;
+using Maraudr.User.Domain.Entities.Users;
+using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Domain
 {
@@ -21,7 +20,7 @@ namespace Domain
 
         private Manager CreateManager(string firstName = "Manager", string lastName = "Test")
         {
-            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>());
+            return new Manager(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, new List<AbstractUser>(),"sting");
         }
 
         [Fact]
@@ -31,13 +30,13 @@ namespace Domain
             var manager = CreateManager();
 
             // Act
-            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, manager);
+            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
 
             // Assert
             Assert.Equal("John", user.Firstname);
             Assert.Equal("Doe", user.Lastname);
             Assert.Equal(_createdAt, user.CreatedAt);
-            Assert.True(user.IsActive);
+            Assert.False(user.IsActive);
             Assert.Equal(_validContactInfo, user.ContactInfo);
             Assert.Equal(_validAddress, user.Address);
             Assert.Equal(_validLanguages, user.Languages);
@@ -66,7 +65,7 @@ namespace Domain
             var manager = CreateManager();
 
             // Act
-            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, manager);
+            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
 
             // Assert
             Assert.Equal(Role.Member, user.Role);
@@ -78,7 +77,7 @@ namespace Domain
             // Arrange
             var initialManager = CreateManager("Initial", "Manager");
             var newManager = CreateManager("New", "Manager");
-            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager);
+            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager,"sting");
             initialManager.AddMemberToTeam(user);
             user.ChangeManager(newManager);
 
@@ -90,7 +89,7 @@ namespace Domain
         {
             // Arrange
             var initialManager = CreateManager();
-            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager);
+            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager,"sting");
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => user.ChangeManager(null));
@@ -101,10 +100,10 @@ namespace Domain
         {
             // Arrange
             var initialManager = CreateManager();
-            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager);
+            var user = new User("John", "Doe", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager,"sting");
             
             // Create a Non-Manager AbstractUser by creating a User
-            var nonManager = new User("Non", "Manager", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager);
+            var nonManager = new User("Non", "Manager", _createdAt, _validContactInfo, _validAddress, _validLanguages, initialManager,"sting");
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => user.ChangeManager(nonManager));
