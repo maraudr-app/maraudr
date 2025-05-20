@@ -21,14 +21,9 @@ public class VerifyAssociationBySiret(IAssociations repository) : IVerifyAssocia
 
         var association = await repository.GetAssociationBySiret(siret);
 
-        if (!content.Contains("statusCode: 404") && association != null)
-        {
-            association.IsVerified = true;
-            await repository.UpdateAssociation(association);
-            return true;
-        }
-
-        return false;
-
+        if (content.Contains("statusCode: 404") || association == null) return false;
+        association.IsVerified = true;
+        await repository.UpdateAssociation(association);
+        return true;
     }
 }

@@ -25,7 +25,13 @@ app.MapGet("/association", async (Guid id, IGetAssociationHandler handler) =>
     return result is null ? Results.NotFound() : Results.Ok(result);
 });
 
-app.MapPost("/association", async (CreateAssociationCommand asso, ICreateAssociationHandler handler) =>
+app.MapPost("/association/basic", async (CreateAssociationCommandBasic asso, ICreateAssociationHandler handler) =>
+{
+    var result = await handler.HandleAsync(asso);
+    return Results.Ok(new { Id = result});
+});
+
+app.MapPost("/association/siret-included", async (CreateAssociationCommandSiretIncluded asso, ICreateAssociationHandlerSiretIncluded handler) =>
 {
     var result = await handler.HandleAsync(asso);
     return Results.Ok(new { Id = result});

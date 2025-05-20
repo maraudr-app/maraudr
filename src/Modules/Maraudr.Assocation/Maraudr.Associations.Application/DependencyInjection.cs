@@ -13,9 +13,10 @@ public static class DependencyInjection
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
 
-        services.AddScoped<ICreateAssociationHandler, CreateAssociation>();
+        services.AddScoped<ICreateAssociationHandler, CreateAssociationBasic>();
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
         services.AddScoped<IVerifyAssociationBySiret, VerifyAssociationBySiret>();
         services.AddScoped<IUnregisterAssociation, UnregisterAssociation>();
+        services.AddScoped<ICreateAssociationHandlerSiretIncluded, CreateAssociationSiretIncluded>();
     }
 }

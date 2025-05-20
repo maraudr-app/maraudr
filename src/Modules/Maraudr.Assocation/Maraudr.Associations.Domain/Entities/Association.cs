@@ -27,16 +27,10 @@ public class Association
         Siret = siret;
     }
 
-    public void ValidateAssociationVerification()
-    {
-        IsVerified = true;
-    }
+    public void ValidateAssociationVerification() => IsVerified = true;
 
-    public void AddMembers(List<Guid> members)
-    {
-        Members.AddRange(members);
-    }
-
+    public void AddMembers(List<Guid> members) => Members.AddRange(members);    
+    
     private bool Equals(Association other)
     {
         return Id.Equals(other.Id);

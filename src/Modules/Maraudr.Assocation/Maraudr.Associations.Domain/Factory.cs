@@ -17,11 +17,11 @@ public class BasicAssociationCreator(string name, string city, string country)
     }
 }
 
-public class AssociationWithSiretCreator(string name, string city, string country, SiretNumber siret) 
+public class AssociationWithSiretCreator(string name, string city, string country, string siret) 
     : AssociationCreator
 {
     public override Association CreateAssociation()
     {
-        return new Association(name, city, country, siret);
+        return new Association(name, city, country, new SiretNumber(siret));
     }
 }
