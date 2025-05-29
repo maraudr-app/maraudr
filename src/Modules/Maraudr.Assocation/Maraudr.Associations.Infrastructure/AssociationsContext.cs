@@ -12,12 +12,20 @@ public class AssociationsContext(DbContextOptions<AssociationsContext> options) 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var converter = new ValueConverter<SiretNumber, string>(
-            v => v.Value, 
+            v => v.Value,
             v => new SiretNumber(v)
         );
 
-        modelBuilder.Entity<Association>()
-            .Property(a => a.Siret)
-            .HasConversion(converter!);
+        modelBuilder.Entity<Association>(builder =>
+        {
+            builder.Property(a => a.Siret)
+                .HasConversion(converter);
+
+            builder.OwnsOne(a => a.Address, address =>
+            {
+               
+            });
+        });
     }
+
 }

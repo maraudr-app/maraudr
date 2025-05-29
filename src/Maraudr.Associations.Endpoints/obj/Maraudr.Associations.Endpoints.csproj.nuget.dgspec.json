@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj": {}
+    "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj": {
+    "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj",
+        "projectUniqueName": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj",
         "projectName": "Maraudr.Associations.Endpoints",
-        "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj",
-        "packagesPath": "C:\\Users\\HCACHON\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\obj\\",
+        "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\Maraudr.Associations.Endpoints.csproj",
+        "packagesPath": "C:\\Users\\hugoc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Maraudr.Associations.Endpoints\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HCACHON\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hugoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,18 +26,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://sbds/BdsPackage/nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj": {
-                "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj"
+              "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj": {
+                "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj"
               },
-              "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj"
+              "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj"
               }
             }
           }
@@ -50,9 +49,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -86,24 +85,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj": {
+    "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj",
+        "projectUniqueName": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj",
         "projectName": "Maraudr.Associations.Application",
-        "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj",
-        "packagesPath": "C:\\Users\\HCACHON\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\obj\\",
+        "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\Maraudr.Associations.Application.csproj",
+        "packagesPath": "C:\\Users\\hugoc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HCACHON\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hugoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -112,18 +111,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://sbds/BdsPackage/nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
-                "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj"
+              "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
+                "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj"
               },
-              "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj"
+              "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj"
               }
             }
           }
@@ -136,9 +134,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -169,24 +167,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
+    "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj",
         "projectName": "Maraudr.Associations.Domain",
-        "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj",
-        "packagesPath": "C:\\Users\\HCACHON\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\obj\\",
+        "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj",
+        "packagesPath": "C:\\Users\\hugoc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HCACHON\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hugoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -195,8 +193,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://sbds/BdsPackage/nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -212,9 +209,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -235,24 +232,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
+    "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj",
         "projectName": "Maraudr.Associations.Infrastructure",
-        "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\HCACHON\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\Maraudr.Associations.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\hugoc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HCACHON\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hugoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -261,15 +258,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://sbds/BdsPackage/nuget": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
-                "projectPath": "C:\\Users\\HCACHON\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj"
+              "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj": {
+                "projectPath": "C:\\Users\\hugoc\\RiderProjects\\maraudr\\src\\Modules\\Maraudr.Assocation\\Maraudr.Associations.Domain\\Maraudr.Associations.Domain.csproj"
               }
             }
           }
@@ -282,9 +278,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -315,7 +311,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

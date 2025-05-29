@@ -1,4 +1,5 @@
 ﻿using Maraudr.Associations.Domain.Siret;
+using Maraudr.Associations.Domain.ValueObjects;
 
 namespace Maraudr.Associations.Domain.Entities;
 
@@ -6,30 +7,28 @@ public class Association
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public List<Guid> Members { get; init; } = [];
-    public string? Country { get; init; }
-    public string? City { get; init; }
-    public string Name { get; init; }
-    public SiretNumber? Siret { get; init; }
-    public bool IsVerified { get; set; }
+    public string? Country { get; set; }
+    public string? City { get; set; }
+    public string Name { get; set; }
+    public Address Address { get; set; } = null!;
+    public SiretNumber? Siret { get; set; }
 
-    public Association(string name, string city, string country)
+    public Association(string name, string city, string country, SiretNumber? siret, Address address)
     {
-        Country = country;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
         City = city;
-        Name = name ?? throw new ArgumentNullException(nameof(name), "Un nom d'association est requis");
+        Country = country;
+        Siret = siret;
+        Address = address;
     }
     
-    public Association(string name, string city, string country, SiretNumber? siret)
+    private Association() { }
+    
+    public void UpdateInformation(string name, Address newAddress)
     {
-        Country = country;
-        City = city;
-        Name = name ?? throw new ArgumentNullException(nameof(name), "Un nom d'association est requis");
-        Siret = siret;
+        Name = name;
+        Address = newAddress;
     }
-
-    public void ValidateAssociationVerification() => IsVerified = true;
-
-    public void AddMembers(List<Guid> members) => Members.AddRange(members);    
     
     private bool Equals(Association other)
     {

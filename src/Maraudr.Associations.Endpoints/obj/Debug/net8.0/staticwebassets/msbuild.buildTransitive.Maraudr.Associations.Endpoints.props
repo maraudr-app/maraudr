@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Maraudr.Associations.Endpoints.props" />
-</Project>

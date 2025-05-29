@@ -1,4 +1,5 @@
 ﻿using Maraudr.Associations.Domain.Entities;
+using Maraudr.Associations.Domain.Interfaces;
 using Maraudr.Associations.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

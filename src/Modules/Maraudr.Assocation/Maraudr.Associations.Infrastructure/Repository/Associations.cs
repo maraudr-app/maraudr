@@ -1,4 +1,5 @@
 ﻿using Maraudr.Associations.Domain.Entities;
+using Maraudr.Associations.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Maraudr.Associations.Infrastructure.Repository;
@@ -30,16 +31,32 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
 
     public async Task<Association?> UpdateAssociation(Association association)
     {
-        var asso = await context.Associations.FindAsync(association.Id);
-        if (asso is null) return null;
-        context.Entry(asso).CurrentValues.SetValues(association);
+        var existing = await context.Associations.FindAsync(association.Id);
+        if (existing is null) return null;
+
+        existing.UpdateInformation(association.Name, association.Address);
+
         await context.SaveChangesAsync();
-        return asso;
+        return existing;
     }
 
     public async Task<Association?> GetAssociationBySiret(string siret)
     {
         var association = await context.Associations.Where(s => s!.Siret!.Value == siret).FirstOrDefaultAsync();
         return association;
+    }
+    
+    public async Task<List<Association>> SearchAssociationsByName(string name)
+    {
+        return await context.Associations
+            .Where(s => EF.Functions.Like(s.Name, $"%{name}%"))
+            .ToListAsync();
+    }
+    
+    public async Task<List<Association>> SearchAssociationsByCity(string city)
+    {
+        return await context.Associations
+            .Where(a => EF.Functions.Like(a.City!, $"%{city}%"))
+            .ToListAsync();
     }
 }

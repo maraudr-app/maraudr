@@ -1,6 +1,6 @@
-﻿using Maraudr.Associations.Domain.Entities;
+﻿using Maraudr.Associations.Domain.Interfaces;
 
-namespace Maraudr.Associations.Application.UseCases;
+namespace Maraudr.Associations.Application.UseCases.Command;
 
 public interface IUnregisterAssociation
 {

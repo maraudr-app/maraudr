@@ -1,4 +1,5 @@
-﻿using Maraudr.Associations.Application.UseCases;
+﻿using Maraudr.Associations.Application.UseCases.Command;
+using Maraudr.Associations.Application.UseCases.Query;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Maraudr.Associations.Application;
@@ -9,14 +10,15 @@ public static class DependencyInjection
     {
         services.AddHttpClient("siret", client =>
         {
-            client.BaseAddress = new Uri("https://siva-integ1.cegedim.cloud/apim/api-asso/api/structure/");
+            client.BaseAddress = new Uri("https://siva-integ1.cegedim.cloud/apim/api-asso/");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
 
-        services.AddScoped<ICreateAssociationHandler, CreateAssociationBasic>();
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
-        services.AddScoped<IVerifyAssociationBySiret, VerifyAssociationBySiret>();
         services.AddScoped<IUnregisterAssociation, UnregisterAssociation>();
         services.AddScoped<ICreateAssociationHandlerSiretIncluded, CreateAssociationSiretIncluded>();
+        services.AddScoped<ISearchAssociationsByNameHandler, SearchAssociationsByName>();
+        services.AddScoped<IUpdateAssociationHandler, UpdateAssociation>();
+        services.AddScoped<ISearchAssociationsByCityHandler, SearchAssociationsByCity>();
     }
 }
