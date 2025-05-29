@@ -6,5 +6,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<StockContext>(options => options.UseInMemoryDatabase("StockTestDb"));
         services.AddScoped<IStockRepository, StockRepository>();
+        services.AddHttpClient<IOpenFoodFactRepository, OpenFoodFactRepository>();
+
     }
 }

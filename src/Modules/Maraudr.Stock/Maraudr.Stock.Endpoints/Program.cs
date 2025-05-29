@@ -29,6 +29,24 @@ app.MapGet("/stock/type/{type}", async (Category type, IQueryItemByType handler)
     return Results.Ok(item);
 });
 
+
+app.MapPost("/stock/{barcode}", async (
+    string barcode,
+    ICreateItemFromBarcodeHandler handler) =>
+{
+    Guid id;
+    try
+    {
+        id = await handler.HandleAsync(barcode);
+    }
+    catch (Exception e)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Created($"/stock/{id}", new { id });
+});
+
 app.MapPost("/stock/", async (
     CreateItemCommand item, 
     ICreateItemHandler handler, 
