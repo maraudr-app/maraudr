@@ -102,4 +102,6 @@ app.MapDelete("/stock/{id}", async (Guid id, IDeleteItemHandler handler) =>
     return Results.Ok();
 });
 
+
+
 app.Run();
