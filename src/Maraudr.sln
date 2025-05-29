@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Infras
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Application", "Modules\Maraudr.Assocation\Maraudr.Associations.Application\Maraudr.Associations.Application.csproj", "{D9B90B63-BCA1-4AF1-9C90-6F448FB8C5EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Endpoints", "Maraudr.Associations.Endpoints\Maraudr.Associations.Endpoints.csproj", "{84F747DA-0AB7-459A-8FC1-F4573F6399FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Endpoints", "Modules\Maraudr.Assocation\Maraudr.Associations.Endpoints\Maraudr.Associations.Endpoints.csproj", "{84F747DA-0AB7-459A-8FC1-F4573F6399FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

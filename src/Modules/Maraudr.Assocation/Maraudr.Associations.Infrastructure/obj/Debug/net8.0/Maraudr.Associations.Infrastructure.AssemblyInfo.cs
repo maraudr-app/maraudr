@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.Associations.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68f07e76cbf9a113bc1705240fc8e265ae6c72fe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f962d463ccaf3442eb5f5f17f374df8c7371fb45")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.Associations.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.Associations.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

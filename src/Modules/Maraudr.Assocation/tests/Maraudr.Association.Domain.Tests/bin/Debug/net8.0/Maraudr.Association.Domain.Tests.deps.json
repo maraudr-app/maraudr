@@ -9,7 +9,6 @@
       "Maraudr.Association.Domain.Tests/1.0.0": {
         "dependencies": {
           "Maraudr.Associations.Domain": "1.0.0",
-          "Maraudr.User.Domain": "1.0.0",
           "Microsoft.NET.Test.Sdk": "17.13.0",
           "coverlet.collector": "6.0.4",
           "xunit": "2.9.3",
@@ -345,7 +344,7 @@
       "Maraudr.Associations.Domain/1.0.0": {
         "runtime": {
           "Maraudr.Associations.Domain.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
