@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Maraudr.Stock\Maraudr.Stock.Domain\Maraudr.Stock.Domain.csproj" />
       <ProjectReference Include="..\Maraudr.User.Application\Maraudr.User.Application.csproj" />
       <ProjectReference Include="..\Maraudr.User.Domain\Maraudr.User.Domain.csproj" />
     </ItemGroup>
@@ -17,9 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
       <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.15" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
