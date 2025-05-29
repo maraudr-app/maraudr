@@ -34,15 +34,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     }
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseCors("AllowFrontend3000");
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapGet("/association", async (Guid id, IGetAssociationHandler handler) =>
 {
@@ -136,6 +145,7 @@ app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")]
         return Results.NoContent();    
     }
 );
+
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.User.Endpoints")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c63b32cf8ceaab48c3b00a5af12fe12cc74b28e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a50424e4ff4a10bde590d7280e87e69e6f79dfc2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.User.Endpoints")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.User.Endpoints")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
