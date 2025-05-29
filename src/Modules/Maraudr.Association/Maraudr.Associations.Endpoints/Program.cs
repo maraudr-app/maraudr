@@ -117,22 +117,21 @@ app.MapPut("/association", [Authorize(Roles = "Admin,Manager")]
     async (UpdateAssociationInformationDto dto, 
         IValidator<UpdateAssociationInformationDto> validator,
         IUpdateAssociationHandler handler) =>
+{
+    var result = await validator.ValidateAsync(dto);
+
+    if (!result.IsValid)
     {
-        var result = await validator.ValidateAsync(dto);
-
-        if (!result.IsValid)
+        return Results.BadRequest(result.Errors.Select(e => new
         {
-            return Results.BadRequest(result.Errors.Select(e => new
-            {
-                e.PropertyName,
-                e.ErrorMessage
-            }));
-        }
+            e.PropertyName,
+            e.ErrorMessage
+        }));
+    }
 
-        var updated = await handler.HandleAsync(dto);
-        return updated is null ? Results.NotFound() : Results.Ok(updated);
-    });
-
+    var updated = await handler.HandleAsync(dto);
+    return updated is null ? Results.NotFound() : Results.Ok(updated);
+});
 
 app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")] 
     async (Guid id, IUnregisterAssociation handler) =>
@@ -145,7 +144,6 @@ app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")]
         return Results.NoContent();    
     }
 );
-
 
 app.UseAuthentication();
 app.UseAuthorization();

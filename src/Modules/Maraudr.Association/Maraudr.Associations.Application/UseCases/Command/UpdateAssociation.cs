@@ -1,5 +1,4 @@
 ﻿using Maraudr.Associations.Application.Dtos;
-using Maraudr.Associations.Domain.Entities;
 using Maraudr.Associations.Domain.Interfaces;
 using Maraudr.Associations.Domain.ValueObjects;
 
@@ -7,12 +6,12 @@ namespace Maraudr.Associations.Application.UseCases.Command;
 
 public interface IUpdateAssociationHandler
 {
-    Task<Association?> HandleAsync(UpdateAssociationInformationDto association);
+    Task<AssociationDto?> HandleAsync(UpdateAssociationInformationDto dto);
 }
 
 public class UpdateAssociation(IAssociations repository) : IUpdateAssociationHandler
 {
-    public async Task<Association?> HandleAsync(UpdateAssociationInformationDto dto)
+    public async Task<AssociationDto?> HandleAsync(UpdateAssociationInformationDto dto)
     {
         var existing = await repository.GetAssociation(dto.Id);
         if (existing is null)
@@ -22,13 +21,21 @@ public class UpdateAssociation(IAssociations repository) : IUpdateAssociationHan
             dto.AddressDto.Street,
             dto.AddressDto.City,
             dto.AddressDto.PostalCode,
-            existing.Country ?? "France" 
+            existing.Country ?? "France"
         );
 
         existing.UpdateInformation(dto.Name, newAddress);
 
-        await repository.UpdateAssociation(existing); 
-        return existing;
+        await repository.UpdateAssociation(existing);
+
+        return new AssociationDto(
+            existing.Id,
+            existing.Name,
+            new AddressDto(
+                existing.Address.Street,
+                existing.Address.City,
+                existing.Address.PostalCode
+            )
+        );
     }
 }
-

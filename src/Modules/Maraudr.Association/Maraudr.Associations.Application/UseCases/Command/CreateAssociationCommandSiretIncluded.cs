@@ -56,6 +56,10 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address);
 
         var result = await associations.RegisterAssociation(association);
+        if (result is null)
+        {
+            throw new Exception("Failed to create association.");
+        }
         return result.Id;
     }
 }

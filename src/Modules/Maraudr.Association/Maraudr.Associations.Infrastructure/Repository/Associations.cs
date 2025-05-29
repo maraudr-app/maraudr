@@ -8,8 +8,20 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
 {
     public async Task<Association?> RegisterAssociation(Association? association)
     {
+        ArgumentNullException.ThrowIfNull(association);
+
+        if (association.Siret is null)
+            throw new ArgumentException("SIRET is required.");
+
+        var exists = await context.Associations
+            .AnyAsync(a => a.Siret != null && a.Siret.Value == association.Siret.Value);
+
+        if (exists)
+            throw new InvalidOperationException("Une association avec ce SIRET existe déjà.");
+
         await context.Associations.AddAsync(association);
         await context.SaveChangesAsync();
+
         return association;
     }
 
