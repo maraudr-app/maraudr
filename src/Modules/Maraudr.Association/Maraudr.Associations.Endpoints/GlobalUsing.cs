@@ -1,0 +1,10 @@
+﻿global using Maraudr.Associations.Application;
+global using Maraudr.Associations.Application.Dtos;
+global using Maraudr.Associations.Application.UseCases.Command;
+global using Maraudr.Associations.Application.UseCases.Query;
+global using Maraudr.Associations.Infrastructure;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;
+global using FluentValidation;
