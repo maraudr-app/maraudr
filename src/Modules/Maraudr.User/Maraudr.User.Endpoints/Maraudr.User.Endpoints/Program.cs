@@ -67,6 +67,15 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
@@ -76,6 +85,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowFrontend3000");
+
 
 app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
     IValidator<CreateUserDto> validator ) => {
