@@ -1,12 +1,20 @@
-using Application.UseCases.Manager.AddUserToManagersTeam;
-using Application.UseCases.Manager.QueryManagersTeam;
-using Application.UseCases.Manager.RemoveUserFromManagersTEam;
-using Application.UseCases.User.CreateUser;
-using Application.UseCases.User.DeleteUser;
-using Application.UseCases.User.QueryAllUsers;
-using Application.UseCases.User.QueryUser;
-using Application.UseCases.User.SearchByNameUser;
-using Application.UseCases.User.UpdateUser;
+using Application.UseCases.Tokens.Authentication.AuthenticateUser;
+using Application.UseCases.Tokens.Authentication.RefreshToken;
+using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
+using Application.UseCases.Tokens.JwtManagement.GenerateRefreshToken;
+using Application.UseCases.Tokens.JwtManagement.RefreshToken;
+using Application.UseCases.Users.Manager.AddUserToManagersTeam;
+using Application.UseCases.Users.Manager.QueryManagersTeam;
+using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
+using Application.UseCases.Users.User.CreateUser;
+using Application.UseCases.Users.User.DeleteUser;
+using Application.UseCases.Users.User.LogoutUser;
+using Application.UseCases.Users.User.QueryAllUsers;
+using Application.UseCases.Users.User.QueryConnectedUsers;
+using Application.UseCases.Users.User.QueryUser;
+using Application.UseCases.Users.User.QueryUserByEmail;
+using Application.UseCases.Users.User.SearchByNameUser;
+using Application.UseCases.Users.User.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -25,5 +33,13 @@ public static class DependencyInjection
         services.AddScoped<IAddUserToManagersTeamHandler, AddUserToManagersTeamHandler>();
         services.AddScoped<IRemoveUserFromManagerTeamHandler, RemoveUserFromManagerTeamHandler>();
         services.AddScoped<ISearchByNameUserHandler, SearchByNameUserHandler>();
+        services.AddScoped<IQueryUserByEmailHandler, QueryUserByEmailHandler>();
+        services.AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>();
+        services.AddScoped<IGenerateAccessTokenHandler, GenerateAccessTokenHandler>();
+        services.AddScoped<IGenerateRefreshTokenHandler, GenerateRefreshTokenHandler>();
+        services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
+        services.AddScoped<ILogoutUserHandler, LogoutUserHandler>();
+        services.AddScoped<IQueryConnectedUsersHandler, QueryConnectedUsersHandler>();
+
     }
 }
