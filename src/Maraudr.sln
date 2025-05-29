@@ -29,17 +29,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.User.Endpoints", "M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Associations", "Associations", "{ED99F4E3-57F0-4996-8536-902FE7C555B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Domain", "Modules\Maraudr.Assocation\Maraudr.Associations.Domain\Maraudr.Associations.Domain.csproj", "{54471F55-DDD7-4D31-82D3-BE2121ACBF6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Domain", "Modules\Maraudr.Association\Maraudr.Associations.Domain\Maraudr.Associations.Domain.csproj", "{54471F55-DDD7-4D31-82D3-BE2121ACBF6A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{82315818-9B87-47FD-869B-87FACD7F0E98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Association.Domain.Tests", "Modules\Maraudr.Assocation\tests\Maraudr.Association.Domain.Tests\Maraudr.Association.Domain.Tests.csproj", "{E2286484-D1A2-43DC-95C2-A24578E9B818}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Association.Domain.Tests", "Modules\Maraudr.Association\tests\Maraudr.Association.Domain.Tests\Maraudr.Association.Domain.Tests.csproj", "{E2286484-D1A2-43DC-95C2-A24578E9B818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Infrastructure", "Modules\Maraudr.Assocation\Maraudr.Associations.Infrastructure\Maraudr.Associations.Infrastructure.csproj", "{B3220560-3795-4734-B99E-F7FDECBF2EFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Infrastructure", "Modules\Maraudr.Association\Maraudr.Associations.Infrastructure\Maraudr.Associations.Infrastructure.csproj", "{B3220560-3795-4734-B99E-F7FDECBF2EFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Application", "Modules\Maraudr.Assocation\Maraudr.Associations.Application\Maraudr.Associations.Application.csproj", "{D9B90B63-BCA1-4AF1-9C90-6F448FB8C5EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Application", "Modules\Maraudr.Association\Maraudr.Associations.Application\Maraudr.Associations.Application.csproj", "{D9B90B63-BCA1-4AF1-9C90-6F448FB8C5EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Endpoints", "Modules\Maraudr.Assocation\Maraudr.Associations.Endpoints\Maraudr.Associations.Endpoints.csproj", "{84F747DA-0AB7-459A-8FC1-F4573F6399FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Associations.Endpoints", "Modules\Maraudr.Association\Maraudr.Associations.Endpoints\Maraudr.Associations.Endpoints.csproj", "{84F747DA-0AB7-459A-8FC1-F4573F6399FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
