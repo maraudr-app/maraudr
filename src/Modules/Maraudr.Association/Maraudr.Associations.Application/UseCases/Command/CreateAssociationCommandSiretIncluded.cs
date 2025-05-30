@@ -9,7 +9,7 @@ namespace Maraudr.Associations.Application.UseCases.Command;
 
 public interface ICreateAssociationHandlerSiretIncluded
 {
-    Task <Guid> HandleAsync(string siret, IHttpClientFactory factory);
+    Task<Guid> HandleAsync(string siret, IHttpClientFactory factory);
 }
 
 public class CreateAssociationSiretIncluded(IAssociations associations) : ICreateAssociationHandlerSiretIncluded
@@ -49,14 +49,34 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         }
 
         var name = data.Identity.Nom;
-        var addr = data.Coordinates.HeadquartersAddress;
-        var fullStreet = $"{addr.NumVoie} {addr.TypeVoie} {addr.Voie}";
+
+        // Choix de la meilleure adresse
+        var addr = GetBestAddress(data.Coordinates);
+
+        var fullStreet = string.Join(" ", new[] { addr.NumVoie, addr.TypeVoie, addr.Voie }
+            .Where(part => !string.IsNullOrWhiteSpace(part)));
+
         var address = new Address(fullStreet, addr.Commune, addr.CodePostal.ToString(), "France");
 
         var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address);
 
         var result = await associations.RegisterAssociation(association);
+        if (result is null)
+        {
+            throw new Exception("Failed to create association.");
+        }
+
         return result.Id;
+    }
+
+    private static HeadquartersAddress GetBestAddress(Coordinates coords)
+    {
+        var primary = coords.HeadquartersAddress;
+        if (string.IsNullOrWhiteSpace(primary.NumVoie) && coords.HeadquartersAddressSirene is not null)
+        {
+            return coords.HeadquartersAddressSirene;
+        }
+        return primary;
     }
 }
 
@@ -75,15 +95,26 @@ public record Identity(
 );
 
 public record Coordinates(
-    [property: JsonPropertyName("adresse_siege")] HeadquartersAddress HeadquartersAddress
+    [property: JsonPropertyName("adresse_siege")] HeadquartersAddress HeadquartersAddress,
+    [property: JsonPropertyName("adresse_siege_sirene")] HeadquartersAddress? HeadquartersAddressSirene
 );
 
 public record HeadquartersAddress(
-    [property: JsonPropertyName("num_voie")] int NumVoie,
-    [property: JsonPropertyName("type_voie")] string TypeVoie,
-    [property: JsonPropertyName("voie")] string Voie,
-    [property: JsonPropertyName("cp")] int CodePostal,
-    [property: JsonPropertyName("commune")] string Commune
+    [property: JsonPropertyName("num_voie")]
+    [property: JsonConverter(typeof(FlexibleStringConverter))]
+    string NumVoie,
+
+    [property: JsonPropertyName("type_voie")]
+    string TypeVoie,
+
+    [property: JsonPropertyName("voie")]
+    string Voie,
+
+    [property: JsonPropertyName("cp")]
+    int CodePostal,
+
+    [property: JsonPropertyName("commune")]
+    string Commune
 );
 
 public class FlexibleStringConverter : JsonConverter<string>
