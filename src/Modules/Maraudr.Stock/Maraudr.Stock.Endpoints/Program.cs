@@ -10,12 +10,9 @@ builder.Services.AddApplication();
 builder.Services.AddValidation();
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.MapGet("/stock/{id}", async (Guid id, IQueryItemHandler handler) =>
 {
@@ -27,6 +24,24 @@ app.MapGet("/stock/type/{type}", async (Category type, IQueryItemByType handler)
 {
     var item = await handler.HandleAsync(type);
     return Results.Ok(item);
+});
+
+
+app.MapPost("/stock/{barcode}", async (
+    string barcode,
+    ICreateItemFromBarcodeHandler handler) =>
+{
+    Guid id;
+    try
+    {
+        id = await handler.HandleAsync(barcode);
+    }
+    catch (Exception e)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Created($"/stock/{id}", new { id });
 });
 
 app.MapPost("/stock/", async (
@@ -83,5 +98,7 @@ app.MapDelete("/stock/{id}", async (Guid id, IDeleteItemHandler handler) =>
     await handler.HandleAsync(id);
     return Results.Ok();
 });
+
+
 
 app.Run();
