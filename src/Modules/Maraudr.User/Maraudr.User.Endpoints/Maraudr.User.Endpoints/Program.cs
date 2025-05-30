@@ -34,14 +34,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddValidation();
-
-
 
 //todo : dependency injection 
 builder.Services.AddAuthentication(options =>
@@ -77,16 +74,13 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
 
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowFrontend3000");
-
 
 app.MapPost("/users", async (CreateUserDto user, ICreateUserHandler handler, 
     IValidator<CreateUserDto> validator ) => {

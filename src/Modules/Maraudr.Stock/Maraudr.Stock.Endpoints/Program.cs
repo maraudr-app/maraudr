@@ -13,7 +13,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.MapGet("/stock/{id}", async (Guid id, IQueryItemHandler handler) =>
 {
     var item = await handler.HandleAsync(id);
