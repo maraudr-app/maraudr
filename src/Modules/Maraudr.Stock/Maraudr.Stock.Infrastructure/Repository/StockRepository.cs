@@ -22,7 +22,7 @@ public class StockRepository(StockContext context) : IStockRepository
     public async Task<StockItem?> GetStockItemByIdAsync(Guid id)
     {
         var item = await _context.Items.FindAsync(id);
-        return item is null ? null : item;
+        return item;
     }
 
     public async Task<IEnumerable<StockItem>> GetStockItemByTypeAsync(Category type)

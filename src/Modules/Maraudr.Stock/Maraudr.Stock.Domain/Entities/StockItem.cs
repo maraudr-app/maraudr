@@ -1,5 +1,6 @@
 ﻿namespace Maraudr.Stock.Domain.Entities
 {
+    // TODO : prendre en compte les quantités 
     public class StockItem : IResource
     {
         public Guid Id { get; init; }
