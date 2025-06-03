@@ -22,6 +22,7 @@ public class OpenFoodFactRepository(HttpClient httpClient) : IOpenFoodFactReposi
         {
             Name = product.GetProperty("product_name").GetString() ?? "Unknown",
             Description = product.TryGetProperty("ingredients_text", out var desc) ? desc.GetString() : null,
+            BarCode = code,
             Category = Category.Food
         };
     }

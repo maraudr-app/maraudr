@@ -26,6 +26,18 @@ app.MapGet("/stock/type/{type}", async (Category type, IQueryItemByType handler)
     return Results.Ok(item);
 });
 
+app.MapPatch("/stock/{id}/quantity", async (Guid id, [FromBody] int quantity, IRemoveQuantityFromStockHandler handler) =>
+{
+    try
+    {
+        await handler.HandleAsync(id, quantity);
+        return Results.Ok(id);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
 
 app.MapPost("/stock/{barcode}", async (
     string barcode,
@@ -38,7 +50,7 @@ app.MapPost("/stock/{barcode}", async (
     }
     catch (Exception e)
     {
-        return Results.NotFound();
+        return Results.NotFound(e.Message);
     }
 
     return Results.Created($"/stock/{id}", new { id });
@@ -64,34 +76,7 @@ app.MapPost("/stock/", async (
     return Results.Created($"/stock/{id}", new { id });
 });
 
-app.MapPost("/stock/bulk", async (
-    CreateItemCommand item, 
-    [FromQuery] int quantity, 
-    ICreateMultipleItemsHandler handler, 
-    IValidator<CreateItemCommand> validator) =>
-{
-    var result = validator.Validate(item);
 
-    if (!result.IsValid)
-    {
-        var errors = result.Errors
-            .ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
-        return Results.BadRequest(errors);
-    }
-
-    if (quantity <= 0)
-    {
-        return Results.BadRequest(new { Error = "Quantity must be greater than 0." });
-    }
-
-    var commands = Enumerable.Range(0, quantity)
-        .Select(_ => new CreateItemCommand(item.Name, item.Description, item.ItemType))
-        .ToList();
-
-    var items = await handler.HandleAsync(commands);
-
-    return Results.Created("/stock", new { items });
-});
 
 app.MapDelete("/stock/{id}", async (Guid id, IDeleteItemHandler handler) =>
 {

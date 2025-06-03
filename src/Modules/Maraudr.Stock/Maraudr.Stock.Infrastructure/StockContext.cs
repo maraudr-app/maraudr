@@ -2,5 +2,5 @@
 
 public class StockContext(DbContextOptions<StockContext> options) : DbContext(options)
 {
-    public DbSet<StockItem> Items { get; init; } = null!;
+    public DbSet<StockItem?> Items { get; init; } = null!;
 }

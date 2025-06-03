@@ -11,6 +11,6 @@ public class QueryItemByType(IStockRepository repository) : IQueryItemByType
     {
         var items = await repository.GetStockItemByTypeAsync(type);
 
-        return items.Select(item => new StockItemQuery(item.Id, item.Name, item.Description, item.Category, item.EntryDate));
+        return items.Select(item => new StockItemQuery(item.Id, item.Name, item.Description,item.Quantity, item.Category, item.EntryDate));
     }
 }
