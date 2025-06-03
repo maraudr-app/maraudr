@@ -1,17 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+# syntax=docker/dockerfile:1
 
-COPY . .
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+COPY . /source
+WORKDIR /source/Maraudr.User.Endpoints/Maraudr.User.Endpoints
+ARG TARGETARCH
 
-RUN dotnet restore Maraudr.User.Endpoints/Maraudr.User.Endpoints.csproj
+RUN dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
 
-WORKDIR /src/Maraudr.User.Endpoints
-RUN dotnet publish Maraudr.User.Endpoints.csproj -c Release -o /app/publish
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
 WORKDIR /app
-COPY --from=build /app/publish .
-
-EXPOSE 8080
+COPY --from=build /app .
 
 ENTRYPOINT ["dotnet", "Maraudr.User.Endpoints.dll"]
