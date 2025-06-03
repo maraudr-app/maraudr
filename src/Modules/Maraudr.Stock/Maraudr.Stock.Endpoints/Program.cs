@@ -1,5 +1,9 @@
+using System.Text;
 using Maraudr.Stock.Endpoints;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,25 +12,37 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddValidation();
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddAuthenticationServices(builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>(),builder.Configuration);
 
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.MapGet("/stock/{id}", async (Guid id, IQueryItemHandler handler) =>
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+app.MapGet("/stock/{id}", [Authorize] async (Guid id, IQueryItemHandler handler) =>
 {
     var item = await handler.HandleAsync(id);
     return item is not null ? Results.Ok(item) : Results.NotFound();
 });
 
-app.MapGet("/stock/type/{type}", async (Category type, IQueryItemByType handler) =>
+app.MapGet("/stock/type/{type}", [Authorize] async (Category type, IQueryItemByType handler) =>
 {
     var item = await handler.HandleAsync(type);
     return Results.Ok(item);
 });
 
-app.MapPatch("/stock/{id}/quantity", async (Guid id, [FromBody] int quantity, IRemoveQuantityFromStockHandler handler) =>
+app.MapGet("/stock/barcode/{barcode}", [Authorize] async (string barcode, IQueryItemWithBarCodeHandler handler) =>
+{
+    var item = await handler.HandleAsync(barcode);
+    return Results.Ok(item);
+});
+
+app.MapPatch("/stock/{id}/quantity", [Authorize] async (Guid id, [FromBody] int quantity, IRemoveQuantityFromStockHandler handler) =>
 {
     try
     {
@@ -39,7 +55,7 @@ app.MapPatch("/stock/{id}/quantity", async (Guid id, [FromBody] int quantity, IR
     }
 });
 
-app.MapPost("/stock/{barcode}", async (
+app.MapPost("/stock/{barcode}", [Authorize] async (
     string barcode,
     ICreateItemFromBarcodeHandler handler) =>
 {
@@ -56,7 +72,7 @@ app.MapPost("/stock/{barcode}", async (
     return Results.Created($"/stock/{id}", new { id });
 });
 
-app.MapPost("/stock/", async (
+app.MapPost("/stock/", [Authorize] async (
     CreateItemCommand item, 
     ICreateItemHandler handler, 
     IValidator<CreateItemCommand> validator) =>
@@ -78,7 +94,7 @@ app.MapPost("/stock/", async (
 
 
 
-app.MapDelete("/stock/{id}", async (Guid id, IDeleteItemHandler handler) =>
+app.MapDelete("/stock/{id}", [Authorize] async (Guid id, IDeleteItemHandler handler) =>
 {
     await handler.HandleAsync(id);
     return Results.Ok();

@@ -1,14 +1,16 @@
+using Microsoft.Extensions.Options;
+
 namespace Maraudr.Stock.Infrastructure.Repository;
 
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-public class OpenFoodFactRepository(HttpClient httpClient) : IOpenFoodFactRepository
+public class OpenFoodFactRepository(HttpClient httpClient,IOptions<ApiSettings> options) : IOpenFoodFactRepository
 {
     public async Task<StockItem?> GetAllProductDataByCode(string code)
     {
-        var url = $"https://world.openfoodfacts.net/api/v2/product/{code}.json";
+        var url = options.Value.OpenFoodFactApiUrl + $"product/{code}.json";
         var response = await httpClient.GetAsync(url);
 
         if (!response.IsSuccessStatusCode) return null;
