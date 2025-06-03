@@ -43,28 +43,7 @@ builder.Services.AddValidation();
 
 
 
-//todo : dependency injection 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        var jwtSection = builder.Configuration.GetSection("JWT");
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSection["Secret"])),
-            ValidateIssuer = true,
-            ValidIssuer = jwtSection["ValidIssuer"],
-            ValidateAudience = true,
-            ValidAudience = jwtSection["ValidAudience"],
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
