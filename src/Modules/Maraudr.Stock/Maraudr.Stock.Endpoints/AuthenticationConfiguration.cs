@@ -28,7 +28,7 @@ public static class AuthenticationConfiguration
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = apiSettings.AuthenticationApiUrl, 
+                    ValidIssuer = "auth-api", 
                     ValidAudience = "https://localhost:7140", 
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
