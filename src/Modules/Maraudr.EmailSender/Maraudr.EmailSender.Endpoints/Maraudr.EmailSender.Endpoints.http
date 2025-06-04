@@ -1,0 +1,6 @@
+@Maraudr.EmailSender.Endpoints_HostAddress = http://localhost:5009
+
+GET {{Maraudr.EmailSender.Endpoints_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
