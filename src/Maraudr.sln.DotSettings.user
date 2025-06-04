@@ -12,6 +12,6 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ASwaggerUIMiddleware_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F2813f16dfae791865ab77daff01fdc41fe1d1ff9b5ba56dc6579d5175f1c_003FSwaggerUIMiddleware_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=59a5eda1_002Dbf54_002D4c0e_002D8aac_002D880bccc555f1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::E2286484-D1A2-43DC-95C2-A24578E9B818::net8.0::Maraudr.Association.Domain.Tests.AssociationTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::17CA8FD6-C371-031E-157F-500CB8B611FB::net8.0::Maraudr.Stock.Domain.Tests.StockItemTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

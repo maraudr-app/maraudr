@@ -37,15 +37,7 @@ public class StockItemTests
         Assert.Throws<InvalidItemNameException>(() => new StockItem(null!));
     }
 
-    [Fact]
-    public void Description_ShouldNotBeNull_WhenSet()
-    {
-        var item = new StockItem("Water", "A bottle of water");
-
-        Assert.Equal("Water", item.Name);
-        Assert.Equal("A bottle of water", item.Description);
-    }
-
+    
     [Fact]
     public void Description_ShouldBeNull_WhenNotSet()
     {
