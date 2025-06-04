@@ -19,6 +19,7 @@ public static class DependencyInjection
 
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
         services.AddScoped<IUnregisterAssociation, UnregisterAssociation>();
+        services.AddScoped<IAddMemberToAssociationHandler, AddMemberToAssociation>();
         services.AddScoped<ICreateAssociationHandlerSiretIncluded, CreateAssociationSiretIncluded>();
         services.AddScoped<ISearchAssociationsByNameHandler, SearchAssociationsByName>();
         services.AddScoped<IUpdateAssociationHandler, UpdateAssociation>();

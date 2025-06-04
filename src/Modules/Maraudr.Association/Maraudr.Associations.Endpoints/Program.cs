@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -136,6 +138,21 @@ app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")]
         return Results.NoContent();    
     });
 
+app.MapPost("/association/member",
+    async (AddMemberRequestDto request,
+        IAddMemberToAssociationHandler handler) =>
+    {
+        try
+        {
+            await handler.HandleAsync(request.UserId, request.AssociationId);
+            return Results.Ok();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+    });
+
 app.MapHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -143,3 +160,4 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.Run();
+

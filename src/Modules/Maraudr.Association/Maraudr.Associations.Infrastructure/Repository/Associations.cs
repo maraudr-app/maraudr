@@ -41,6 +41,19 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
         return association;
     }
     
+    public async Task AddUserToAssociationAsync(Guid associationId, Guid userId)
+    {
+        var association = await context.Associations.FindAsync(associationId);
+        if (association == null)
+            throw new ArgumentException("Association not found");
+
+        if (association.Members.Contains(userId))
+            throw new InvalidOperationException("User is already a member of this association");
+
+        association.Members.Add(userId);
+        await context.SaveChangesAsync();
+    }
+    
     public async Task<List<Association?>> ListPaginated(int skip, int take)
     {
         return await context.Associations
