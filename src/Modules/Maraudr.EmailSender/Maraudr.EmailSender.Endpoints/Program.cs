@@ -1,16 +1,24 @@
+using Maraudr.EmailSender.Application;
+using Maraudr.EmailSender.Application.Dtos;
+using Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail;
+using Maraudr.EmailSender.Domain.Interfaces;
 using Maraudr.EmailSender.Endpoints.MailSettings;
+using Maraudr.EmailSender.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers(); // Ou AddMvc() si vous utilisez MVC complet
 
+builder.Services.AddEndpointsApiExplorer(); 
 // Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-builder.Services.AddInfrastructure();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,16 +36,12 @@ app.MapControllers();
 
 
 
-app.MapPost("/email/send", async (
+app.MapPost("/email/send-welcome", async (
     [FromBody] MailToQuery query,
     ISendWelcomeEmailHandler handler) =>
 {
-    if (query is null)
-    {
-        throw new ArgumentNullException(nameof(query));
-    }
 
-    await handler.HandleAsync(email);
+    await handler.HandleAsync(query);
 
 });
 app.Run();

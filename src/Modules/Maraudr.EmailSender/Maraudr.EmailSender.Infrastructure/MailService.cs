@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using MailKit.Security;
 using MimeKit;
-using MailKit.Net.Smtp;
 using Maraudr.EmailSender.Domain.Interfaces;
 using Maraudr.EmailSender.Application.Dtos;
 using Maraudr.EmailSender.Endpoints.MailSettings;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Maraudr.EmailSender.Application.Dtos
 {
-    internal class MailToQuery
+    public class MailToQuery
     {
         public string ToEmail { get; set; }
         public string Name { get; set; }

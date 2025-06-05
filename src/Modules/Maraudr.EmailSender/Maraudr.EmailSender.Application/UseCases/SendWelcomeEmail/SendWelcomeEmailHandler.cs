@@ -16,7 +16,8 @@ namespace Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail
             {
                 ToEmail = query.ToEmail,
                 Subject = "Welcome to Maraudr",
-                Body = $"Hello {query.Name},\n\nWelcome to Maraudr! We are excited to have you on board.\n\nBest regards,\nMaraudr Team"
+                Body = $"Hello {query.Name},\nWelcome to Maraudr! We are excited to have you on board.\nBest regards,\nMaraudr Team"
+                                
             });
         }
     }

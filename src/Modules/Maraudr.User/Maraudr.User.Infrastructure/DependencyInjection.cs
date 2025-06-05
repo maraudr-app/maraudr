@@ -16,5 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPasswordManager, PasswordManager>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IMailSenderRepository, MailSenderRepository>();
+
     }
 }
