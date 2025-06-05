@@ -29,8 +29,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-// TODO : many endpoints require auth -> doit être impléménté assez vite 
-// TODO : verifeir unicité via email aussi & numéro de telephone aussi  
+// TODO : verifier unicité via email aussi & numéro de telephone aussi  
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +39,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddValidation();
-
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddHttpClient();
 
 
 builder.Services.AddAuthenticationServices(builder.Configuration);

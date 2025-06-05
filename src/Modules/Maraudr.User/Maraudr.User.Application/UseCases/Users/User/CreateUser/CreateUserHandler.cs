@@ -7,7 +7,7 @@ using Maraudr.User.Infrastructure.Security;
 namespace Application.UseCases.Users.User.CreateUser;
 
 
-public class CreateUserHandler(IUserRepository repository,IPasswordManager passwordManager) : ICreateUserHandler
+public class CreateUserHandler(IUserRepository repository,IPasswordManager passwordManager,IMailSenderRepository mailSenderRepository ) : ICreateUserHandler
 {
 
     public async Task<Guid> HandleAsync(CreateUserDto createUserDto)
@@ -20,6 +20,8 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
         {
             var manager = CreationCommandToManager.MapCreationCommandToManager(createUserDto,passwordManager);
             await repository.AddAsync(manager);
+            await mailSenderRepository.SendWelcomeEmailTo(manager.ContactInfo.Email, manager.Firstname);
+
             return manager.Id;
         }else{
             
@@ -43,8 +45,11 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             var cManager = (Maraudr.User.Domain.Entities.Users.Manager)manager;
             cManager.AddMemberToTeam(user);
             await repository.UpdateAsync(cManager);
+
+            await mailSenderRepository.SendWelcomeEmailTo(user.ContactInfo.Email, user.Firstname);
             return user.Id;
         }
+        
         
     }
 }
