@@ -49,6 +49,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.EmailSender.Endpoin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.EmailSender.Infrastructure", "Modules\Maraudr.EmailSender\Maraudr.EmailSender.Infrastructure\Maraudr.EmailSender.Infrastructure.csproj", "{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Disponibilities", "Disponibilities", "{72A05AE1-D63E-4E2D-9594-364A45AE3FA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Disponibilities.Application", "Modules\Maraudr.Disponibilities\Maraudr.Disponibilities.Application\Maraudr.Disponibilities.Application.csproj", "{783370E9-E90A-4351-BA20-35DF3A58ACED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Disponibilities.Infrastructure", "Modules\Maraudr.Disponibilities\Maraudr.Disponibilities.Infrastructure\Maraudr.Disponibilities.Infrastructure.csproj", "{CCE2E804-0165-4BC9-970B-739FE764909F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Disponibilities.Domain", "Modules\Maraudr.Disponibilities\Maraudr.Disponibilities.Domain\Maraudr.Disponibilities.Domain.csproj", "{94958308-3059-4D60-81F5-9ABACA33EFBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Disponibilities.Endpoints", "Modules\Maraudr.Disponibilities\Maraudr.Disponibilities.Endpoints\Maraudr.Disponibilities.Endpoints.csproj", "{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +133,22 @@ Global
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{783370E9-E90A-4351-BA20-35DF3A58ACED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783370E9-E90A-4351-BA20-35DF3A58ACED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783370E9-E90A-4351-BA20-35DF3A58ACED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783370E9-E90A-4351-BA20-35DF3A58ACED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE2E804-0165-4BC9-970B-739FE764909F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE2E804-0165-4BC9-970B-739FE764909F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE2E804-0165-4BC9-970B-739FE764909F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE2E804-0165-4BC9-970B-739FE764909F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94958308-3059-4D60-81F5-9ABACA33EFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94958308-3059-4D60-81F5-9ABACA33EFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94958308-3059-4D60-81F5-9ABACA33EFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94958308-3059-4D60-81F5-9ABACA33EFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +173,10 @@ Global
 		{03A6C491-4643-4715-8FB0-8D3BBEB4BD8A} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
 		{57D92403-96E8-4668-A985-A95EF9943EA6} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
+		{783370E9-E90A-4351-BA20-35DF3A58ACED} = {72A05AE1-D63E-4E2D-9594-364A45AE3FA8}
+		{CCE2E804-0165-4BC9-970B-739FE764909F} = {72A05AE1-D63E-4E2D-9594-364A45AE3FA8}
+		{94958308-3059-4D60-81F5-9ABACA33EFBC} = {72A05AE1-D63E-4E2D-9594-364A45AE3FA8}
+		{1C288788-30C1-4FCB-AF23-4CDBE3F5B02E} = {72A05AE1-D63E-4E2D-9594-364A45AE3FA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BCD56F0-98C0-4AB6-A596-4EA261D31C8D}
