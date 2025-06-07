@@ -153,6 +153,21 @@ app.MapPost("/association/member",
         }
     });
 
+app.MapGet("/association/membership",
+    async (Guid id,
+        IGetAssocationsOfUserHandler handler) =>
+    {
+        try
+        {
+            var associations = await handler.HandleAsync(id);
+            return Results.Ok(associations);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+    });
+
 app.MapHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
