@@ -12,4 +12,5 @@ public interface IAssociations
     Task<Association?> GetAssociationBySiret(string siret);
     Task<List<Association>> SearchAssociationsByName(string name);
     Task<List<Association>> SearchAssociationsByCity(string city);
+    Task AddUserToAssociationAsync(Guid associationId, Guid userId);
 }

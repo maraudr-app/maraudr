@@ -30,6 +30,14 @@ public class Association
         Address = newAddress;
     }
     
+    public void AddMember(Guid userId)
+    {
+        if (Members.Contains(userId))
+            throw new InvalidOperationException("User already member of the association.");
+
+        Members.Add(userId);
+    }
+    
     private bool Equals(Association other)
     {
         return Id.Equals(other.Id);

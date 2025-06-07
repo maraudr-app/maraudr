@@ -5,15 +5,21 @@ services:
       target: final
     ports:
       - 8080:8080
+
   stock:
     build:
       context: ./src/Modules/Maraudr.Stock/
       target: final
     ports:
       - 8081:8080
+    environment:
+      - Jwt__Secret=SECRET
+
   user:
     build:
       context: ./src/Modules/Maraudr.User/
       target: final
     ports:
       - 8082:8080
+    environment:
+      - Jwt__Secret=SECRET
