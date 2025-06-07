@@ -4,8 +4,6 @@ namespace Maraudr.User.Domain.Entities.Users;
 
 public abstract class AbstractUser
 {
-   
-
     public virtual Role Role { get; protected set; }
     public Guid Id { get;  set; }
     public string Firstname { get;  set; }
@@ -25,7 +23,8 @@ public abstract class AbstractUser
     
     public string? Biography { get; set; }
 
-    
+    public string UserType { get; private set; } = null!;
+
     
     public List<Language> Languages { get; set; }
 
