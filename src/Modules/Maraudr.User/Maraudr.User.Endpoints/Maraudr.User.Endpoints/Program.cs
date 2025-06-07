@@ -29,7 +29,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-// TODO : verifier unicité via email aussi & numéro de telephone aussi  
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,12 +55,11 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
 
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowFrontend3000");

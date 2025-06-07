@@ -23,3 +23,20 @@ services:
       - 8082:8080
     environment:
       - Jwt__Secret=SECRET
+      - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
+
+
+
+  email-sender:
+    build:
+      context: ./src/Modules/Maraudr.EmailSender/
+      target: final
+    ports:
+      - 8083:8080
+    environment:
+      - Jwt__Secret=SECRET
+      - MailSettings__Password=
+      - MailSettings__Mail=
+      - MailSettings__Host=smtp.mailersend.net
+      - MailSettings__Port=587
+
