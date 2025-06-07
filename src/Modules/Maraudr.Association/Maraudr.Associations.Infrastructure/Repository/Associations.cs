@@ -94,4 +94,12 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
             .Where(a => EF.Functions.Like(a.City!, $"%{city}%"))
             .ToListAsync();
     }
+    
+    public async Task<IEnumerable<Guid>> GetAssociationIdsByUserIdAsync(Guid userId)
+    {
+        return await context.Associations
+            .Where(a => a.Members.Contains(userId))
+            .Select(a => a.Id)
+            .ToListAsync();
+    }
 }
