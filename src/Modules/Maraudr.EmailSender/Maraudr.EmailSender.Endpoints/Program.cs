@@ -18,16 +18,7 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 
 
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowLocalhost8082", builder =>
-    {
-        builder.WithOrigins("http://localhost:8082")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-});
+
 
 
 var app = builder.Build();
