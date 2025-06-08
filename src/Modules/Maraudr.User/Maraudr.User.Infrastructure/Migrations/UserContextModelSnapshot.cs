@@ -116,6 +116,12 @@ namespace Maraudr.User.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
                     b.Property<string>("UserType")
                         .IsRequired()
                         .HasMaxLength(13)
@@ -128,6 +134,28 @@ namespace Maraudr.User.Infrastructure.Migrations
                     b.HasDiscriminator<string>("UserType").HasValue("AbstractUser");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Maraudr.User.Domain.ValueObjects.Users.Disponibility", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Disponibilities", (string)null);
                 });
 
             modelBuilder.Entity("Maraudr.User.Domain.Entities.Users.Manager", b =>
@@ -230,6 +258,15 @@ namespace Maraudr.User.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Maraudr.User.Domain.ValueObjects.Users.Disponibility", b =>
+                {
+                    b.HasOne("Maraudr.User.Domain.Entities.Users.AbstractUser", null)
+                        .WithMany("Disponibilities")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Maraudr.User.Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("Maraudr.User.Domain.Entities.Users.Manager", "Manager")
@@ -238,6 +275,11 @@ namespace Maraudr.User.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Manager");
+                });
+
+            modelBuilder.Entity("Maraudr.User.Domain.Entities.Users.AbstractUser", b =>
+                {
+                    b.Navigation("Disponibilities");
                 });
 
             modelBuilder.Entity("Maraudr.User.Domain.Entities.Users.Manager", b =>
