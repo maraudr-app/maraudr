@@ -32,5 +32,12 @@
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/rider.project.restore.info
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.nuget.cache
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/project.nuget.cache
+
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Application/bin
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Application/obj
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Endpoints/bin
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Endpoints/obj
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Infrastructure/bin
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Infrastructure/obj
 .env
 *.env

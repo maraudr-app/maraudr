@@ -29,7 +29,7 @@ services:
     ports:
       - 8081:8080
     environment:
-      - Jwt__Secret=SECRET
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
     depends_on:
       - maraudr-db
 
@@ -40,7 +40,7 @@ services:
     ports:
       - 8082:8080
     environment:
-      - Jwt__Secret=SECRET
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
     depends_on:
       - maraudr-db
@@ -53,7 +53,7 @@ services:
     ports:
       - 8083:8080
     environment:
-      - Jwt__Secret=SECRET
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - MailSettings__Password=
       - MailSettings__Mail=
       - MailSettings__Host=smtp.mailersend.net

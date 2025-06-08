@@ -20,7 +20,7 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
         {
             var manager = CreationCommandToManager.MapCreationCommandToManager(createUserDto,passwordManager);
             await repository.AddAsync(manager);
-            await mailSenderRepository.SendWelcomeEmailTo(manager.ContactInfo.Email, manager.Firstname);
+            //await mailSenderRepository.SendWelcomeEmailTo(manager.ContactInfo.Email, manager.Firstname);
 
             return manager.Id;
         }else{
@@ -46,7 +46,7 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             cManager.AddMemberToTeam(user);
             await repository.UpdateAsync(cManager);
 
-            await mailSenderRepository.SendWelcomeEmailTo(user.ContactInfo.Email, user.Firstname);
+            //await mailSenderRepository.SendWelcomeEmailTo(user.ContactInfo.Email, user.Firstname);
             return user.Id;
         }
         
