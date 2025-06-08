@@ -1,5 +1,6 @@
 using Application.DTOs.DisponibilitiesQueriesDtos.Requests;
 using FluentValidation;
+using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Application.Validators;
 
@@ -17,6 +18,9 @@ public class CreateDisponiblityValidator : AbstractValidator<CreateDisponiblityR
         
         RuleFor(d => d)
             .Must(BeLogicalDuration).WithMessage("La durée de disponibilité doit être raisonnable (moins de 120h)");
+        
+        
+    
     }
     
     private bool BeInFuture(DateTime dateTime)
@@ -29,4 +33,6 @@ public class CreateDisponiblityValidator : AbstractValidator<CreateDisponiblityR
         TimeSpan duration = request.End - request.Start;
         return duration.TotalHours <= 120;
     }
+    
+
 }
