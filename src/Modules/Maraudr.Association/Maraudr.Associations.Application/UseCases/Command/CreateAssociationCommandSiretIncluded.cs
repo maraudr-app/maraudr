@@ -9,12 +9,12 @@ namespace Maraudr.Associations.Application.UseCases.Command;
 
 public interface ICreateAssociationHandlerSiretIncluded
 {
-    Task<Guid> HandleAsync(string siret, IHttpClientFactory factory);
+    Task<Guid> HandleAsync(string siret, Guid id, IHttpClientFactory factory);
 }
 
 public class CreateAssociationSiretIncluded(IAssociations associations) : ICreateAssociationHandlerSiretIncluded
 {
-    public async Task<Guid> HandleAsync(string siret, IHttpClientFactory factory)
+    public async Task<Guid> HandleAsync(string siret, Guid id, IHttpClientFactory factory)
     {
         using var client = factory.CreateClient("siret");
         var response = await client.GetAsync($"api/structure/{siret}");
@@ -50,7 +50,6 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
 
         var name = data.Identity.Nom;
 
-        // Choix de la meilleure adresse
         var addr = GetBestAddress(data.Coordinates);
 
         var fullStreet = string.Join(" ", new[] { addr.NumVoie, addr.TypeVoie, addr.Voie }
@@ -60,6 +59,9 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
 
         var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address);
 
+        association.ManagerId = id;
+        association.Members.Add(id);
+        
         var result = await associations.RegisterAssociation(association);
         if (result is null)
         {
