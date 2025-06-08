@@ -15,6 +15,7 @@ public class UserContext : DbContext
     public DbSet<AbstractUser> Users { get; set; }
     public DbSet<RefreshToken?> RefreshTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+    public DbSet<Disponibility> Disponibilities { get; set; } // Ajoutez cette ligne
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -111,6 +112,57 @@ public class UserContext : DbContext
                 .WithMany()
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            
         });
+        modelBuilder.Entity<Disponibility>(builder =>
+        {
+            builder.ToTable("Disponibilities");
+        
+            builder.HasKey(d => d.Id);
+        
+            builder.Property(d => d.Start)
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                )
+                .IsRequired();
+            
+            builder.Property(d => d.End)
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                )
+                .IsRequired();
+            
+            builder.HasOne<AbstractUser>()
+                .WithMany(u => u.Disponibilities)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<AbstractUser>()
+            .HasMany(u => u.Disponibilities)
+            .WithOne()
+            .HasForeignKey(d => d.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<AbstractUser>()
+            .Property(u => u.RowVersion)
+            .IsRowVersion();
+        
+        modelBuilder.Entity<Disponibility>(builder =>
+{
+    builder.ToTable("Disponibilities");
+    builder.HasKey(d => d.Id);
+    // ...
+});
+
+modelBuilder.Entity<AbstractUser>()
+    .HasMany(u => u.Disponibilities)
+    .WithOne()
+    .HasForeignKey(d => d.UserId)
+    .OnDelete(DeleteBehavior.Cascade);
+        
     }
 }
+

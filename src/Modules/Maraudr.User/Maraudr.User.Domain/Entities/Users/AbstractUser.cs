@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Maraudr.User.Domain.Entities.Users;
@@ -15,7 +16,8 @@ public abstract class AbstractUser
     public ContactInfo ContactInfo { get;  set; }
     public Address Address { get;  set; } 
     public string PasswordHash { get; set; }
-    
+
+    public virtual ICollection<Disponibility> Disponibilities { get; private set; } = new List<Disponibility>();
     private bool IsAdmin {
         get;
         set;
@@ -27,7 +29,8 @@ public abstract class AbstractUser
 
     
     public List<Language> Languages { get; set; }
-
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
 
     protected AbstractUser( string firstname, string lastname, DateTime createdAt,
         ContactInfo contactInfo, Address address,List<Language> languages,string passwordHash)
@@ -177,6 +180,26 @@ public abstract class AbstractUser
         IsActive = isConnected;
     }
 
+    // Méthode pour ajouter une disponibilité
+    public void AddDisponiblity(DateTime start, DateTime end)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+            
+        Disponibilities.Add(new Disponibility
+        {
+            Start = start,
+            End = end,
+            UserId = Id
+        });
+    }
+    
+    public void RemoveAvailability(Guid availabilityId)
+    {
+        var availability = Disponibilities.FirstOrDefault(a => a.Id == availabilityId);
+        if (availability != null)
+            Disponibilities.Remove(availability);
+    }
 
     public override bool Equals(object? obj)
     {

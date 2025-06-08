@@ -1,3 +1,4 @@
+using Application.UseCases.Disponibilities.CreateDisponibility;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
 using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
@@ -40,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenHandler, RefreshTokenHandler>();
         services.AddScoped<ILogoutUserHandler, LogoutUserHandler>();
         services.AddScoped<IQueryConnectedUsersHandler, QueryConnectedUsersHandler>();
+        services.AddScoped<ICreateDisponibilityHandler, CreateDisponibilityHandler>();
 
     }
 }

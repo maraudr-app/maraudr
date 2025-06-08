@@ -13,7 +13,11 @@ namespace Maraudr.User.Infrastructure.Repositories
             var user = await context.Users.FindAsync(id);
             if (user is Manager)
             {
-                await context.Entry(user).Collection("Team").LoadAsync();
+                var cUser = (Manager)user;
+                //await context.Entry(cUser).Collection("Team").LoadAsync();
+                await context.Entry(cUser).Collection(m => m.EFTeam).LoadAsync();
+
+                
             }
             return user;
         }

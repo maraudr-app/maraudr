@@ -34,7 +34,7 @@ public class AuthController: ControllerBase
     }
 
     // Permet uniquement de revoke ler refresh token 
-// LA suppression du bearer doit se faire côté client 
+    // LA suppression du bearer doit se faire côté client 
     [HttpPost("logout")]
     [Authorize]
     public async Task<IResult> Logout([FromServices]ILogoutUserHandler handler){
