@@ -14,7 +14,6 @@ public class CreateDisponibilityHandler(IUserRepository repository):ICreateDispo
             
         user.AddDisponiblity(request.Start, request.End);
         
-        var newDisponibilityId = user.Disponibilities.Last().Id;
         
         await repository.UpdateAsync(user);
         
