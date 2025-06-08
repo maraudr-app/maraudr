@@ -86,18 +86,23 @@ app.MapGet("/association/city", async (string city, ISearchAssociationsByCityHan
     });
 
 app.MapPost("/association", async (
-    string siret,
+    string siret, Guid userId,
     ICreateAssociationHandlerSiretIncluded handler,
     IHttpClientFactory factory) =>
     {
-        if (string.IsNullOrWhiteSpace(siret) || siret.Length != 14 || !siret.All(char.IsDigit))
+        if (string.IsNullOrWhiteSpace(siret) || siret.Length != 14 || !siret.All(char.IsDigit) )
         {
             return Results.BadRequest(new { message = "Missing or invalid SIRET." });
+        }
+        
+        if (userId == Guid.Empty)
+        {
+            return Results.BadRequest(new { message = "Missing or invalid Id." });
         }
 
         try
         {
-            var id = await handler.HandleAsync(siret, factory);
+            var id = await handler.HandleAsync(siret, userId, factory);
 
             return Results.Created($"/association?id={id}", new { Id = id });
         }

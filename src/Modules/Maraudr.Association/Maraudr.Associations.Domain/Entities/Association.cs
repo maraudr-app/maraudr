@@ -6,6 +6,7 @@ namespace Maraudr.Associations.Domain.Entities;
 public class Association
 {
     public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid ManagerId { get; set; }
     public List<Guid> Members { get; init; } = [];
     public string? Country { get; set; }
     public string? City { get; set; }
