@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace Maraudr.Authentication.Domain.Entities
 {
-    public class PasswordResetToken(Guid userId, string token, TimeSpan expiration) : AbstractToken(userId, token, DateTime.UtcNow.Add(expiration))
+    public class PasswordResetToken
     {
-
-        public bool IsUsed { get; private set; } = false;
-
-        public bool IsValid => !IsUsed && ExpiresAt > DateTime.UtcNow;
-
-        public void MarkAsUsed()
+        public PasswordResetToken() { }
+    
+        public PasswordResetToken(Guid userId, string token, TimeSpan expiration)
         {
-            IsUsed = true;
+            UserId = userId;
+            Token = token;
+            ExpiresAt = DateTime.UtcNow.Add(expiration); 
         }
+    
+        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

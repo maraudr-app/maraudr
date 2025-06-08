@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Maraudr.User.Domain.Entities.Users
@@ -8,7 +9,10 @@ namespace Maraudr.User.Domain.Entities.Users
 
         public override Role Role { get; protected set; } = Role.Member;
 
-        public Manager Manager { get; set; }
+        public Guid? ManagerId { get; set; }
+
+        [ForeignKey(nameof(ManagerId))]
+        public Manager? Manager { get; set; }
 
         public User(string firstname, string lastname, DateTime createdAt,
             ContactInfo contactInfo, Address address, List<Language> languages,
