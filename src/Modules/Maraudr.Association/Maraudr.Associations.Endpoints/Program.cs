@@ -90,7 +90,8 @@ app.MapPost("/association", async (
     string siret, Guid userId,
     ICreateAssociationHandlerSiretIncluded handler,
     IHttpClientFactory siretHttpFactory, 
-    IHttpClientFactory stockHttpFactory) =>
+    IHttpClientFactory stockHttpFactory,
+    IHttpClientFactory geoHttpFactory) =>
 {
     if (string.IsNullOrWhiteSpace(siret) || siret.Length != 14 || !siret.All(char.IsDigit))
     {
@@ -104,8 +105,8 @@ app.MapPost("/association", async (
 
     try
     {
-        var result = await handler.HandleAsync(siret, userId, siretHttpFactory, stockHttpFactory);
-        return Results.Created($"/association?id={result.AssociationId}", new { AssociationId = result.AssociationId, StockId = result.StockId });
+        var result = await handler.HandleAsync(siret, userId, siretHttpFactory, stockHttpFactory, geoHttpFactory);
+        return Results.Created($"/association?id={result.AssociationId}", new { result.AssociationId, result.StockId, result.GeoStoreId });
     }
     catch (Exception ex)
     {
