@@ -16,11 +16,23 @@ public class Disponibility
             throw new ArgumentException("La date de début doit être antérieure à la date de fin");
 
         Id = Guid.NewGuid();
-        UserId = userId;
         Start = start;
         End = end;
+        UserId = userId;
         AssociationId = associationId;
     }
+    public Disponibility(Guid id,Guid userId, DateTime start, DateTime end, Guid associationId)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+
+        Id = id;
+        Start = start;
+        End = end;
+        UserId = userId;
+        AssociationId = associationId;
+    }
+    
 
     public bool Overlaps(Disponibility other)
     {
@@ -31,6 +43,11 @@ public class Disponibility
     {
         if (start >= end)
             throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+        if (Start < end && End > start)
+        {
+            throw new ArgumentException("Nouvelle disponibilité chevauche une disponibilité déjà présente");
+
+        }
         Start = start;
         End = end;
     }

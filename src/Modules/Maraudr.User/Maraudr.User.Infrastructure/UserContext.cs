@@ -166,7 +166,6 @@ modelBuilder.Entity<AbstractUser>()
     .HasMany(u => u.Disponibilities)
     .WithOne()
     .HasForeignKey(d => d.UserId)
-    .HasForeignKey(d =>d.AssociationId)
     .OnDelete(DeleteBehavior.Cascade);
         
     }

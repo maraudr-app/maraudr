@@ -184,6 +184,7 @@ public abstract class AbstractUser
     {
         if (start >= end)
             throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+        Console.WriteLine("Association Id : " + associationId);
     
         var newDisponiblity = new Disponibility { 
             Start = start, 
@@ -194,7 +195,35 @@ public abstract class AbstractUser
     
         if (Disponibilities.Any(d => d.Overlaps(newDisponiblity)))
             throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante pour cette association");
+        Console.WriteLine("Association Id : " + newDisponiblity.AssociationId);
+
+        Disponibilities.Add(newDisponiblity);
+    }
+
+
+    public void UpdateDisponibility(Guid dispoId, DateTime start, DateTime end)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+
+        var dispoToRemove = Disponibilities.FirstOrDefault(disponibility => disponibility.Id == dispoId);
+        if (dispoToRemove != null)
+        {
+            Disponibilities.Remove(dispoToRemove);
+        }
+        
+        var newDisponiblity = new Disponibility { 
+            Id=dispoId,
+            Start = start, 
+            End = end, 
+            UserId = Id,
+            AssociationId = dispoToRemove.AssociationId
+        };
     
+        if (Disponibilities.Any(d => d.Overlaps(newDisponiblity)))
+            throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante pour cette association");
+        Console.WriteLine("Association Id : " + newDisponiblity.AssociationId);
+
         Disponibilities.Add(newDisponiblity);
     }
     
