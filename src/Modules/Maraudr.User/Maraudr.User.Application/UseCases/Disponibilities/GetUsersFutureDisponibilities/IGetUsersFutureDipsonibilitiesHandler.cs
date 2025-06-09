@@ -1,8 +1,9 @@
 using Maraudr.User.Domain.ValueObjects.Users;
 
-namespace Application.UseCases.Disponibilities.GetUsersDipsonibilities;
+namespace Application.UseCases.Disponibilities.GetUsersFutureDisponibilities;
 
-public interface IGetUsersDipsonibilitiesHandler
+public interface IGetUsersFutureDipsonibilitiesHandler
 {
     public Task<IEnumerable<Disponibility>> HandleAsync(Guid userId, Guid associationId);
+
 }
