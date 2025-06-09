@@ -1,5 +1,8 @@
 using Application.UseCases.Disponibilities.CreateDisponibility;
+using Application.UseCases.Disponibilities.DeleteDisponiblity;
+using Application.UseCases.Disponibilities.GetAllAssociationUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersDipsonibilities;
+using Application.UseCases.Disponibilities.GetUsersFutureDisponibilities;
 using Application.UseCases.Disponibilities.UpdateDisponibility;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
 using Application.UseCases.Tokens.Authentication.RefreshToken;
@@ -45,7 +48,10 @@ public static class DependencyInjection
         services.AddScoped<IQueryConnectedUsersHandler, QueryConnectedUsersHandler>();
         services.AddScoped<ICreateDisponibilityHandler, CreateDisponibilityHandler>();
         services.AddScoped<IUpdateDisponibilityHandler, UpdateDisponibilityHandler>();
-        services.AddScoped<IGetUsersDipsonibilitiesHandler, GetUsersDipsonibilitiesHandler>();
+        services.AddScoped<IGetUsersDisponibilitiesHandler, GetUsersDisponibilitiesHandler>();
+        services.AddScoped<IGetUsersFutureDipsonibilitiesHandler, GetUsersFutureDipsonibilitiesHandler>();
+        services.AddScoped<IDeleteDisponibilityHandler, DeleteDisponibilityHandler>();
+        services.AddScoped<IGetAllAssociationUsersDipsonibilitiesHandler, GetAllAssociationUsersDipsonibilitiesHandler>();
 
     }
 }

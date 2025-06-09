@@ -1,6 +1,9 @@
 using Application.DTOs.DisponibilitiesQueriesDtos.Requests;
 using Application.UseCases.Disponibilities.CreateDisponibility;
+using Application.UseCases.Disponibilities.DeleteDisponiblity;
+using Application.UseCases.Disponibilities.GetAllAssociationUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersDipsonibilities;
+using Application.UseCases.Disponibilities.GetUsersFutureDisponibilities;
 using Application.UseCases.Disponibilities.UpdateDisponibility;
 using FluentValidation;
 using Maraudr.User.Domain.ValueObjects.Users;
@@ -66,7 +69,7 @@ public class DisponibilitiesController:ControllerBase
     [HttpGet("{associationId}")]
     [Authorize]
     public async Task<IEnumerable<Disponibility?>> GetUserDisponbilities(Guid associationId,
-        [FromServices] IGetUsersDipsonibilitiesHandler handler)
+        [FromServices] IGetUsersDisponibilitiesHandler handler)
     {
         var userId = User.GetUserId();
 
@@ -77,13 +80,70 @@ public class DisponibilitiesController:ControllerBase
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return [];
         }
-            
-   
-      
     }
     
+    [HttpGet("all/{associationId}")]
+    [Authorize]
+    public async Task<IEnumerable<Disponibility?>> GetAllAssociationUsesrDisponbilities(Guid associationId,
+        [FromServices] IGetAllAssociationUsersDipsonibilitiesHandler handler)
+    {
+        var userId = User.GetUserId();
+
+        try
+        {
+            return await handler.HandleAsync(userId,associationId);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return [];
+        }
+    }
+    
+    [HttpGet("futur/{associationId}")]
+    [Authorize]
+    public async Task<IEnumerable<Disponibility?>> GetUserFutureDisponbilities(Guid associationId,
+        [FromServices] IGetUsersFutureDipsonibilitiesHandler handler)
+    {
+        var userId = User.GetUserId();
+
+        try
+        {
+            return await handler.HandleAsync(userId,associationId);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return [];
+        }
+    }
+
+    [HttpDelete("{disponibilityId}")]
+    [Authorize]
+    public async Task<IResult> DeleteDisponibility(Guid disponibilityId, 
+        [FromServices] IDeleteDisponibilityHandler handler
+    )
+    {
+        var userId = User.GetUserId();
+
+        try
+        { 
+            await handler.HandleAsync(userId,disponibilityId);
+            return Results.Ok();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return Results.BadRequest();
+        }
+    }
+
     //Recuperer dispo si moi même ou si membre meme equipe  ou memebre meme association
     
     //[HttpGet]
