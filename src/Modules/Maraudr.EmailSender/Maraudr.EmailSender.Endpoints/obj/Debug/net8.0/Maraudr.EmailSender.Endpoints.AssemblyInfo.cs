@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.EmailSender.Endpoints")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+03ebd201b4307eee350dd2a32093143232676530")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb97b967cc1bf11a4c8ee5171056177651297e21")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.EmailSender.Endpoints")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.EmailSender.Endpoints")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
