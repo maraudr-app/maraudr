@@ -139,6 +139,11 @@ public class UserContext : DbContext
                 .WithMany(u => u.Disponibilities)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Property(d => d.AssociationId)
+                .IsRequired(); 
+    
+            
         });
 
         modelBuilder.Entity<AbstractUser>()
@@ -154,13 +159,14 @@ public class UserContext : DbContext
 {
     builder.ToTable("Disponibilities");
     builder.HasKey(d => d.Id);
-    // ...
+    
 });
 
 modelBuilder.Entity<AbstractUser>()
     .HasMany(u => u.Disponibilities)
     .WithOne()
     .HasForeignKey(d => d.UserId)
+    .HasForeignKey(d =>d.AssociationId)
     .OnDelete(DeleteBehavior.Cascade);
         
     }

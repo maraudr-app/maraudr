@@ -19,7 +19,8 @@ public class CreateDisponiblityValidator : AbstractValidator<CreateDisponiblityR
         RuleFor(d => d)
             .Must(BeLogicalDuration).WithMessage("La durée de disponibilité doit être raisonnable (moins de 120h)");
         
-        
+        RuleFor(d => d.AssociationId)
+            .NotEmpty().WithMessage("L'identifiant de l'association est obligatoire");
     
     }
     
