@@ -4,6 +4,7 @@
     public class StockItem : IResource
     {
         public Guid Id { get; init; }
+        public Guid StockId { get; private set; }
         public string Name { get; init; } = null!;
         public string? Description { get; init; }
         public string? BarCode { get; init; }
@@ -22,15 +23,14 @@
             Category = type;
         }
         
-        public StockItem(string name, string barcode, string description = null!, Category type = Category.Unknown)
+        public StockItem(string name, string description, string barCode, Category category, Guid stockId)
         {
-            Id = Guid.NewGuid();
-            Name = name ?? throw new InvalidItemNameException("Item name is null");
-            BarCode = barcode;
+            Name = name;
             Description = description;
-            Category = type;
+            BarCode = barCode;
+            Category = category;
+            StockId = stockId;
         }
-
         
         
 

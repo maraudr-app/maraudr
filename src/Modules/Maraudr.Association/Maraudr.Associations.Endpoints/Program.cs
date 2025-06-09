@@ -89,29 +89,30 @@ app.MapGet("/association/city", async (string city, ISearchAssociationsByCityHan
 app.MapPost("/association", async (
     string siret, Guid userId,
     ICreateAssociationHandlerSiretIncluded handler,
-    IHttpClientFactory factory) =>
+    IHttpClientFactory siretHttpFactory, 
+    IHttpClientFactory stockHttpFactory) =>
+{
+    if (string.IsNullOrWhiteSpace(siret) || siret.Length != 14 || !siret.All(char.IsDigit))
     {
-        if (string.IsNullOrWhiteSpace(siret) || siret.Length != 14 || !siret.All(char.IsDigit) )
-        {
-            return Results.BadRequest(new { message = "Missing or invalid SIRET." });
-        }
-        
-        if (userId == Guid.Empty)
-        {
-            return Results.BadRequest(new { message = "Missing or invalid Id." });
-        }
+        return Results.BadRequest(new { message = "Missing or invalid SIRET." });
+    }
 
-        try
-        {
-            var id = await handler.HandleAsync(siret, userId, factory);
+    if (userId == Guid.Empty)
+    {
+        return Results.BadRequest(new { message = "Missing or invalid Id." });
+    }
 
-            return Results.Created($"/association?id={id}", new { Id = id });
-        }
-        catch (Exception ex)
-        {
-            return Results.BadRequest(new { message = ex.Message });
-        }
-    });
+    try
+    {
+        var result = await handler.HandleAsync(siret, userId, siretHttpFactory, stockHttpFactory);
+        return Results.Created($"/association?id={result.AssociationId}", new { AssociationId = result.AssociationId, StockId = result.StockId });
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { message = ex.Message });
+    }
+});
+
 
 app.MapPut("/association", [Authorize(Roles = "Admin,Manager")] 
     async (UpdateAssociationInformationDto dto, 

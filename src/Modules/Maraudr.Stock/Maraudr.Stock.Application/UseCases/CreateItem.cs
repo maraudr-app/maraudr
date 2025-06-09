@@ -9,14 +9,24 @@ public class CreateItemHandler(IStockRepository repository) : ICreateItemHandler
 {
     public async Task<Guid> HandleAsync(CreateItemCommand command)
     {
-        var savedItem = await repository.GetStockItemByBarCodeAsync(command.BarCode);
-        if (savedItem != null)
+        var existingItem = await repository.GetStockItemByBarCodeAsync(command.BarCode);
+
+        if (existingItem != null && existingItem.StockId == command.StockId)
         {
-            await repository.AddQuantityToStock(savedItem.Id, 1);
-            return savedItem.Id;
+            await repository.AddQuantityToStock(existingItem.Id, 1);
+            return existingItem.Id;
         }
-        var item = new StockItem(command.Name, command.Description,command.BarCode, command.ItemType);
+
+        var item = new StockItem(
+            command.Name,
+            command.Description,
+            command.BarCode,
+            command.ItemType,
+            command.StockId
+        );
+
         await repository.CreateStockItemAsync(item);
         return item.Id;
     }
 }
+

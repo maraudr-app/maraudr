@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Maraudr.Associations.Domain.Entities;
 using Maraudr.Associations.Domain.Interfaces;
@@ -9,15 +10,21 @@ namespace Maraudr.Associations.Application.UseCases.Command;
 
 public interface ICreateAssociationHandlerSiretIncluded
 {
-    Task<Guid> HandleAsync(string siret, Guid id, IHttpClientFactory factory);
+    Task<AssociationWithStockResponse> HandleAsync(
+        string siret, Guid id,
+        IHttpClientFactory siretHttpFactory,
+        IHttpClientFactory stockHttpFactory);
 }
 
 public class CreateAssociationSiretIncluded(IAssociations associations) : ICreateAssociationHandlerSiretIncluded
 {
-    public async Task<Guid> HandleAsync(string siret, Guid id, IHttpClientFactory factory)
+    public async Task<AssociationWithStockResponse> HandleAsync(
+        string siret, Guid id,
+        IHttpClientFactory siretHttpFactory,
+        IHttpClientFactory stockHttpFactory)
     {
-        using var client = factory.CreateClient("siret");
-        var response = await client.GetAsync($"api/structure/{siret}");
+        using var siretClient = siretHttpFactory.CreateClient("siret");
+        var response = await siretClient.GetAsync($"api/structure/{siret}");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -49,7 +56,6 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         }
 
         var name = data.Identity.Nom;
-
         var addr = GetBestAddress(data.Coordinates);
 
         var fullStreet = string.Join(" ", new[] { addr.NumVoie, addr.TypeVoie, addr.Voie }
@@ -57,18 +63,34 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
 
         var address = new Address(fullStreet, addr.Commune, addr.CodePostal.ToString(), "France");
 
-        var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address);
-
-        association.ManagerId = id;
+        var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address)
+        {
+            ManagerId = id
+        };
         association.Members.Add(id);
-        
+
         var result = await associations.RegisterAssociation(association);
         if (result is null)
         {
             throw new Exception("Failed to create association.");
         }
 
-        return result.Id;
+        using var stockClient = stockHttpFactory.CreateClient("stock");
+        var stockResponse = await stockClient.PostAsJsonAsync("/create-stock", new { AssociationId = result.Id });
+
+        if (!stockResponse.IsSuccessStatusCode)
+        {
+            throw new Exception("Stock creation failed");
+        }
+
+        var responseContent = await stockResponse.Content.ReadFromJsonAsync<StockResponse>();
+
+        if (responseContent == null)
+        {
+            throw new Exception("Invalid response from stock API.");
+        }
+
+        return new AssociationWithStockResponse(result.Id, responseContent.Id);
     }
 
     private static HeadquartersAddress GetBestAddress(Coordinates coords)
@@ -82,6 +104,9 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
     }
 }
 
+public record AssociationWithStockResponse(Guid AssociationId, Guid StockId);
+public record StockResponse(Guid Id);
+
 public record SiretApiResponse(
     [property: JsonPropertyName("identite")] Identity Identity,
     [property: JsonPropertyName("coordonnees")] Coordinates Coordinates
@@ -89,8 +114,7 @@ public record SiretApiResponse(
 
 public record Identity(
     [property: JsonPropertyName("nom")]
-    [property: JsonConverter(typeof(FlexibleStringConverter))]
-    string Nom,
+    [property: JsonConverter(typeof(FlexibleStringConverter))] string Nom,
 
     [property: JsonPropertyName("lib_forme_juridique")]
     string LegalFormLabel
@@ -103,8 +127,7 @@ public record Coordinates(
 
 public record HeadquartersAddress(
     [property: JsonPropertyName("num_voie")]
-    [property: JsonConverter(typeof(FlexibleStringConverter))]
-    string NumVoie,
+    [property: JsonConverter(typeof(FlexibleStringConverter))] string NumVoie,
 
     [property: JsonPropertyName("type_voie")]
     string TypeVoie,

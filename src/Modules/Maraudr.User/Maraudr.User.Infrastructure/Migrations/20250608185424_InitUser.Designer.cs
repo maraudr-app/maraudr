@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20250607195707_InitUser")]
+    [Migration("20250608185424_InitUser")]
     partial class InitUser
     {
         /// <inheritdoc />
