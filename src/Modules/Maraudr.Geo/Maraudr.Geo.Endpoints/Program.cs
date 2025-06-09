@@ -1,5 +1,7 @@
 using System.Net.WebSockets;
+using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
+using Maraudr.Geo.Application.UseCases;
 using Maraudr.Geo.Domain.Entities;
 using Maraudr.Geo.Domain.Interfaces;
 using Maraudr.Geo.Infrastructure;
@@ -11,6 +13,8 @@ builder.Services.AddDbContext<GeoContext>(options => options.UseNpgsql(builder.C
 builder.Services.AddScoped<IGeoRepository, GeoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 app.UseSwagger();
@@ -38,14 +42,17 @@ app.MapPost("/geo", async (CreateGeoDataRequest dto, IGeoRepository repo) =>
     return Results.Ok(response);
 });
 
-app.MapPost("/geo/store", async (CreateGeoStoreRequest request, IGeoRepository repo) =>
+app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreForAnAssociation handler) =>
 {
-    var existing = await repo.GetGeoStoreByAssociationAsync(request.AssociationId);
-    if (existing is not null)
-        return Results.Conflict("GeoStore already exists for this association");
-
-    var created = await repo.CreateGeoStoreAsync(request.AssociationId);
-    return Results.Created($"/geo/store/{created.Id}", new GeoStoreResponse(created.Id, created.AssociationId));
+    try
+    {
+        var response = await handler.HandleAsync(request);
+        return Results.Created($"/geo/store/{response.Id}", new GeoStoreResponse(response.Id, response.AssociationId));
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }
 });
 
 app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGeoRepository repo) =>
@@ -63,7 +70,7 @@ app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGeoReposito
         : Results.NotFound("GeoStore not found for this association.");
 });
 
-app.Map("/geo/live", async (HttpContext context) =>
+app.Map("/geo/live", async context =>
 {
     if (context.WebSockets.IsWebSocketRequest)
     {
@@ -79,6 +86,6 @@ app.Map("/geo/live", async (HttpContext context) =>
     {
         context.Response.StatusCode = 400;
     }
-});
+}); 
 
 app.Run();

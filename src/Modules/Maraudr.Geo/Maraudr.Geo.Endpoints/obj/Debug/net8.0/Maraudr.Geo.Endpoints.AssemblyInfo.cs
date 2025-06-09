@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.Geo.Endpoints")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5211c6e1224311a8e8b535100df9a3263b365a27")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f19f4f051df07b453a7c8336ede9bc73465d96e0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.Geo.Endpoints")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.Geo.Endpoints")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
