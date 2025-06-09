@@ -22,6 +22,15 @@ services:
     depends_on:
       - maraudr-db
 
+  geo:
+    build:
+      context: ./src/Modules/Maraudr.Geo/
+      target: final
+    ports:
+      - 8084:8080
+    depends_on:
+      - maraudr-db
+
   stock:
     build:
       context: ./src/Modules/Maraudr.Stock/
@@ -44,7 +53,6 @@ services:
       - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
     depends_on:
       - maraudr-db
-
 
   email-sender:
     build:

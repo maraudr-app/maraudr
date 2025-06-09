@@ -112,5 +112,12 @@ public class UserContext : DbContext
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        
+        modelBuilder.Entity<Manager>()
+            .HasMany(m => m.EFTeam)
+            .WithOne(u => u.Manager)
+            .HasForeignKey(u => u.ManagerId)
+            .OnDelete(DeleteBehavior.SetNull);
+
     }
 }
