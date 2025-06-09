@@ -1,5 +1,6 @@
 using Application.DTOs.DisponibilitiesQueriesDtos.Requests;
 using Application.UseCases.Disponibilities.CreateDisponibility;
+using Application.UseCases.Disponibilities.UpdateDisponibility;
 using FluentValidation;
 using Maraudr.User.Endpoints.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -37,10 +38,28 @@ public class DisponibilitiesController:ControllerBase
         {
             return Results.Problem(e.Message);
         }
-            
-   
-      
     }
+    
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IResult> UpdateDisponibility(Guid id,[FromBody]UpdateDisponiblityRequest request,
+        [FromServices] IUpdateDisponibilityHandler handler
+       )
+    {
+        var userId = User.GetUserId();
+
+        try
+        {
+            await handler.HandleAsync(id,userId, request);
+            return Results.Created();
+
+        }
+        catch (Exception e)
+        {
+            return Results.Problem(e.Message);
+        }
+    }
+
     
     [HttpGet()]
     [Authorize]

@@ -26,4 +26,12 @@ public class Disponibility
     {
         return AssociationId == other.AssociationId && Start < other.End && End > other.Start;
     }
+
+    public void UpdateDates(DateTime start, DateTime end)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+        Start = start;
+        End = end;
+    }
 }
