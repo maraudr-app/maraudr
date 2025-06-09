@@ -3,7 +3,8 @@ using Maraudr.User.Domain.Interfaces.Repositories;
 
 namespace Application.UseCases.Disponibilities.CreateDisponibility;
 
-public class CreateDisponibilityHandler(IUserRepository repository):ICreateDisponibilityHandler
+public class CreateDisponibilityHandler(IUserRepository repository, IAssociationRepository associationRepository) 
+    : ICreateDisponibilityHandler
 {
     public async Task HandleAsync(Guid id, CreateDisponiblityRequest request)
     {
@@ -11,12 +12,17 @@ public class CreateDisponibilityHandler(IUserRepository repository):ICreateDispo
         
         if (user == null)
             throw new ArgumentException("Utilisateur non trouvé");
-            
-        user.AddDisponiblity(request.Start, request.End);
-        
-        
-        await repository.UpdateAsync(user);
-        
-     
+      
+        var isMember = await associationRepository.IsUserMemberOfAssociationAsync(id,request.AssociationId);
+        Console.WriteLine(isMember);
+        if (!isMember)
+        {
+            throw new ArgumentException("L'utilisateur n'est pas membre de l'association");
+
+        }
+        user.AddDisponiblity(request.Start, request.End, request.AssociationId);
+        await repository.UpdateAsync(user);        
+       
+      
     }
 }

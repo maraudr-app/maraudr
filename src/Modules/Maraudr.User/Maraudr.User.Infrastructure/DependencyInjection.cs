@@ -20,6 +20,8 @@ public static class DependencyInjection
         services.AddScoped<IPasswordManager, PasswordManager>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IMailSenderRepository, MailSenderRepository>();
+        services.AddScoped<IAssociationRepository, AssociationRepository>();
+
 
     }
 }

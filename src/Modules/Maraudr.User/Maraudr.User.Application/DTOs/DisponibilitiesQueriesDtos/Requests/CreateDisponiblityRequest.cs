@@ -9,4 +9,7 @@ public class CreateDisponiblityRequest
     
     [Required]
     public DateTime End { get; set; }
+    
+    [Required]
+    public Guid AssociationId { get; set; }
 }

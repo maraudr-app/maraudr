@@ -11,7 +11,6 @@ public class MailSenderRepository(HttpClient httpClient, IOptions<ApiSettings> o
     {
         
             var url = options.Value.EmailSenderApiUrl + "email/send-welcome";
-            Console.WriteLine(url);
         
             var payload = new 
             {

@@ -42,6 +42,35 @@ public class DisponibilitiesController:ControllerBase
       
     }
     
+    [HttpGet()]
+    [Authorize]
+    public async Task<IResult> GetUserDisponbilities([FromBody]CreateDisponiblityRequest request,
+        [FromServices] ICreateDisponibilityHandler handler,
+        [FromServices] IValidator<CreateDisponiblityRequest> validator)
+    {
+        var validationResult = validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.Errors);
+        }
+        
+        var userId = User.GetUserId();
+
+        try
+        {
+            await handler.HandleAsync(userId, request);
+            return Results.Created();
+
+        }
+        catch (Exception e)
+        {
+            return Results.Problem(e.Message);
+        }
+            
+   
+      
+    }
+    
     //Recuperer dispo si moi même ou si membre meme equipe  ou memebre meme association
     
     //[HttpGet]

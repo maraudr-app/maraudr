@@ -142,6 +142,9 @@ namespace Maraudr.User.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AssociationId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("End")
                         .HasColumnType("timestamp with time zone");
 
@@ -153,7 +156,7 @@ namespace Maraudr.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AssociationId");
 
                     b.ToTable("Disponibilities", (string)null);
                 });
@@ -262,7 +265,7 @@ namespace Maraudr.User.Infrastructure.Migrations
                 {
                     b.HasOne("Maraudr.User.Domain.Entities.Users.AbstractUser", null)
                         .WithMany("Disponibilities")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AssociationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -180,17 +180,21 @@ public abstract class AbstractUser
         IsActive = isConnected;
     }
 
-    // Méthode pour ajouter une disponibilité
-    public void AddDisponiblity(DateTime start, DateTime end)
+    public void AddDisponiblity(DateTime start, DateTime end, Guid associationId)
     {
         if (start >= end)
             throw new ArgumentException("La date de début doit être antérieure à la date de fin");
     
-        var newDisponiblity = new Disponibility { Start = start, End = end, UserId = Id };
+        var newDisponiblity = new Disponibility { 
+            Start = start, 
+            End = end, 
+            UserId = Id,
+            AssociationId = associationId
+        };
     
         if (Disponibilities.Any(d => d.Overlaps(newDisponiblity)))
-            throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante");
-        
+            throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante pour cette association");
+    
         Disponibilities.Add(newDisponiblity);
     }
     
