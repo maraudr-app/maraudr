@@ -1,7 +1,9 @@
 using Application.DTOs.DisponibilitiesQueriesDtos.Requests;
 using Application.UseCases.Disponibilities.CreateDisponibility;
+using Application.UseCases.Disponibilities.GetUsersDipsonibilities;
 using Application.UseCases.Disponibilities.UpdateDisponibility;
 using FluentValidation;
+using Maraudr.User.Domain.ValueObjects.Users;
 using Maraudr.User.Endpoints.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -51,7 +53,7 @@ public class DisponibilitiesController:ControllerBase
         try
         {
             await handler.HandleAsync(id,userId, request);
-            return Results.Created();
+            return Results.Ok(id);
 
         }
         catch (Exception e)
@@ -61,29 +63,21 @@ public class DisponibilitiesController:ControllerBase
     }
 
     
-    [HttpGet()]
+    [HttpGet("{associationId}")]
     [Authorize]
-    public async Task<IResult> GetUserDisponbilities([FromBody]CreateDisponiblityRequest request,
-        [FromServices] ICreateDisponibilityHandler handler,
-        [FromServices] IValidator<CreateDisponiblityRequest> validator)
+    public async Task<IEnumerable<Disponibility?>> GetUserDisponbilities(Guid associationId,
+        [FromServices] IGetUsersDipsonibilitiesHandler handler)
     {
-        var validationResult = validator.Validate(request);
-        if (!validationResult.IsValid)
-        {
-            return Results.BadRequest(validationResult.Errors);
-        }
-        
         var userId = User.GetUserId();
 
         try
         {
-            await handler.HandleAsync(userId, request);
-            return Results.Created();
+            return await handler.HandleAsync(userId,associationId);
 
         }
         catch (Exception e)
         {
-            return Results.Problem(e.Message);
+            return [];
         }
             
    

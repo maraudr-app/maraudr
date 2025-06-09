@@ -13,11 +13,8 @@ public class UpdateDisponibilityHandler(IUserRepository repository):IUpdateDispo
         {
             throw new ArgumentException("User not found");
         }
-        foreach(Disponibility dispo in user.Disponibilities)
-        {
-            Console.WriteLine(dispo.Id);
-        }
-        user.Disponibilities.First(disponibility => disponibility.Id == dispoId).UpdateDates(request.Start, request.End);
+
+        user.UpdateDisponibility(dispoId, request.Start, request.End);
         await repository.UpdateAsync(user);
 
     }
