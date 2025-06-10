@@ -1,5 +1,6 @@
+using System.Security.Claims;
+using Maraudr.Associations.Endpoints;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,23 +10,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var jwtSection = builder.Configuration.GetSection("JWT");
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSection["ValidIssuer"],
-            ValidAudience = jwtSection["ValidAudience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSection["Secret"]!))
-        };
-    }
-);
+builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
@@ -86,10 +71,11 @@ app.MapGet("/association/city", async (string city, ISearchAssociationsByCityHan
         return results.Count != 0 ? Results.Ok(results) : Results.NotFound();
     });
 
-app.MapPost("/association", async (
-    string siret, Guid userId,
+app.MapPost("/association", [Authorize] async (
+    HttpContext httpContext,
+    [FromQuery] string siret,
     ICreateAssociationHandlerSiretIncluded handler,
-    IHttpClientFactory siretHttpFactory, 
+    IHttpClientFactory siretHttpFactory,
     IHttpClientFactory stockHttpFactory,
     IHttpClientFactory geoHttpFactory) =>
 {
@@ -98,15 +84,22 @@ app.MapPost("/association", async (
         return Results.BadRequest(new { message = "Missing or invalid SIRET." });
     }
 
-    if (userId == Guid.Empty)
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (!Guid.TryParse(userIdClaim, out var userId))
     {
-        return Results.BadRequest(new { message = "Missing or invalid Id." });
+        return Results.Unauthorized(); 
     }
 
     try
     {
         var result = await handler.HandleAsync(siret, userId, siretHttpFactory, stockHttpFactory, geoHttpFactory);
-        return Results.Created($"/association?id={result.AssociationId}", new { result.AssociationId, result.StockId, result.GeoStoreId });
+        return Results.Created($"/association?id={result.AssociationId}", new
+        {
+            result.AssociationId,
+            result.StockId,
+            result.GeoStoreId
+        });
     }
     catch (Exception ex)
     {
