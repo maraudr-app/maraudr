@@ -19,6 +19,7 @@ namespace Maraudr.User.Infrastructure.Repositories
             {
                 var cUser = (Manager)user;
                 await context.Entry(cUser).Collection(m => m.EFTeam).LoadAsync();
+
             }
     
             return user;
@@ -49,8 +50,8 @@ namespace Maraudr.User.Infrastructure.Repositories
         public async Task<IEnumerable<AbstractUser>> SearchByNameAsync(string searchTerm)
         {
              return await context.Users
-                .Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                            u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                 .Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) 
+                             || u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                 .ToListAsync();
         }
         

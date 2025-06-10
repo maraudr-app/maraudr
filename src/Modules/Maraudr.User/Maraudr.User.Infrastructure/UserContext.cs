@@ -168,6 +168,7 @@ modelBuilder.Entity<AbstractUser>()
     .HasForeignKey(d => d.UserId)
     .OnDelete(DeleteBehavior.Cascade);
         
+
     }
 }
 

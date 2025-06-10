@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Maraudr.Associations.Application.Dtos;
 using Maraudr.Associations.Domain.Entities;
 using Maraudr.Associations.Domain.Interfaces;
 using Maraudr.Associations.Domain.Siret;
@@ -13,85 +14,77 @@ public interface ICreateAssociationHandlerSiretIncluded
     Task<AssociationWithStockResponse> HandleAsync(
         string siret, Guid id,
         IHttpClientFactory siretHttpFactory,
-        IHttpClientFactory stockHttpFactory);
+        IHttpClientFactory stockHttpFactory,
+        IHttpClientFactory geoHttpFactory);
 }
 
 public class CreateAssociationSiretIncluded(IAssociations associations) : ICreateAssociationHandlerSiretIncluded
 {
     public async Task<AssociationWithStockResponse> HandleAsync(
-        string siret, Guid id,
-        IHttpClientFactory siretHttpFactory,
-        IHttpClientFactory stockHttpFactory)
+    string siret, Guid id,
+    IHttpClientFactory siretHttpFactory,
+    IHttpClientFactory stockHttpFactory,
+    IHttpClientFactory geoHttpFactory)
+{
+    using var siretClient = siretHttpFactory.CreateClient("siret");
+    var response = await siretClient.GetAsync($"api/structure/{siret}");
+
+    if (!response.IsSuccessStatusCode)
+        throw new Exception($"SIRET API error: {response.StatusCode}");
+
+    var contentString = await response.Content.ReadAsStringAsync();
+
+    if (contentString.Contains("statusCode: 404"))
+        throw new Exception("SIRET not found");
+
+    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+    var data = JsonSerializer.Deserialize<SiretApiResponse>(contentString, options);
+
+    if (data is null)
+        throw new Exception("Invalid response from SIRET API");
+
+    if (data.Identity.LegalFormLabel != "Association déclarée")
+        throw new Exception("Le SIRET ne correspond pas à une association déclarée.");
+
+    var name = data.Identity.Nom;
+    var addr = GetBestAddress(data.Coordinates);
+
+    var fullStreet = string.Join(" ", new[] { addr.NumVoie, addr.TypeVoie, addr.Voie }
+        .Where(part => !string.IsNullOrWhiteSpace(part)));
+
+    var address = new Address(fullStreet, addr.Commune, addr.CodePostal.ToString(), "France");
+
+    var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address)
     {
-        using var siretClient = siretHttpFactory.CreateClient("siret");
-        var response = await siretClient.GetAsync($"api/structure/{siret}");
+        ManagerId = id
+    };
+    association.Members.Add(id);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"SIRET API error: {response.StatusCode}");
-        }
+    var result = await associations.RegisterAssociation(association);
+    if (result is null)
+        throw new Exception("Failed to create association.");
 
-        var contentString = await response.Content.ReadAsStringAsync();
+    using var stockClient = stockHttpFactory.CreateClient("stock");
+    var stockResponse = await stockClient.PostAsJsonAsync("/create-stock", new { AssociationId = result.Id });
+    if (!stockResponse.IsSuccessStatusCode)
+        throw new Exception("Stock creation failed");
 
-        if (contentString.Contains("statusCode: 404"))
-        {
-            throw new Exception("SIRET not found");
-        }
+    var stockData = await stockResponse.Content.ReadFromJsonAsync<StockResponse>();
+    if (stockData == null)
+        throw new Exception("Invalid response from stock API");
 
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
+    using var geoClient = geoHttpFactory.CreateClient("geo"); 
+    var geoResponse = await geoClient.PostAsJsonAsync("/geo/store", new CreateGeoStoreRequest(result.Id));
+    if (!geoResponse.IsSuccessStatusCode)
+        throw new Exception("GeoStore creation failed");
 
-        var data = JsonSerializer.Deserialize<SiretApiResponse>(contentString, options);
+    var geoData = await geoResponse.Content.ReadFromJsonAsync<GeoStoreResponse>();
+    if (geoData == null)
+        throw new Exception("Invalid response from geo API");
 
-        if (data is null)
-        {
-            throw new Exception("Invalid response from SIRET API");
-        }
+    return new AssociationWithStockResponse(result.Id, stockData.Id, geoData.Id);
+}
 
-        if (data.Identity.LegalFormLabel != "Association déclarée")
-        {
-            throw new Exception("Le SIRET ne correspond pas à une association déclarée.");
-        }
-
-        var name = data.Identity.Nom;
-        var addr = GetBestAddress(data.Coordinates);
-
-        var fullStreet = string.Join(" ", new[] { addr.NumVoie, addr.TypeVoie, addr.Voie }
-            .Where(part => !string.IsNullOrWhiteSpace(part)));
-
-        var address = new Address(fullStreet, addr.Commune, addr.CodePostal.ToString(), "France");
-
-        var association = new Association(name, addr.Commune, "France", new SiretNumber(siret), address)
-        {
-            ManagerId = id
-        };
-        association.Members.Add(id);
-
-        var result = await associations.RegisterAssociation(association);
-        if (result is null)
-        {
-            throw new Exception("Failed to create association.");
-        }
-
-        using var stockClient = stockHttpFactory.CreateClient("stock");
-        var stockResponse = await stockClient.PostAsJsonAsync("/create-stock", new { AssociationId = result.Id });
-
-        if (!stockResponse.IsSuccessStatusCode)
-        {
-            throw new Exception("Stock creation failed");
-        }
-
-        var responseContent = await stockResponse.Content.ReadFromJsonAsync<StockResponse>();
-
-        if (responseContent == null)
-        {
-            throw new Exception("Invalid response from stock API.");
-        }
-
-        return new AssociationWithStockResponse(result.Id, responseContent.Id);
-    }
 
     private static HeadquartersAddress GetBestAddress(Coordinates coords)
     {
@@ -104,8 +97,10 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
     }
 }
 
-public record AssociationWithStockResponse(Guid AssociationId, Guid StockId);
+public record AssociationWithStockResponse(Guid AssociationId, Guid StockId, Guid GeoStoreId);
 public record StockResponse(Guid Id);
+
+public record CreateGeoStoreRequest(Guid AssociationId);
 
 public record SiretApiResponse(
     [property: JsonPropertyName("identite")] Identity Identity,

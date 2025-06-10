@@ -22,6 +22,12 @@ public static class DependencyInjection
             client.BaseAddress = new Uri("http://stock:8080");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
+        
+        services.AddHttpClient("geo", client =>
+        {
+            client.BaseAddress = new Uri("http://geo:8080");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
 
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
         services.AddScoped<IGetAssocationsOfUserHandler, GetAssociationsOfUser>();

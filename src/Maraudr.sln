@@ -49,6 +49,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.EmailSender.Endpoin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.EmailSender.Infrastructure", "Modules\Maraudr.EmailSender\Maraudr.EmailSender.Infrastructure\Maraudr.EmailSender.Infrastructure.csproj", "{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geo", "Geo", "{D00280FC-F6DD-458A-A9C0-A41FB631B57D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Geo.Endpoints", "Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\Maraudr.Geo.Endpoints.csproj", "{7E3973B9-6435-4B06-AE32-C8048BD2BC5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Geo.Domain", "Modules\Maraudr.Geo\Maraudr.Geo.Domain\Maraudr.Geo.Domain.csproj", "{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Geo.Application", "Modules\Maraudr.Geo\Maraudr.Geo.Application\Maraudr.Geo.Application.csproj", "{82FE4618-2B64-4A97-9BEB-1C194BA245E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Geo.Infrastructure", "Modules\Maraudr.Geo\Maraudr.Geo.Infrastructure\Maraudr.Geo.Infrastructure.csproj", "{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +133,22 @@ Global
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E3973B9-6435-4B06-AE32-C8048BD2BC5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E3973B9-6435-4B06-AE32-C8048BD2BC5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E3973B9-6435-4B06-AE32-C8048BD2BC5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E3973B9-6435-4B06-AE32-C8048BD2BC5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82FE4618-2B64-4A97-9BEB-1C194BA245E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82FE4618-2B64-4A97-9BEB-1C194BA245E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82FE4618-2B64-4A97-9BEB-1C194BA245E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82FE4618-2B64-4A97-9BEB-1C194BA245E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +173,10 @@ Global
 		{03A6C491-4643-4715-8FB0-8D3BBEB4BD8A} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
 		{57D92403-96E8-4668-A985-A95EF9943EA6} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
 		{6E6C9E61-00CC-4C8E-8954-4F85E36A811B} = {DA41BF2E-1F07-4DBD-822B-24CFFA1F4104}
+		{7E3973B9-6435-4B06-AE32-C8048BD2BC5C} = {D00280FC-F6DD-458A-A9C0-A41FB631B57D}
+		{7B7F0ABF-9C49-47E5-8E45-9F1C25EF8E86} = {D00280FC-F6DD-458A-A9C0-A41FB631B57D}
+		{82FE4618-2B64-4A97-9BEB-1C194BA245E3} = {D00280FC-F6DD-458A-A9C0-A41FB631B57D}
+		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE} = {D00280FC-F6DD-458A-A9C0-A41FB631B57D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BCD56F0-98C0-4AB6-A596-4EA261D31C8D}
