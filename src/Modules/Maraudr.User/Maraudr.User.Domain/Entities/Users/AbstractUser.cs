@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Maraudr.User.Domain.Entities.Users;
@@ -15,7 +16,8 @@ public abstract class AbstractUser
     public ContactInfo ContactInfo { get;  set; }
     public Address Address { get;  set; } 
     public string PasswordHash { get; set; }
-    
+
+    public virtual ICollection<Disponibility> Disponibilities { get; private set; } = new List<Disponibility>();
     private bool IsAdmin {
         get;
         set;
@@ -27,7 +29,8 @@ public abstract class AbstractUser
 
     
     public List<Language> Languages { get; set; }
-
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
 
     protected AbstractUser( string firstname, string lastname, DateTime createdAt,
         ContactInfo contactInfo, Address address,List<Language> languages,string passwordHash)
@@ -177,6 +180,59 @@ public abstract class AbstractUser
         IsActive = isConnected;
     }
 
+    public void AddDisponiblity(DateTime start, DateTime end, Guid associationId)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+        Console.WriteLine("Association Id : " + associationId);
+    
+        var newDisponiblity = new Disponibility { 
+            Start = start, 
+            End = end, 
+            UserId = Id,
+            AssociationId = associationId
+        };
+    
+        if (Disponibilities.Any(d => d.Overlaps(newDisponiblity)))
+            throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante pour cette association");
+        Console.WriteLine("Association Id : " + newDisponiblity.AssociationId);
+
+        Disponibilities.Add(newDisponiblity);
+    }
+
+
+    public void UpdateDisponibility(Guid dispoId, DateTime start, DateTime end)
+    {
+        if (start >= end)
+            throw new ArgumentException("La date de début doit être antérieure à la date de fin");
+
+        var dispoToRemove = Disponibilities.FirstOrDefault(disponibility => disponibility.Id == dispoId);
+        if (dispoToRemove != null)
+        {
+            Disponibilities.Remove(dispoToRemove);
+        }
+        
+        var newDisponiblity = new Disponibility { 
+            Id=dispoId,
+            Start = start, 
+            End = end, 
+            UserId = Id,
+            AssociationId = dispoToRemove.AssociationId
+        };
+    
+        if (Disponibilities.Any(d => d.Overlaps(newDisponiblity)))
+            throw new InvalidOperationException("Cette disponibilité chevauche une disponibilité existante pour cette association");
+        Console.WriteLine("Association Id : " + newDisponiblity.AssociationId);
+
+        Disponibilities.Add(newDisponiblity);
+    }
+    
+    public void RemoveAvailability(Guid availabilityId)
+    {
+        var availability = Disponibilities.FirstOrDefault(a => a.Id == availabilityId);
+        if (availability != null)
+            Disponibilities.Remove(availability);
+    }
 
     public override bool Equals(object? obj)
     {

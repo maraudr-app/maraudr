@@ -176,6 +176,22 @@ app.MapGet("/association/membership",
         }
     });
 
+
+app.MapGet("/association/is-member/{associationId}/{userId}",
+    async (Guid userId, Guid associationId, IIsUserMemberOfAssociationHandler handler) =>
+    {
+        try
+        {
+            var isMember = await handler.HandleAsync(userId, associationId);
+            return Results.Ok(isMember);
+
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+    });
+
 app.MapHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();

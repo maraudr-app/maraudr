@@ -2,6 +2,7 @@ using Maraudr.Authentication.Domain.Entities;
 using Maraudr.User.Domain.Entities.Tokens;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
+using Maraudr.User.Domain.ValueObjects.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Maraudr.User.Infrastructure.Repositories
@@ -10,11 +11,17 @@ namespace Maraudr.User.Infrastructure.Repositories
     {
         public async Task<AbstractUser?> GetByIdAsync(Guid id)
         {
-            var user = await context.Users.FindAsync(id);
+            var user = await context.Users
+                .Include(u => u.Disponibilities)  
+                .FirstOrDefaultAsync(u => u.Id == id);
+    
             if (user is Manager)
             {
-                await context.Entry((Manager)user).Collection(m => m.EFTeam).LoadAsync();
+                var cUser = (Manager)user;
+                await context.Entry(cUser).Collection(m => m.EFTeam).LoadAsync();
+
             }
+    
             return user;
         }
 
@@ -62,6 +69,14 @@ namespace Maraudr.User.Infrastructure.Repositories
             return await context.RefreshTokens
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.UserId == id);
+        }
+        
+        
+        public async Task<IEnumerable<Disponibility>> GetDisponibilitiesByAssociationIdAsync(Guid associationId)
+        {
+            return await context.Disponibilities
+                .Where(d => d.AssociationId == associationId)
+                .ToListAsync();
         }
         
     }

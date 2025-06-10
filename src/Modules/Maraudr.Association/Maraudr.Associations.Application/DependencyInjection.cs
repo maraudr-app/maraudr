@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IListAssociationsPaginatedHandler, ListAssociationsPaginated>();
         services.AddScoped<IValidator<AddressDto>, AddressDtoValidator>();
         services.AddScoped<IValidator<UpdateAssociationInformationDto>, UpdateAssociationInformationDtoValidator>();
-        
+        services.AddScoped<IIsUserMemberOfAssociationHandler, IsUserMemberOfAssociationHandler>();
+
     }
 }
