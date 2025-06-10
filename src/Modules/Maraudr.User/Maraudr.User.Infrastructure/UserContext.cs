@@ -32,7 +32,17 @@ public class UserContext : DbContext
             .HasDiscriminator<string>("UserType")
             .HasValue<Domain.Entities.Users.User>("User")
             .HasValue<Manager>("Manager");
-
+        
+        modelBuilder.Entity<Domain.Entities.Users.User>()
+            .Property(u => u.Role)
+            .HasDefaultValue(Role.Member)
+            .IsRequired();
+        
+        modelBuilder.Entity<Manager>()
+            .Property(u => u.Role)
+            .HasDefaultValue(Role.Manager)
+            .IsRequired();
+        
         modelBuilder.Entity<Domain.Entities.Users.User>(builder =>
         {
             builder.HasOne(u => u.Manager)

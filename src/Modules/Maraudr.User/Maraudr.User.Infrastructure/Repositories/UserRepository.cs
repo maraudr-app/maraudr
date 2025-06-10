@@ -32,10 +32,19 @@ namespace Maraudr.User.Infrastructure.Repositories
 
         public async Task AddAsync(AbstractUser user)
         {
+            if (user is Manager && user.Role != Role.Manager)
+            {
+                user.Role = Role.Manager;
+            }
+            else if (user is Domain.Entities.Users.User && user.Role != Role.Member)
+            {
+                user.Role = Role.Member;
+            }
+    
             await context.Users.AddAsync(user);
-            
             await context.SaveChangesAsync();
         }
+        
 
         public async Task DeleteAsync(AbstractUser user)
         {
