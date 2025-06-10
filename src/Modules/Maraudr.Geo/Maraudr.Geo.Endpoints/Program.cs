@@ -2,15 +2,10 @@ using System.Net.WebSockets;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
-using Maraudr.Geo.Domain.Entities;
-using Maraudr.Geo.Domain.Interfaces;
 using Maraudr.Geo.Infrastructure;
 using Maraudr.Geo.Infrastructure.WebSocket;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<GeoContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("GeoDb")));
-builder.Services.AddScoped<IGeoRepository, GeoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
@@ -21,25 +16,24 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseWebSockets();
 
-app.MapPost("/geo", async (CreateGeoDataRequest dto, IGeoRepository repo) =>
+app.MapPost("/geo", async (CreateGeoDataRequest dto, ICreateGeoDataForAnAssociation handler) =>
 {
-    var store = await repo.GetGeoStoreByAssociationAsync(dto.AssociationId);
-    if (store is null) return Results.NotFound("GeoStore not found");
+    var response = await handler.HandleAsync(dto);
 
-    var data = new GeoData
+    if (response == null)
     {
-        Id = Guid.NewGuid(),
-        GeoStoreId = store.Id,
-        Latitude = dto.Latitude,
-        Longitude = dto.Longitude,
-        Notes = dto.Notes,
-        ObservedAt = DateTime.UtcNow
-    };
+        return Results.BadRequest();
+    }
 
-    await repo.AddEventAsync(data);
-
-    var response = new GeoDataResponse(data.Id, data.GeoStoreId, data.Latitude, data.Longitude, data.Notes, data.ObservedAt);
-    return Results.Ok(response);
+    await GeoWebSocketManager.BroadcastAsync(
+        response.Latitude,
+        response.Longitude,
+        response.ObservedAt,
+        response.Notes, 
+        response.Id);
+    
+    return Results.Created($"/geo/store/{response.Id}", new { response.Id });
+    
 });
 
 app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreForAnAssociation handler) =>
@@ -55,27 +49,34 @@ app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreF
     }
 });
 
-app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGeoRepository repo) =>
+app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGetAllGeoDataForAnAssociation handler) =>
 {
-    var from = DateTime.UtcNow.AddDays(-days);
-    var data = await repo.GetEventsAsync(associationId, from);
-    return Results.Ok(data);
+    var response = await handler.HandleAsync(associationId, days);
+    return Results.Ok(response);
 });
 
-app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGeoRepository repo) =>
+app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGetGeoStoreInfoForAnAssociation handler) =>
 {
-    var geoStore = await repo.GetGeoStoreByAssociationAsync(associationId);
-    return geoStore is not null
-        ? Results.Ok(new { geoStore.Id })
+    var id = await handler.HandleAsync(associationId);
+    return id is not null
+        ? Results.Ok(new { id })
         : Results.NotFound("GeoStore not found for this association.");
 });
 
 app.Map("/geo/live", async context =>
 {
+    var associationIdQuery = context.Request.Query["associationId"];
+    if (!Guid.TryParse(associationIdQuery, out var associationId))
+    {
+        context.Response.StatusCode = 400;
+        return;
+    }
+
     if (context.WebSockets.IsWebSocketRequest)
     {
         var socket = await context.WebSockets.AcceptWebSocketAsync();
-        GeoWebSocketManager.Add(socket);
+        GeoWebSocketManager.Add(socket, associationId);
+
         while (socket.State == WebSocketState.Open)
         {
             var buffer = new byte[1024];
@@ -86,6 +87,6 @@ app.Map("/geo/live", async context =>
     {
         context.Response.StatusCode = 400;
     }
-}); 
+});
 
 app.Run();
