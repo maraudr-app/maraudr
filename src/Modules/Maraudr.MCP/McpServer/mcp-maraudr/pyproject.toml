@@ -1,0 +1,16 @@
+[project]
+name = "mcp-maraudr"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "llama-index>=0.12.42",
+    "llama-index-core>=0.12.42",
+    "llama-index-llms-ollama>=0.6.2",
+    "llama-index-tools-mcp>=0.2.5",
+    "mcp[cli]>=1.9.4",
+    "pandas>=2.3.0",
+    "pyarrow>=20.0.0",
+    "requests>=2.32.4",
+]
