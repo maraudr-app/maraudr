@@ -13,7 +13,7 @@ from llama_index.core import Settings
 from llama_index.tools.mcp import BasicMCPClient, McpToolSpec
 from llama_index.core.agent.workflow import FunctionAgent, ToolCallResult, ToolCall
 from llama_index.core.workflow import Context
-from llama_index.llms.openai import OpenAI
+
 # Apply nest_asyncio for Jupyter-like async support
 nest_asyncio.apply()
 
@@ -28,7 +28,7 @@ Before helping the user, you must first interact with internal tools and APIs to
 
 def setup_llm():
     """Setup the local LLM using Ollama."""
-    llm = Ollama(model="llama3.2", request_timeout=120.0)
+    llm = Ollama(model="llama3.2:1b", request_timeout=120.0)
     Settings.llm = llm
     return llm
 
@@ -39,7 +39,6 @@ async def get_agent(tools: McpToolSpec):
         name="Agent",
         description="An agent that can work with our APIS.",
         tools=tool_list,
-        llm=OpenAI(model="gpt-4"),
         system_prompt=SYSTEM_PROMPT,
     )
     return agent
@@ -76,26 +75,21 @@ async def main():
     print("Building a Local MCP Client with LlamaIndex")
     print("=" * 50)
     
-    # Setup LLM
     print("Setting up local LLM...")
     setup_llm()
     
-    # Initialize MCP client
     print("Initializing MCP client...")
     mcp_client = BasicMCPClient("http://localhost:8000/sse")
     mcp_tools = McpToolSpec(client=mcp_client)
     
-    # List available tools
     await list_available_tools(mcp_tools)
     
-    # Build agent
     print("Building agent...")
     agent = await get_agent(mcp_tools)
     agent_context = Context(agent)
     
     print("Agent ready! Type 'exit' to quit.\n")
     
-    # Interactive chat loop
     while True:
         try:
             user_input = input("Enter your message: ")
@@ -115,5 +109,4 @@ async def main():
             print("Continuing...\n")
 
 if __name__ == "__main__":
-    # Run the async main function
     asyncio.run(main())

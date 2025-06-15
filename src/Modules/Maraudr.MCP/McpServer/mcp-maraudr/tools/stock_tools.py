@@ -8,7 +8,7 @@ import uuid
 BASE_URL = "http://localhost:8081"  # Adjust to your API URL
 API_HEADERS = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2Y1OWM0YS1mZmFiLTQ4M2MtOTA1MS01MTVmZGI0NmIyNjkiLCJlbWFpbCI6ImtoYWxpbG1ha2hsb3VmaUBnbWFpbC5jb20iLCJqdGkiOiI3YzViYjdjMi0xNDQzLTRkNTYtOTdmNS1jMDdkNDlhNmQ3YzAiLCJuYmYiOjE3NDk3NDA0MjYsImV4cCI6MTc0OTc0NDAyNiwiaWF0IjoxNzQ5NzQwNDI2LCJpc3MiOiJhdXRoLWFwaSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNDAifQ.jb5PKJnPvNrHcwKDThIFPqQAcpxRPVDCgG4IzeGBgxI"  # Replace with actual token
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2Y1OWM0YS1mZmFiLTQ4M2MtOTA1MS01MTVmZGI0NmIyNjkiLCJlbWFpbCI6ImtoYWxpbG1ha2hsb3VmaUBnbWFpbC5jb20iLCJqdGkiOiI5YmRlNWM0My0yMDM3LTQ1NmQtYmY1Yy05ODdkNDRhY2QwODkiLCJuYmYiOjE3NTAwMDU4ODMsImV4cCI6MTc1MDAwOTQ4MywiaWF0IjoxNzUwMDA1ODgzLCJpc3MiOiJhdXRoLWFwaSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNDAifQ.VHBRZ4DM5YGYnl806xwVd0fJkgCPvFHQqcxbiymWy0c"  # Replace with actual token
 }
 
 
