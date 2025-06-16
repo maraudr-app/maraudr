@@ -29,11 +29,10 @@ app.MapPost("/geo", async (CreateGeoDataRequest dto, ICreateGeoDataForAnAssociat
         response.Latitude,
         response.Longitude,
         response.ObservedAt,
-        response.Notes, 
-        response.Id);
-    
+        response.Notes,
+        dto.AssociationId);
+
     return Results.Created($"/geo/store/{response.Id}", new { response.Id });
-    
 });
 
 app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreForAnAssociation handler) =>
