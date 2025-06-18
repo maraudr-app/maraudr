@@ -2,8 +2,10 @@ using System.Net.WebSockets;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
+using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
 using Maraudr.Geo.Infrastructure.WebSocket;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -11,19 +13,28 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.UseWebSockets();
 
-app.MapPost("/geo", async (CreateGeoDataRequest dto, ICreateGeoDataForAnAssociation handler) =>
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/geo", [Authorize] async (
+    HttpContext httpContext,
+    CreateGeoDataRequest dto,
+    ICreateGeoDataForAnAssociation handler) =>
 {
     var response = await handler.HandleAsync(dto);
 
     if (response == null)
-    {
         return Results.BadRequest();
-    }
 
     await GeoWebSocketManager.BroadcastAsync(
         response.Latitude,
@@ -48,13 +59,18 @@ app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreF
     }
 });
 
-app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGetAllGeoDataForAnAssociation handler) =>
+app.MapGet("/geo/{associationId}", [Authorize] async (
+    Guid associationId,
+    int days,
+    IGetAllGeoDataForAnAssociation handler) =>
 {
     var response = await handler.HandleAsync(associationId, days);
     return Results.Ok(response);
 });
 
-app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGetGeoStoreInfoForAnAssociation handler) =>
+app.MapGet("/geo/store/{associationId}", [Authorize] async (
+    Guid associationId,
+    IGetGeoStoreInfoForAnAssociation handler) =>
 {
     var id = await handler.HandleAsync(associationId);
     return id is not null
@@ -64,10 +80,16 @@ app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGetGeoStore
 
 app.Map("/geo/live", async context =>
 {
+    if (!context.User.Identity?.IsAuthenticated ?? true)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return;
+    }
+
     var associationIdQuery = context.Request.Query["associationId"];
     if (!Guid.TryParse(associationIdQuery, out var associationId))
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
         return;
     }
 
@@ -84,8 +106,9 @@ app.Map("/geo/live", async context =>
     }
     else
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
 });
+
 
 app.Run();
