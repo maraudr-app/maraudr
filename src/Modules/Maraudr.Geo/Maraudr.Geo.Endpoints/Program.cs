@@ -68,7 +68,9 @@ app.MapGet("/geo/{associationId}", [Authorize] async (
     return Results.Ok(response);
 });
 
-app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGetGeoStoreInfoForAnAssociation handler) =>
+app.MapGet("/geo/store/{associationId}", [Authorize] async (
+    Guid associationId,
+    IGetGeoStoreInfoForAnAssociation handler) =>
 {
     var id = await handler.HandleAsync(associationId);
     return id is not null
