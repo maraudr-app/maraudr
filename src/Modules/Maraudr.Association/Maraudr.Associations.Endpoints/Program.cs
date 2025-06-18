@@ -162,11 +162,16 @@ app.MapDelete("/association", [Authorize] async (
 app.MapPost("/association/member", [Authorize] async (
     HttpContext httpContext,
     AddMemberRequestDto request,
-    IAddMemberToAssociationHandler handler) =>
+    IAddMemberToAssociationHandler handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
 {
     var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     if (!Guid.TryParse(userIdClaim, out var requesterId))
         return Results.Unauthorized();
+
+    var isMember = await membershipHandler.HandleAsync(requesterId, request.AssociationId);
+    if (!isMember)
+        return Results.Forbid();
 
     try
     {
