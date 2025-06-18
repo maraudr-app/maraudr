@@ -108,67 +108,100 @@ app.MapPost("/association", [Authorize] async (
 });
 
 
-app.MapPut("/association", [Authorize(Roles = "Admin,Manager")] 
-    async (UpdateAssociationInformationDto dto, 
-        IValidator<UpdateAssociationInformationDto> validator,
-        IUpdateAssociationHandler handler) =>
+app.MapPut("/association", [Authorize] async (
+    HttpContext httpContext,
+    UpdateAssociationInformationDto dto,
+    IValidator<UpdateAssociationInformationDto> validator,
+    IUpdateAssociationHandler handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    var isMember = await membershipHandler.HandleAsync(userId, dto.Id);
+    if (!isMember)
+        return Results.Forbid();
+
+    var result = await validator.ValidateAsync(dto);
+    if (!result.IsValid)
     {
-        var result = await validator.ValidateAsync(dto);
-
-        if (!result.IsValid)
+        return Results.BadRequest(result.Errors.Select(e => new
         {
-            return Results.BadRequest(result.Errors.Select(e => new
-            {
-                e.PropertyName,
-                e.ErrorMessage
-            }));
-        }
+            e.PropertyName,
+            e.ErrorMessage
+        }));
+    }
 
-        var updated = await handler.HandleAsync(dto);
-        return updated is null ? Results.NotFound() : Results.Ok(updated);
-    });
+    var updated = await handler.HandleAsync(dto);
+    return updated is null ? Results.NotFound() : Results.Ok(updated);
+});
 
-app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")] 
-    async (Guid id, IUnregisterAssociation handler) =>
+app.MapDelete("/association", [Authorize] async (
+    HttpContext httpContext,
+    Guid id,
+    IUnregisterAssociation handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
+{
+    if (id == Guid.Empty)
+        return Results.BadRequest("Missing or invalid id");
+
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    var isMember = await membershipHandler.HandleAsync(userId, id);
+    if (!isMember)
+        return Results.Forbid();
+
+    await handler.HandleAsync(id);
+    return Results.NoContent();
+});
+
+
+app.MapPost("/association/member", [Authorize] async (
+    HttpContext httpContext,
+    AddMemberRequestDto request,
+    IAddMemberToAssociationHandler handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var requesterId))
+        return Results.Unauthorized();
+
+    var isMember = await membershipHandler.HandleAsync(requesterId, request.AssociationId);
+    if (!isMember)
+        return Results.Forbid();
+
+    try
     {
-        if (id == Guid.Empty)
-        {
-            return Results.BadRequest("Missing or invalid id");
-        }
-        await handler.HandleAsync(id);
-        return Results.NoContent();    
-    });
-
-app.MapPost("/association/member",
-    async (AddMemberRequestDto request,
-        IAddMemberToAssociationHandler handler) =>
+        await handler.HandleAsync(request.UserId, request.AssociationId);
+        return Results.Ok();
+    }
+    catch (Exception e)
     {
-        try
-        {
-            await handler.HandleAsync(request.UserId, request.AssociationId);
-            return Results.Ok();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-    });
+        return Results.BadRequest(e.Message);
+    }
+});
 
-app.MapGet("/association/membership",
-    async (Guid id,
-        IGetAssocationsOfUserHandler handler) =>
+app.MapGet("/association/membership", [Authorize] async (
+    HttpContext httpContext,
+    IGetAssocationsOfUserHandler handler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    try
     {
-        try
-        {
-            var associations = await handler.HandleAsync(id);
-            return Results.Ok(associations);
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-    });
-
+        var associations = await handler.HandleAsync(userId);
+        return Results.Ok(associations);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
 
 app.MapGet("/association/is-member/{associationId}/{userId}",
     async (Guid userId, Guid associationId, IIsUserMemberOfAssociationHandler handler) =>
