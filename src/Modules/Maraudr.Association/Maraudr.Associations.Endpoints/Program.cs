@@ -128,16 +128,22 @@ app.MapPut("/association",
         return updated is null ? Results.NotFound() : Results.Ok(updated);
     });
 
-app.MapDelete("/association", 
-    async (Guid id, IUnregisterAssociation handler) =>
-    {
-        if (id == Guid.Empty)
-        {
-            return Results.BadRequest("Missing or invalid id");
-        }
-        await handler.HandleAsync(id);
-        return Results.NoContent();    
-    });
+app.MapDelete("/association", [Authorize] async (
+    HttpContext httpContext,
+    Guid id,
+    IUnregisterAssociation handler) =>
+{
+    if (id == Guid.Empty)
+        return Results.BadRequest("Missing or invalid id");
+
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+
+    await handler.HandleAsync(id);
+    return Results.NoContent();
+});
 
 app.MapPost("/association/member", [Authorize] async (
     HttpContext httpContext,
