@@ -4,8 +4,10 @@ using Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail;
 using Maraudr.EmailSender.Domain.Interfaces;
 using Maraudr.EmailSender.Endpoints.MailSettings;
 using Maraudr.EmailSender.Infrastructure;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); 
