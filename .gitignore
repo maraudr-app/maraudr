@@ -183,3 +183,12 @@
 /src/Modules/Maraudr.Planning/Maraudr.Planning.Domain/Maraudr.Planning.Domain/obj/Debug/net8.0/Maraudr.Planning.Domain.assets.cache
 /src/Modules/Maraudr.Planning/Maraudr.Planning.Domain/Maraudr.Planning.Domain/obj/Debug/net8.0/Maraudr.Planning.Domain.GeneratedMSBuildEditorConfig.editorconfig
 /src/Modules/Maraudr.Planning/Maraudr.Planning.Domain/Maraudr.Planning.Domain/obj/Debug/net8.0/Maraudr.Planning.Domain.GlobalUsings.g.cs
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Application/obj/Debug/net8.0
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Application/obj
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Domain/Maraudr.Planning.Domain/obj/Debug/net8.0
+/src/Modules/Maraudr.EmailSender/Maraudr.EmailSender.Endpoints/obj/Maraudr.EmailSender.Endpoints.csproj.nuget.g.targets
+/src/Modules/Maraudr.Geo/Maraudr.Geo.Endpoints/obj/Maraudr.Geo.Endpoints.csproj.nuget.g.targets
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Endpoints/obj/Debug/net8.0
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Endpoints/obj
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Infrastructure/bin/Debug/net8.0
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Infrastructure/obj
