@@ -2,8 +2,10 @@ using System.Net.WebSockets;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
+using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
 using Maraudr.Geo.Infrastructure.WebSocket;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -11,19 +13,28 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.UseWebSockets();
 
-app.MapPost("/geo", async (CreateGeoDataRequest dto, ICreateGeoDataForAnAssociation handler) =>
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/geo", [Authorize] async (
+    HttpContext httpContext,
+    CreateGeoDataRequest dto,
+    ICreateGeoDataForAnAssociation handler) =>
 {
     var response = await handler.HandleAsync(dto);
 
     if (response == null)
-    {
         return Results.BadRequest();
-    }
 
     await GeoWebSocketManager.BroadcastAsync(
         response.Latitude,
