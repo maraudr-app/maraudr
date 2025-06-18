@@ -108,25 +108,30 @@ app.MapPost("/association", [Authorize] async (
 });
 
 
-app.MapPut("/association", 
-    async (UpdateAssociationInformationDto dto, 
-        IValidator<UpdateAssociationInformationDto> validator,
-        IUpdateAssociationHandler handler) =>
+app.MapPut("/association", [Authorize] async (
+    HttpContext httpContext,
+    UpdateAssociationInformationDto dto,
+    IValidator<UpdateAssociationInformationDto> validator,
+    IUpdateAssociationHandler handler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    var result = await validator.ValidateAsync(dto);
+    if (!result.IsValid)
     {
-        var result = await validator.ValidateAsync(dto);
-
-        if (!result.IsValid)
+        return Results.BadRequest(result.Errors.Select(e => new
         {
-            return Results.BadRequest(result.Errors.Select(e => new
-            {
-                e.PropertyName,
-                e.ErrorMessage
-            }));
-        }
+            e.PropertyName,
+            e.ErrorMessage
+        }));
+    }
 
-        var updated = await handler.HandleAsync(dto);
-        return updated is null ? Results.NotFound() : Results.Ok(updated);
-    });
+    var updated = await handler.HandleAsync(dto);
+    return updated is null ? Results.NotFound() : Results.Ok(updated);
+});
+
 
 app.MapDelete("/association", [Authorize] async (
     HttpContext httpContext,
