@@ -108,7 +108,7 @@ app.MapPost("/association", [Authorize] async (
 });
 
 
-app.MapPut("/association", [Authorize(Roles = "Admin,Manager")] 
+app.MapPut("/association", 
     async (UpdateAssociationInformationDto dto, 
         IValidator<UpdateAssociationInformationDto> validator,
         IUpdateAssociationHandler handler) =>
@@ -128,7 +128,7 @@ app.MapPut("/association", [Authorize(Roles = "Admin,Manager")]
         return updated is null ? Results.NotFound() : Results.Ok(updated);
     });
 
-app.MapDelete("/association", [Authorize(Roles = "Admin,Manager")] 
+app.MapDelete("/association", 
     async (Guid id, IUnregisterAssociation handler) =>
     {
         if (id == Guid.Empty)
@@ -154,21 +154,24 @@ app.MapPost("/association/member",
         }
     });
 
-app.MapGet("/association/membership",
-    async (Guid id,
-        IGetAssocationsOfUserHandler handler) =>
-    {
-        try
-        {
-            var associations = await handler.HandleAsync(id);
-            return Results.Ok(associations);
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-    });
+app.MapGet("/association/membership", [Authorize] async (
+    HttpContext httpContext,
+    IGetAssocationsOfUserHandler handler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
 
+    try
+    {
+        var associations = await handler.HandleAsync(userId);
+        return Results.Ok(associations);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
 
 app.MapGet("/association/is-member/{associationId}/{userId}",
     async (Guid userId, Guid associationId, IIsUserMemberOfAssociationHandler handler) =>
