@@ -80,10 +80,16 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
 
 app.Map("/geo/live", async context =>
 {
+    if (!context.User.Identity?.IsAuthenticated ?? true)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return;
+    }
+
     var associationIdQuery = context.Request.Query["associationId"];
     if (!Guid.TryParse(associationIdQuery, out var associationId))
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
         return;
     }
 
@@ -100,8 +106,9 @@ app.Map("/geo/live", async context =>
     }
     else
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
 });
+
 
 app.Run();
