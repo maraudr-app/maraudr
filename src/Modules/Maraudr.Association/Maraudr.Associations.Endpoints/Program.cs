@@ -139,20 +139,25 @@ app.MapDelete("/association",
         return Results.NoContent();    
     });
 
-app.MapPost("/association/member",
-    async (AddMemberRequestDto request,
-        IAddMemberToAssociationHandler handler) =>
+app.MapPost("/association/member", [Authorize] async (
+    HttpContext httpContext,
+    AddMemberRequestDto request,
+    IAddMemberToAssociationHandler handler) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!Guid.TryParse(userIdClaim, out var requesterId))
+        return Results.Unauthorized();
+
+    try
     {
-        try
-        {
-            await handler.HandleAsync(request.UserId, request.AssociationId);
-            return Results.Ok();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-    });
+        await handler.HandleAsync(request.UserId, request.AssociationId);
+        return Results.Ok();
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }
+});
 
 app.MapGet("/association/membership", [Authorize] async (
     HttpContext httpContext,
