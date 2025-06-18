@@ -136,7 +136,8 @@ app.MapPut("/association", [Authorize] async (
 app.MapDelete("/association", [Authorize] async (
     HttpContext httpContext,
     Guid id,
-    IUnregisterAssociation handler) =>
+    IUnregisterAssociation handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
 {
     if (id == Guid.Empty)
         return Results.BadRequest("Missing or invalid id");
@@ -145,10 +146,14 @@ app.MapDelete("/association", [Authorize] async (
     if (!Guid.TryParse(userIdClaim, out var userId))
         return Results.Unauthorized();
 
+    var isMember = await membershipHandler.HandleAsync(userId, id);
+    if (!isMember)
+        return Results.Forbid();
 
     await handler.HandleAsync(id);
     return Results.NoContent();
 });
+
 
 app.MapPost("/association/member", [Authorize] async (
     HttpContext httpContext,
