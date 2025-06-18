@@ -59,7 +59,10 @@ app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreF
     }
 });
 
-app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGetAllGeoDataForAnAssociation handler) =>
+app.MapGet("/geo/{associationId}", [Authorize] async (
+    Guid associationId,
+    int days,
+    IGetAllGeoDataForAnAssociation handler) =>
 {
     var response = await handler.HandleAsync(associationId, days);
     return Results.Ok(response);
