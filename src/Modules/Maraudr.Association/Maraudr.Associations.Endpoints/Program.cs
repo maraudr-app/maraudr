@@ -112,11 +112,16 @@ app.MapPut("/association", [Authorize] async (
     HttpContext httpContext,
     UpdateAssociationInformationDto dto,
     IValidator<UpdateAssociationInformationDto> validator,
-    IUpdateAssociationHandler handler) =>
+    IUpdateAssociationHandler handler,
+    IIsUserMemberOfAssociationHandler membershipHandler) =>
 {
     var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     if (!Guid.TryParse(userIdClaim, out var userId))
         return Results.Unauthorized();
+
+    var isMember = await membershipHandler.HandleAsync(userId, dto.Id);
+    if (!isMember)
+        return Results.Forbid();
 
     var result = await validator.ValidateAsync(dto);
     if (!result.IsValid)
@@ -131,7 +136,6 @@ app.MapPut("/association", [Authorize] async (
     var updated = await handler.HandleAsync(dto);
     return updated is null ? Results.NotFound() : Results.Ok(updated);
 });
-
 
 app.MapDelete("/association", [Authorize] async (
     HttpContext httpContext,
