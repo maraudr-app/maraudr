@@ -29,5 +29,44 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
             
         }
+
+        [HttpDelete("{id:guid}")]
+        [Authorize]
+        public async Task<IResult> DeleteAnEvent(Guid id,[FromServices] IDeleteAnEventHandler handler)
+        {
+            var userId = User.GetUserId();
+            var role = User.GetUserRoleEnum();
+            try
+            {
+                await handler.HandleAsync(userId,role, id);
+                return Results.Ok();
+
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+        
+        /*[HttpGet("{associationId:guid}")]
+        [Authorize]
+        public async Task<IResult> GetAllAssociationEvents(Guid associationId,[FromServices] IGetAllAssociationEvents handler)
+        {
+            var userId = User.GetUserId();
+            var role = User.GetUserRoleEnum();
+            try
+            {
+                await handler.HandleAsync(userId,role, id);
+                return Results.Ok();
+
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }*/
+
+
+        
     }
 }

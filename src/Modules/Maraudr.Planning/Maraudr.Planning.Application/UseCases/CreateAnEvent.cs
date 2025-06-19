@@ -11,11 +11,11 @@ namespace Maraudr.Planning.Application.UseCases
 
    }
 
-    public class CreateAnEventHandler(IPlanningRepository repository,IAssociationRepository associationRepository) : ICreateAnEventHandler
+    public class CreateAnEventHandler(IPlanningRepository repository) : ICreateAnEventHandler
     {
         public async Task<Guid> HandleAsync(Guid organizerId, CreateEventDto request)
         {
-            var exists = await associationRepository.ExistsByIdAsync(request.AssociationId);
+            var exists = await repository.AssociationExistsByIdAsync(request.AssociationId);
             if (!exists)
                 throw new InvalidOperationException("Association not found");
             

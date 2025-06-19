@@ -23,6 +23,19 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
         }
     
         return planning.Id;
+    }  
+    
+    public async Task<Guid> GetAssociationIdFromPlanningIdAsync(Guid planningId)
+    {
+        var planning = await context.Plannings
+            .FirstOrDefaultAsync(p => p.Id == planningId);
+
+        if (planning == null)
+        {
+            throw new InvalidOperationException($"Aucun planning trouvé avec l'ID {planningId}");
+        }
+
+        return planning.AssociationId;
     }
     
     public async Task DeleteEventByIdAsync(Guid id)
@@ -72,7 +85,11 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
             .Where(e => e.ParticipantsIds.Contains(userId))
             .ToListAsync();
     }
-    
+
+    public async Task<bool> AssociationExistsByIdAsync(Guid associationId)
+    {
+        return await context.Plannings.AnyAsync(p => p.AssociationId == associationId);
+    }
     public async Task UpdateEventAsync(Event @event)
     {
         context.Events.Update(@event);
