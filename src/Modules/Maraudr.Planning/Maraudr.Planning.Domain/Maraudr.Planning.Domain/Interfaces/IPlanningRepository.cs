@@ -1,0 +1,17 @@
+using Maraudr.Planning.Domain.Entities;
+
+namespace Maraudr.Planning.Domain.Interfaces;
+
+public interface IPlanningRepository
+{
+    public Task AddEventAsync(Event @event);
+    public Task<Guid> GetPlanningIdFromAssociationAsync(Guid associationId);
+    public     Task UpdateEventAsync(Event @event);
+
+    public Task DeleteEventByIdAsync(Guid id);
+    public Task<Event> GetEventByIdAsync(Guid id);
+    public Task<List<Event>> GetAllUserEventsAsync(Guid associationId,Guid userId);
+    public Task<List<Event>> GetAllEventsAsync(Guid associationId);
+    public Task<List<Event>> GetAllUserEventsAsync(Guid id);
+
+}

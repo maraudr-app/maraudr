@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Validators\" />
+    <ProjectReference Include="..\Maraudr.Planning.Domain\Maraudr.Planning.Domain\Maraudr.Planning.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Maraudr.Planning.Domain\Maraudr.Planning.Domain\Maraudr.Planning.Domain.csproj" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
   </ItemGroup>
 
 </Project>

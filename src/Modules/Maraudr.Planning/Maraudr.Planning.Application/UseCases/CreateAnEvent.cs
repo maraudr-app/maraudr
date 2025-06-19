@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using Maraudr.Planning.Application.DTOs;
+using Maraudr.Planning.Domain.Entities;
+using Maraudr.Planning.Domain.Interfaces;
 
 namespace Maraudr.Planning.Application.UseCases
 {
@@ -17,26 +15,25 @@ namespace Maraudr.Planning.Application.UseCases
     {
         public async Task<Guid> HandleAsync(Guid organizerId, CreateEventDto request)
         {
-            var association = await associationRepository.GetByIdAsync(request.AssociationId);
-            var planningId = repository.GetPlanningIdFromAssociation(request.AssociationId);
-            if (association == null)
+            var exists = await associationRepository.ExistsByIdAsync(request.AssociationId);
+            if (!exists)
                 throw new InvalidOperationException("Association not found");
+            
+            var planningId = await repository.GetPlanningIdFromAssociationAsync(request.AssociationId);
+
             var @event = new Event
             {
                 PlanningId = planningId,
-                OrganizerId = organizerId,
+                OrganizerdId = organizerId,
                 ParticipantsIds = request.ParticipantsIds,
                 BeginningDate = request.BeginningDate,
                 EndDate = request.EndDate,
                 Title = request.Title,
                 Description = request.Description,
-                Street = request.Street,
-                City = request.City,
-                State = request.State,
-                PostalCode = request.PostalCode,
-                Country = request.Country
+                Location = request.Location
             };
-            await repository.AddAsync(@event);
+            
+            await repository.AddEventAsync(@event);
             return @event.Id;
         }
     }

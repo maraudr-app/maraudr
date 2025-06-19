@@ -1,4 +1,4 @@
-﻿namespace Maraudr.Planning.Domain.Entities;
+namespace Maraudr.Planning.Domain.Entities;
 
 public class Planning
 {

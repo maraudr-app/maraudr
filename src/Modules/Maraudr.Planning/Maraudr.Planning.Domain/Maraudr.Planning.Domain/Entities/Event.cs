@@ -1,5 +1,4 @@
-﻿using Maraudr.Planning.Domain.ValueObjects;
-
+﻿
 namespace Maraudr.Planning.Domain.Entities;
 
 public class Event
@@ -12,7 +11,7 @@ public class Event
     public DateTime EndDate { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public Address Location { get; set; }
+    public string Location { get; set; }
 
     public Event()
     {
@@ -20,7 +19,7 @@ public class Event
     }
 
     public Event(Guid planningId, Guid organizerdId, List<Guid> participantsIds, string title, string description,
-        DateTime beginningDate, DateTime endDate, Address location)
+        DateTime beginningDate, DateTime endDate, string location)
     {
         Id = Guid.NewGuid();
         PlanningId = planningId;
