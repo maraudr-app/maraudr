@@ -48,23 +48,21 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
-        /*[HttpGet("{associationId:guid}")]
+        [HttpGet("{associationId:guid}")]
         [Authorize]
-        public async Task<IResult> GetAllAssociationEvents(Guid associationId,[FromServices] IGetAllAssociationEvents handler)
+        public async Task<IResult> GetAllAssociationEvents(Guid associationId,[FromServices] IGetAllAssociationEventsHandler handler)
         {
             var userId = User.GetUserId();
-            var role = User.GetUserRoleEnum();
             try
             {
-                await handler.HandleAsync(userId,role, id);
+                await handler.HandleAsync(associationId,userId);
                 return Results.Ok();
-
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
-        }*/
+        }
 
 
         

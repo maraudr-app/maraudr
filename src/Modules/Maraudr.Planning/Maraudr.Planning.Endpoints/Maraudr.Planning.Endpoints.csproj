@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Maraudr.Planning.Application\Maraudr.Planning.Application.csproj" />
+    <ProjectReference Include="..\Maraudr.Planning.Infrastructure\Maraudr.Planning.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
