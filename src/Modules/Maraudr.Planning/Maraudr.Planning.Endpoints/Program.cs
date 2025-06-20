@@ -1,6 +1,9 @@
 using Maraudr.Planning.Application;
 using Maraudr.Planning.Endpoints;
+using Maraudr.Planning.Endpoints.Identity;
 using Maraudr.Planning.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,15 @@ builder.Services.AddApplication();
 builder.Services.AddValidation();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddHttpClient();
+
+builder.Services.AddAuthenticationServices(builder.Configuration);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<PlanningContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// Configure authorization
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
