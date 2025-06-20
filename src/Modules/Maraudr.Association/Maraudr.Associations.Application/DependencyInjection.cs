@@ -28,6 +28,12 @@ public static class DependencyInjection
             client.BaseAddress = new Uri("http://geo:8080");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
+        
+        services.AddHttpClient("planning", client =>
+        {
+            client.BaseAddress = new Uri("http://planning:8080");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
 
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
         services.AddScoped<IGetAssocationsOfUserHandler, GetAssociationsOfUser>();

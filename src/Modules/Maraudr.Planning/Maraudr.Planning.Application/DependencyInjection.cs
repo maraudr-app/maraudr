@@ -13,6 +13,8 @@ public static class DependencyInjection
         services.AddScoped<IDeleteAnEventHandler, DeleteAnEventHandler>();
         services.AddScoped<IGetAllAssociationEventsHandler, GetAllAssociationEventsHandler>();
         services.AddScoped<IGetAllEventsOfUserHandler,GetAllEventsOfUserHandler>();
+        services.AddScoped<ICreatePlanningHandler,CreatePlanningHandler>();
+
 
     }
 }

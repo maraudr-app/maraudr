@@ -95,5 +95,11 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
         context.Events.Update(@event);
         await context.SaveChangesAsync();
     }
+    
+    public async Task CreatePlanningAsync(Domain.Entities.Planning planning)
+    {
+        await context.Plannings.AddAsync(planning);
+        await context.SaveChangesAsync();
+    }
 
 }

@@ -111,12 +111,29 @@ namespace Maraudr.Planning.Endpoints.Controllers
                 return Results.BadRequest(e.Message);
             }
         }
-
         
+        [HttpPost("create-planning")]
+        [Authorize]
+        public async Task<IResult>  CreatePlanning([FromBody] CreatePlanningRequest request, [FromServices] ICreatePlanningHandler handler,
+            [FromServices] IValidator<CreateEventDto> validator)
+        {
+            try
+            {
+                if (request.AssociationId == Guid.Empty)
+                {
+                    return Results.BadRequest("associationId is required");
+                }
+                var id = await handler.HandleAsync(request.AssociationId);
+                return Results.Created($"/create-stock/{id}", new { Id = id });
+
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+            
+        }
         
-
-
-
 
         
         

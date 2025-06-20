@@ -15,7 +15,10 @@ public interface IPlanningRepository
     public Task<List<Event>> GetAllEventsAsync(Guid associationId);
     public Task<List<Event>> GetAllUserEventsAsync(Guid id);
     public Task<bool> AssociationExistsByIdAsync(Guid associationId);
-    
-    
+
+    public Task CreatePlanningAsync(Domain.Entities.Planning planning);
+
+
+
 
 }
