@@ -19,7 +19,7 @@ builder.Services.AddValidation();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddHttpClient();
 
-builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddAuthenticationServicesForPlanning(builder.Configuration);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<PlanningContext>(options =>
     options.UseNpgsql(connectionString));
@@ -31,11 +31,10 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 app.UseHttpsRedirection();
 

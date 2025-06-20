@@ -74,13 +74,17 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         throw new Exception("Invalid response from stock API");
     
     using var planningClient = stockHttpFactory.CreateClient("planning");
-    var planningResponse = await stockClient.PostAsJsonAsync("/create-planning", new { AssociationId = result.Id });
-    if (!planningResponse.IsSuccessStatusCode)
-        throw new Exception("Stock creation failed");
 
-    var planningData = await stockResponse.Content.ReadFromJsonAsync<PlanningResponse>();
+    planningClient.DefaultRequestHeaders.Add("X-Api-Key", Environment.GetEnvironmentVariable("ASSOCIATION_API_KEY"));
+
+    var planningResponse = await planningClient.PostAsJsonAsync("/api/planning/create-planning", new { AssociationId = result.Id });
+
+    if (!planningResponse.IsSuccessStatusCode)
+        throw new Exception($"Planning creation failed: {planningResponse.StatusCode}");
+
+    var planningData = await planningResponse.Content.ReadFromJsonAsync<PlanningResponse>();
     if (planningData == null)
-        throw new Exception("Invalid response from stock API");
+        throw new Exception("Invalid response from planning API");
 
     using var geoClient = geoHttpFactory.CreateClient("geo"); 
     var geoResponse = await geoClient.PostAsJsonAsync("/geo/store", new CreateGeoStoreRequest(result.Id));

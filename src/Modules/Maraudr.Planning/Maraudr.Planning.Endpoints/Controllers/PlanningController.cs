@@ -80,7 +80,7 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
-        [HttpGet("association/{associationId:guid}")]
+        [HttpGet("user/{associationId:guid}")]
         [Authorize]
         public async Task<IResult> GetAllEventsOfUserInAssociation(Guid associationId ,[FromServices] IGetAllEventsOfUserInAssociationHandler handler)
         {
@@ -113,10 +113,17 @@ namespace Maraudr.Planning.Endpoints.Controllers
         }
         
         [HttpPost("create-planning")]
-        [Authorize]
-        public async Task<IResult>  CreatePlanning([FromBody] CreatePlanningRequest request, [FromServices] ICreatePlanningHandler handler,
-            [FromServices] IValidator<CreateEventDto> validator)
+        public async Task<IResult> CreatePlanning(
+            [FromBody] CreatePlanningRequest request, 
+            [FromServices] ICreatePlanningHandler handler,
+            [FromServices] IValidator<CreateEventDto> validator,
+            [FromHeader(Name = "X-Api-Key")] string apiKey)
         {
+            if (apiKey != Environment.GetEnvironmentVariable("ASSOCIATION_API_KEY"))
+            {
+                return Results.Unauthorized();
+            }
+    
             try
             {
                 if (request.AssociationId == Guid.Empty)
@@ -124,14 +131,12 @@ namespace Maraudr.Planning.Endpoints.Controllers
                     return Results.BadRequest("associationId is required");
                 }
                 var id = await handler.HandleAsync(request.AssociationId);
-                return Results.Created($"/create-stock/{id}", new { Id = id });
-
+                return Results.Created($"/create-planning/{id}", new { Id = id });
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
-            
         }
         
 
