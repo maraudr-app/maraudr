@@ -79,6 +79,44 @@ namespace Maraudr.Planning.Endpoints.Controllers
                 return Results.BadRequest(e.Message);
             }
         }
+        
+        [HttpGet("association/{associationId:guid}")]
+        [Authorize]
+        public async Task<IResult> GetAllEventsOfUserInAssociation(Guid associationId ,[FromServices] IGetAllEventsOfUserInAssociationHandler handler)
+        {
+            var userId = User.GetUserId();
+            try
+            {
+                await handler.HandleAsync(userId,associationId);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+        
+        
+        [HttpGet("/{eventId:guid}")]
+        [Authorize]
+        public async Task<IResult> GetEventById(Guid eventId ,[FromServices] IGetAnEventByIdHandler handler)
+        {
+            try
+            {
+                await handler.HandleAsync(eventId);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+
+        
+        
+
+
+
 
         
         
