@@ -63,8 +63,24 @@ namespace Maraudr.Planning.Endpoints.Controllers
                 return Results.BadRequest(e.Message);
             }
         }
+        
+        [HttpGet("my-events")]
+        [Authorize]
+        public async Task<IResult> GetAllEventsOfUser([FromServices] IGetAllEventsOfUserHandler handler)
+        {
+            var userId = User.GetUserId();
+            try
+            {
+                await handler.HandleAsync(userId);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
 
-
+        
         
     }
 }

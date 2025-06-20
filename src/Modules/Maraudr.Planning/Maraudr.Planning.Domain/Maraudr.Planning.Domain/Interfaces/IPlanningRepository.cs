@@ -7,7 +7,7 @@ public interface IPlanningRepository
     public Task AddEventAsync(Event @event);
     public Task<Guid> GetPlanningIdFromAssociationAsync(Guid associationId);
     public Task<Guid> GetAssociationIdFromPlanningIdAsync(Guid planningId);
-    public     Task UpdateEventAsync(Event @event);
+    public Task UpdateEventAsync(Event @event);
 
     public Task DeleteEventByIdAsync(Guid id);
     public Task<Event> GetEventByIdAsync(Guid id);
