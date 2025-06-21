@@ -1,9 +1,10 @@
 using System.Net.Http.Json;
-using Maraudr.User.Domain.Entities.Users;
-using Maraudr.User.Domain.Interfaces.Repositories;
+using Maraudr.Planning.Domain.Interfaces;
+using Maraudr.Planning.Infrastructure;
+
 using Microsoft.Extensions.Options;
 
-namespace Maraudr.User.Infrastructure.Repositories;
+namespace Maraudr.Planning.Infrastructure.Repositories;
 
 
 
@@ -50,5 +51,9 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
         }
 
     }
-    
-}    
+
+    public Task<bool> ExistsByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+}

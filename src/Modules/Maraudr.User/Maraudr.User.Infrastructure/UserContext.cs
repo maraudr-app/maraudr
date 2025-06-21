@@ -177,8 +177,13 @@ modelBuilder.Entity<AbstractUser>()
     .WithOne()
     .HasForeignKey(d => d.UserId)
     .OnDelete(DeleteBehavior.Cascade);
-        
+modelBuilder.Entity<AbstractUser>()
+    .Property(u => u.RowVersion)
+    .IsRowVersion()
+    .HasDefaultValue(new byte[] { });
 
     }
+    
+    
 }
 

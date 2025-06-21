@@ -30,7 +30,7 @@ public abstract class AbstractUser
     
     public List<Language> Languages { get; set; }
     [Timestamp]
-    public byte[] RowVersion { get; set; }
+    public byte[]? RowVersion { get; set; }
 
     protected AbstractUser( string firstname, string lastname, DateTime createdAt,
         ContactInfo contactInfo, Address address,List<Language> languages,string passwordHash)

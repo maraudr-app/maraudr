@@ -9,7 +9,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddHealthChecks();
-
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddCors(options =>
@@ -98,7 +97,8 @@ app.MapPost("/association", [Authorize] async (
         {
             result.AssociationId,
             result.StockId,
-            result.GeoStoreId
+            result.GeoStoreId,
+            result.PlanningId
         });
     }
     catch (Exception ex)
