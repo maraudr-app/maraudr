@@ -1,51 +1,36 @@
 services:
-
-
   association:
-    build:
-      context: ./src/Modules/Maraudr.Association/
-      target: final
+    image: maraudr/maraudrapp:association
     ports:
       - 8080:8080
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
-    
 
   geo:
-    build:
-      context: ./src/Modules/Maraudr.Geo/
-      target: final
+    image: maraudr/maraudrapp:geo
     ports:
       - 8084:8080
     environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo  
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
   
-
   stock:
-    build:
-      context: ./src/Modules/Maraudr.Stock/
-      target: final
+    image: maraudr/maraudrapp:stock
     ports:
       - 8081:8080
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-    
+  
   user:
-    build:
-      context: ./src/Modules/Maraudr.User/
-      target: final
+    image: maraudr/maraudrapp:user
     ports:
       - 8082:8080
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-      - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
-
-
+      - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/
+  
   email-sender:
-    build:
-      context: ./src/Modules/Maraudr.EmailSender/
-      target: final
+    image: maraudr/maraudrapp:email-sender
     ports:
       - 8083:8080
     environment:
@@ -56,14 +41,9 @@ services:
       - MailSettings__Port=587
   
   planning:
-    build:
-      context: ./src/Modules/Maraudr.Planning/
-      target: final
+    image: maraudr/maraudrapp:planning
     ports:
       - 8085:8080
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
-    
-  
-      
