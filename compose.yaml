@@ -7,6 +7,9 @@ services:
       target: final
     ports:
       - 8080:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
     
 
   geo:
@@ -15,6 +18,8 @@ services:
       target: final
     ports:
       - 8084:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo  
   
 
   stock:
@@ -49,6 +54,16 @@ services:
       - MailSettings__Mail=
       - MailSettings__Host=smtp.mailersend.net
       - MailSettings__Port=587
+  
+  planning:
+    build:
+      context: ./src/Modules/Maraudr.Planning/
+      target: final
+    ports:
+      - 8085:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
     
   
       
