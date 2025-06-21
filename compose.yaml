@@ -1,29 +1,13 @@
 services:
 
-  maraudr-db:
-    image: postgres:15
-    container_name: maraudr-db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: maraudr-dev
-    ports:
-      - "5432:5432"
-    volumes:
-      - maraudr-db-data:/var/lib/postgresql/data
-    
+
   association:
     build:
       context: ./src/Modules/Maraudr.Association/
       target: final
     ports:
       - 8080:8080
-    environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-      - ASSOCIATION_API_KEY=zokieie,oifenfeihubfuybecfubcurry-test
-    depends_on:
-      - maraudr-db
+    
 
   geo:
     build:
@@ -31,10 +15,7 @@ services:
       target: final
     ports:
       - 8084:8080
-    environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-    depends_on:
-      - maraudr-db
+  
 
   stock:
     build:
@@ -44,9 +25,7 @@ services:
       - 8081:8080
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-    depends_on:
-      - maraudr-db
-
+    
   user:
     build:
       context: ./src/Modules/Maraudr.User/
@@ -56,8 +35,7 @@ services:
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
-    depends_on:
-      - maraudr-db
+
 
   email-sender:
     build:
@@ -71,19 +49,6 @@ services:
       - MailSettings__Mail=
       - MailSettings__Host=smtp.mailersend.net
       - MailSettings__Port=587
-    depends_on:
-      - maraudr-db
-  planning:
-    build:
-      context: ./src/Modules/Maraudr.Planning/
-      target: final
-    ports:
-      - 8085:8080
-    environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-      - ASSOCIATION_API_KEY=zokieie,oifenfeihubfuybecfubcurry-test
-    depends_on:
-      - maraudr-db
-
-volumes:
-  maraudr-db-data:
+    
+  
+      
