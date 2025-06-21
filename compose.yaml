@@ -30,7 +30,7 @@ services:
       - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/
   
   email-sender:
-    image: maraudr/maraudrapp:email-sender
+    image: maraudr/maraudrapp:emailsender
     ports:
       - 8083:8080
     environment:
