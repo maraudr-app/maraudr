@@ -55,8 +55,8 @@ namespace Maraudr.Planning.Endpoints.Controllers
             var userId = User.GetUserId();
             try
             {
-                await handler.HandleAsync(associationId,userId);
-                return Results.Ok();
+                var events = await handler.HandleAsync(associationId,userId);
+                return Results.Ok(events);
             }
             catch (Exception e)
             {
@@ -71,8 +71,8 @@ namespace Maraudr.Planning.Endpoints.Controllers
             var userId = User.GetUserId();
             try
             {
-                await handler.HandleAsync(userId);
-                return Results.Ok();
+                var events =await handler.HandleAsync(userId);
+                return Results.Ok(events);
             }
             catch (Exception e)
             {
@@ -87,8 +87,8 @@ namespace Maraudr.Planning.Endpoints.Controllers
             var userId = User.GetUserId();
             try
             {
-                await handler.HandleAsync(userId,associationId);
-                return Results.Ok();
+                var events  = await handler.HandleAsync(userId,associationId);
+                return Results.Ok(events);
             }
             catch (Exception e)
             {
@@ -103,8 +103,8 @@ namespace Maraudr.Planning.Endpoints.Controllers
         {
             try
             {
-                await handler.HandleAsync(eventId);
-                return Results.Ok();
+                var events  = await handler.HandleAsync(eventId);
+                return Results.Ok(events);
             }
             catch (Exception e)
             {
