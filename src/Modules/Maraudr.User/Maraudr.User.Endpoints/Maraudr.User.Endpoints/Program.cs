@@ -27,30 +27,27 @@ builder.Services.AddControllers();
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowFrontend3000");
 app.MapControllers(); 
-
-
-
-
-
 
 // MANAGER TEAM
 app.MapGet("/managers/team/{managerGuid:guid}", [Authorize] async (
