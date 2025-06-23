@@ -17,11 +17,11 @@ public class GetAllEventsOfUserInAssociationHandler(IPlanningRepository reposito
             throw new UnauthorizedAccessException($"L'utilisateur {userId} n'est pas autorisé à récuperer les événements");
 
         }
-        var exists = await repository.AssociationExistsByIdAsync(associationId);
-        if (!exists)
-            throw new InvalidOperationException("Association not found");
         
-        var events =  await repository.GetAllUserEventsAsync(associationId,userId);
-        return events;
+        var events =  await repository.GetAllEventsAsync(associationId);
+        return events.Where(e => 
+            e.OrganizerdId == userId || 
+            (e.ParticipantsIds.Contains(userId))
+        ).ToList();
     }
 }

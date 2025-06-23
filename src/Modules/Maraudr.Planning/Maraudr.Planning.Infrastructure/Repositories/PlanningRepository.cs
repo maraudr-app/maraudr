@@ -60,15 +60,7 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
     
         return @event;
     }
-
-    public async Task<List<Event>> GetAllUserEventsAsync(Guid associationId, Guid userId)
-    {
-        var planningId = await GetPlanningIdFromAssociationAsync(associationId);
     
-        return await context.Events
-            .Where(e => e.PlanningId == planningId && e.ParticipantsIds.Contains(userId))
-            .ToListAsync();
-    }
 
     public async Task<List<Event>> GetAllEventsAsync(Guid associationId)
     {
@@ -78,13 +70,13 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
             .Where(e => e.PlanningId == planningId)
             .ToListAsync();
     }
-
-    public async Task<List<Event>> GetAllUserEventsAsync(Guid userId)
+    
+    
+    public async Task<List<Event>> GetAllEventsAsync()
     {
-        return await context.Events
-            .Where(e => e.ParticipantsIds.Contains(userId))
-            .ToListAsync();
+        return await context.Events.AsNoTracking().ToListAsync();  
     }
+   
 
     public async Task<bool> AssociationExistsByIdAsync(Guid associationId)
     {
@@ -101,5 +93,7 @@ public class PlanningRepository(PlanningContext context):IPlanningRepository
         await context.Plannings.AddAsync(planning);
         await context.SaveChangesAsync();
     }
+
+
 
 }
