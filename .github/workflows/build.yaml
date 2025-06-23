@@ -32,13 +32,6 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_PREFIX }}-association:latest
 
-      - name: Build and push Authentication module
-        uses: docker/build-push-action@v5
-        with:
-          context: ./src/Modules/Maraudr.Authentication
-          push: true
-          tags: ${{ env.IMAGE_PREFIX }}-authentication:latest
-
       - name: Build and push EmailSender module
         uses: docker/build-push-action@v5
         with:
