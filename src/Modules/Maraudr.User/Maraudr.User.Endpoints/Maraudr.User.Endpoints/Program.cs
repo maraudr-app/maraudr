@@ -44,16 +44,10 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowFrontend3000");
 app.MapControllers(); 
-
-
-
-
-
 
 // MANAGER TEAM
 app.MapGet("/managers/team/{managerGuid:guid}", [Authorize] async (
