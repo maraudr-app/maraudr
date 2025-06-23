@@ -3,7 +3,6 @@ using Maraudr.Planning.Application.DTOs;
 using Maraudr.Planning.Application.UseCases;
 using Maraudr.Planning.Endpoints.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Maraudr.Planning.Endpoints.Controllers
@@ -21,7 +20,7 @@ namespace Maraudr.Planning.Endpoints.Controllers
             {
                 var userId = User.GetUserId();
                 var eventId = await handler.HandleAsync(userId, request);
-                return Results.Ok(eventId);
+                return Results.Ok(new { EventId = eventId, AssociationId = request.AssociationId });
             }
             catch (Exception e)
             {
@@ -48,7 +47,7 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
-        [HttpGet("{associationId:guid}")]
+        [HttpGet("all-events/{associationId:guid}")]
         [Authorize]
         public async Task<IResult> GetAllAssociationEvents(Guid associationId,[FromServices] IGetAllAssociationEventsHandler handler)
         {
@@ -80,7 +79,7 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
-        [HttpGet("user/{associationId:guid}")]
+        [HttpGet("my-events/{associationId:guid}")]
         [Authorize]
         public async Task<IResult> GetAllEventsOfUserInAssociation(Guid associationId ,[FromServices] IGetAllEventsOfUserInAssociationHandler handler)
         {
@@ -96,8 +95,7 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
-        
-        [HttpGet("/{eventId:guid}")]
+        [HttpGet("events/{eventId:guid}")]
         [Authorize]
         public async Task<IResult> GetEventById(Guid eventId ,[FromServices] IGetAnEventByIdHandler handler)
         {

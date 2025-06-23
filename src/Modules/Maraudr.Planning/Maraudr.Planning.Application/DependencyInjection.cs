@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IGetAllEventsOfUserHandler,GetAllEventsOfUserHandler>();
         services.AddScoped<ICreatePlanningHandler,CreatePlanningHandler>();
         services.AddScoped<IGetAnEventByIdHandler, GetAnEventByIdHandler>();
+        services.AddScoped<IGetAllEventsOfUserInAssociationHandler, GetAllEventsOfUserInAssociationHandler>();
 
 
     }
