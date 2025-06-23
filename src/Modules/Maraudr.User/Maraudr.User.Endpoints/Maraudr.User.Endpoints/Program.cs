@@ -27,15 +27,18 @@ builder.Services.AddControllers();
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
+
 var app = builder.Build();
 
 app.UseSwagger();
