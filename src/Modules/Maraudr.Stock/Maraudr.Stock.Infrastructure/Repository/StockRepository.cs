@@ -47,6 +47,12 @@ public class StockRepository(StockContext context) : IStockRepository
 
     }
     
+    public async Task<StockItem?> GetStockItemByBarCodeAndStockIdAsync(string code, Guid stockId)
+    {
+        return await _context.Items
+            .FirstOrDefaultAsync(x => x.BarCode != null && x.BarCode.Equals(code) && x.StockId == stockId);
+    }
+    
     public async Task AddQuantityToStock(Guid id, int newQuantity)
     {
         var item = await _context.Items.FindAsync(id);

@@ -65,17 +65,19 @@ app.MapPatch("/item/{id}/quantity", async (Guid id, [FromBody] int quantity, IRe
 
 app.MapPost("/item/{barcode}", [Authorize] async (
     string barcode,
-    Guid associationId,
+    [FromBody] CreateItemRequest request,
     ICreateItemFromBarcodeHandler handler) =>
 {
-    if (associationId == Guid.Empty)
+    Console.WriteLine(request.AssociationId);
+    if (request.AssociationId == Guid.Empty)
     {
         return Results.BadRequest(new { message = "associationId requis" });
     }
 
     try
     {
-        var id = await handler.HandleAsync(barcode, associationId);
+        Console.WriteLine(request.AssociationId);
+        var id = await handler.HandleAsync(barcode, request.AssociationId);
         return Results.Created($"/item/{id}", new { id });
     }
     catch (Exception e)
