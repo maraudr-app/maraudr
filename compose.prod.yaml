@@ -1,0 +1,49 @@
+services:
+  association:
+    image: maraudr/maraudrapp:association
+    ports:
+      - 8080:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
+
+  geo:
+    image: maraudr/maraudrapp:geo
+    ports:
+      - 8084:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+  
+  stock:
+    image: maraudr/maraudrapp:stock
+    ports:
+      - 8081:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+  
+  user:
+    image: maraudr/maraudrapp:user
+    ports:
+      - 8082:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/
+  
+  email-sender:
+    image: maraudr/maraudrapp:emailsender
+    ports:
+      - 8083:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - MailSettings__Password=
+      - MailSettings__Mail=
+      - MailSettings__Host=smtp.mailersend.net
+      - MailSettings__Port=587
+  
+  planning:
+    image: maraudr/maraudrapp:planning
+    ports:
+      - 8085:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - ASSOCIATION_API_KEY=amiralcommandergrossetttttttt2222222228
