@@ -102,4 +102,12 @@ public class AssocationsRepository(AssociationsContext context) : IAssociations
             .Select(a => a.Id)
             .ToListAsync();
     }
+    
+    public async Task<IEnumerable<Association>> GetAssociationsOfUserAsync(Guid userId)
+    {
+        return await context.Associations
+            .Where(a => a.Members.Contains(userId))
+            .Select(a => new Association(a.Id, a.Name))
+            .ToListAsync();
+    }
 }

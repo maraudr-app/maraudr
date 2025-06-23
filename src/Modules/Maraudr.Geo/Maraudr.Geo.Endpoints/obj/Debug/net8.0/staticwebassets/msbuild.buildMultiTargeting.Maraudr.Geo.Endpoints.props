@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Maraudr.Geo.Endpoints.props" />
+</Project>
