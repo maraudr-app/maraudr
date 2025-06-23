@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_PREFIX: maraudr/maraudrapp
+      IMAGE_REPO: maraudr/maraudrapp
 
     steps:
       - name: Checkout repository
@@ -25,37 +25,44 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Association module
+      - name: Build and push Association
         uses: docker/build-push-action@v5
         with:
           context: ./src/Modules/Maraudr.Association
           push: true
-          tags: ${{ env.IMAGE_PREFIX }}-association:latest
+          tags: ${{ env.IMAGE_REPO }}:association-latest
 
-      - name: Build and push EmailSender module
+      - name: Build and push Authentication
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Authentication
+          push: true
+          tags: ${{ env.IMAGE_REPO }}:authentication-latest
+
+      - name: Build and push EmailSender
         uses: docker/build-push-action@v5
         with:
           context: ./src/Modules/Maraudr.EmailSender
           push: true
-          tags: ${{ env.IMAGE_PREFIX }}-emailsender:latest
+          tags: ${{ env.IMAGE_REPO }}:emailsender-latest
 
-      - name: Build and push Geo module
+      - name: Build and push Geo
         uses: docker/build-push-action@v5
         with:
           context: ./src/Modules/Maraudr.Geo
           push: true
-          tags: ${{ env.IMAGE_PREFIX }}-geo:latest
+          tags: ${{ env.IMAGE_REPO }}:geo-latest
 
-      - name: Build and push Stock module
+      - name: Build and push Stock
         uses: docker/build-push-action@v5
         with:
           context: ./src/Modules/Maraudr.Stock
           push: true
-          tags: ${{ env.IMAGE_PREFIX }}-stock:latest
+          tags: ${{ env.IMAGE_REPO }}:stock-latest
 
-      - name: Build and push User module
+      - name: Build and push User
         uses: docker/build-push-action@v5
         with:
           context: ./src/Modules/Maraudr.User
           push: true
-          tags: ${{ env.IMAGE_PREFIX }}-user:latest
+          tags: ${{ env.IMAGE_REPO }}:user-latest
