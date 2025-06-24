@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.Associations.Infrastructure.Migrations
 {
     [DbContext(typeof(AssociationsContext))]
-    [Migration("20250623090835_InitAssociations")]
+    [Migration("20250624160542_InitAssociations")]
     partial class InitAssociations
     {
         /// <inheritdoc />

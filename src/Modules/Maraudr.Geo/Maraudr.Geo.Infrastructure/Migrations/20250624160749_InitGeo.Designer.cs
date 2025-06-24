@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.Geo.Infrastructure.Migrations
 {
     [DbContext(typeof(GeoContext))]
-    [Migration("20250623085250_InitGeo")]
+    [Migration("20250624160749_InitGeo")]
     partial class InitGeo
     {
         /// <inheritdoc />

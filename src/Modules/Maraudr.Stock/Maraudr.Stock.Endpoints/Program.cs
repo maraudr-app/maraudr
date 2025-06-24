@@ -126,8 +126,16 @@ app.MapPost("/item", [Authorize] async (
     return Results.Created($"/item/{id}", new { id });
 });
 
-app.MapPost("/create-stock", async (CreateStockRequest request, ICreateStockHandler handler) =>
+app.MapPost("/create-stock", async (
+    CreateStockRequest request, 
+    ICreateStockHandler handler, 
+    [FromHeader(Name = "X-Stock-Api-Key")] string apiKey) =>
 {
+    if (apiKey != Environment.GetEnvironmentVariable("STOCK_API_KEY"))
+    {
+        return Results.Unauthorized();
+    }
+    
     if (request.AssociationId == Guid.Empty)
     {
         return Results.BadRequest("associationId is required");
