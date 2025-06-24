@@ -197,7 +197,7 @@ app.MapDelete("/stock/item/{itemId}", [Authorize] async (
     return Results.NoContent();
 });
 
-app.MapGet("/stock/id", [Authorize] async (
+app.MapGet("/stock/{associationId}", [Authorize] async (
     Guid associationId,
     IGetStockIdByAssociationHandler handler) =>
 {
@@ -209,6 +209,5 @@ app.MapGet("/stock/id", [Authorize] async (
         ? Results.Ok(new { StockId = stockId })
         : Results.NotFound(new { message = "Aucun stock trouvé pour cette association" });
 });
-
 
 app.Run();
