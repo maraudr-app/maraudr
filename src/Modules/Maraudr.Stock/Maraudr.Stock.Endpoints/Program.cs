@@ -101,7 +101,7 @@ app.MapPost("/item/{barcode}", [Authorize] async (
     }
 });
 
-app.MapPut("/item/{barcode}", [Authorize] async (
+app.MapPut("/item/reduce/{barcode}", [Authorize] async (
     string barcode,
     [FromBody] UpdateItemQuantityInStockRequest request,
     IReduceQuantityFromItemHandler handler) =>
