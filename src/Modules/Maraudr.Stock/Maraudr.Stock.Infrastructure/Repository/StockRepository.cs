@@ -44,7 +44,6 @@ public class StockRepository(StockContext context) : IStockRepository
         {
             return null;
         }
-
     }
     
     public async Task<StockItem?> GetStockItemByBarCodeAndStockIdAsync(string code, Guid stockId)
@@ -59,6 +58,17 @@ public class StockRepository(StockContext context) : IStockRepository
         if (item != null)
         {
             item.Quantity += newQuantity;
+            _context.Items.Update(item);
+            await _context.SaveChangesAsync();
+        }
+    }
+    
+    public async Task ReduceQuantityFromStockAsync(Guid itemId, int quantity)
+    {
+        var item = await _context.Items.FindAsync(itemId);
+        if (item != null)
+        {
+            item.Quantity -= quantity;
             _context.Items.Update(item);
             await _context.SaveChangesAsync();
         }

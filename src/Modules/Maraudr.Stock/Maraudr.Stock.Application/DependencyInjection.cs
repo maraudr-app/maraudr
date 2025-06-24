@@ -16,5 +16,6 @@ public static class DependencyInjection
         services.AddScoped<IDeleteItemFromStockHandler, DeleteItemFromStockHandler>();
         services.AddScoped<IGetStockIdByAssociationHandler, GetStockIdByAssociationHandler>();
         services.AddScoped<IQueryItemByAssociationHandler, QueryItemByAssociationHandler>();
+        services.AddScoped<IReduceQuantityFromItemHandler, ReduceQuantityFromItemHandler>();
     }
 }
