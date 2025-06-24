@@ -15,7 +15,7 @@ public class UserContext : DbContext
     public DbSet<AbstractUser> Users { get; set; }
     public DbSet<RefreshToken?> RefreshTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
-    public DbSet<Disponibility> Disponibilities { get; set; } // Ajoutez cette ligne
+    public DbSet<Disponibility> Disponibilities { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)

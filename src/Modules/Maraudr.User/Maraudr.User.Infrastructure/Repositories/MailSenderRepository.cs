@@ -26,4 +26,24 @@ public class MailSenderRepository(HttpClient httpClient, IOptions<ApiSettings> o
                 throw new HttpRequestException($"Échec de l'envoi de l'email: {error}", null, response.StatusCode);
             }
     }
+
+    public async Task SendResetEmailAsync(string name,string email,  string token)
+    {
+        var url = options.Value.EmailSenderApiUrl + "email/send-reset-link";
+        
+        var payload = new 
+        {
+            toEmail = email.Trim(),
+            name = name,
+            token= token
+        };
+
+        var response = await httpClient.PostAsJsonAsync(url, payload);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Échec de l'envoi de l'email: {error}", null, response.StatusCode);
+        }
+    }
 }    

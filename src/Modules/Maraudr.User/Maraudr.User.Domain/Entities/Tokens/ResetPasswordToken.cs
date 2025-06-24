@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maraudr.Authentication.Domain.Entities
+﻿
+namespace Maraudr.User.Domain.Entities.Tokens
 {
     public class PasswordResetToken
     {
@@ -14,12 +9,18 @@ namespace Maraudr.Authentication.Domain.Entities
         {
             UserId = userId;
             Token = token;
-            ExpiresAt = DateTime.UtcNow.Add(expiration); 
+            CreatedAt = DateTime.UtcNow; 
+            ExpiresAt = DateTime.UtcNow.Add(expiration);
+            IsUsed = false;
         }
     
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string Token { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
+        
+        public bool IsUsed { get; set; }
     }
 }
