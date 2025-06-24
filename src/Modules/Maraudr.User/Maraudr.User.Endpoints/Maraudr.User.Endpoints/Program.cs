@@ -46,7 +46,7 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend3000");
+app.UseCors("AllowFrontend");
 app.MapControllers(); 
 
 // MANAGER TEAM
