@@ -30,8 +30,6 @@ namespace Maraudr.EmailSender.Infrastructure;
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
             
-            Console.WriteLine("mail " + _mailSettings.Mail);
-            Console.WriteLine("password " + _mailSettings.Password);
             using var smtp = new SmtpClient();
             await smtp.ConnectAsync(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
             await smtp.AuthenticateAsync(_mailSettings.Mail, _mailSettings.Password);

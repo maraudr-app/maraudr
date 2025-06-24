@@ -9,6 +9,7 @@ using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateRefreshToken;
 using Application.UseCases.Tokens.JwtManagement.RefreshToken;
+using Application.UseCases.Tokens.RefreshPasswordToken;
 using Application.UseCases.Users.Manager.AddUserToManagersTeam;
 using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
@@ -52,6 +53,9 @@ public static class DependencyInjection
         services.AddScoped<IGetUsersFutureDipsonibilitiesHandler, GetUsersFutureDipsonibilitiesHandler>();
         services.AddScoped<IDeleteDisponibilityHandler, DeleteDisponibilityHandler>();
         services.AddScoped<IGetAllAssociationUsersDipsonibilitiesHandler, GetAllAssociationUsersDipsonibilitiesHandler>();
+        services.AddScoped<IInitiatePasswordResetAsync, InitiatePasswordResetAsync>();
+        services.AddScoped<IResetPasswordHandler, ResetPasswordHandler>();
+        services.AddScoped<IValidateResetTokenHandler, ValidateResetTokenHandler>();
 
     }
 }

@@ -62,6 +62,8 @@ services:
     environment:
       - Jwt__Secret=${JWT_SECRET}
       - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
+      - ApiSettings__EmailSenderApiKey=${EMAIL_SENDER_API_KEY}
+
     depends_on:
       - maraudr-db
 
@@ -77,6 +79,8 @@ services:
       - MailSettings__Mail=${MAIL_ADDRESS}
       - MailSettings__Host=${MAIL_HOST}
       - MailSettings__Port=${MAIL_PORT}
+      - ApiKey=${EMAIL_SENDER_API_KEY}
+
     depends_on:
       - maraudr-db
 

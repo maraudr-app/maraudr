@@ -248,4 +248,6 @@ public abstract class AbstractUser
     {
         return Id.GetHashCode();
     }
+
+  
 }
