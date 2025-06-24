@@ -175,19 +175,26 @@ app.MapGet("/stock/items", [Authorize] async (
     return Results.Ok(items);
 });
 
-app.MapDelete("/stock/item", [Authorize] async (
-    Guid associationId,
+app.MapDelete("/stock/item/{itemId}", [Authorize] async (
     Guid itemId,
-    IDeleteItemFromStockHandler handler) =>
+    [FromQuery] Guid associationId,
+    IDeleteItemFromStockHandler handler,
+    IRedisCacheService cache) =>
 {
     if (associationId == Guid.Empty || itemId == Guid.Empty)
         return Results.BadRequest(new { message = "Invalid parameters" });
 
     var success = await handler.HandleAsync(associationId, itemId);
 
-    return success
-        ? Results.NoContent()
-        : Results.NotFound(new { message = "Item not found or does not belong to this association" });
+    if (!success)
+    {
+        return Results.NotFound(new { message = "L'item n'existe pas ou n'appartient pas à cette association" });
+    }
+
+    var cacheKey = $"item:{associationId}:{itemId}";
+    await cache.RemoveAsync(cacheKey);
+
+    return Results.NoContent();
 });
 
 app.MapGet("/stock/id", [Authorize] async (
