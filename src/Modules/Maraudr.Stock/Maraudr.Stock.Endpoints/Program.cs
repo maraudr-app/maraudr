@@ -1,5 +1,7 @@
 using Maraudr.Stock.Application.Dtos;
+using Maraudr.Stock.Domain.Entities;
 using Maraudr.Stock.Endpoints;
+using Maraudr.Stock.Infrastructure.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,18 +40,31 @@ app.UseAuthorization();
 
 app.MapGet("/item/{id}", [Authorize] async (
     Guid id,
-    Guid associationId,
-    IQueryItemByAssociationHandler handler) =>
+    [FromQuery] Guid associationId,
+    IQueryItemByAssociationHandler handler,
+    IRedisCacheService cache) =>
 {
     if (associationId == Guid.Empty)
         return Results.BadRequest(new { message = "associationId requis" });
 
-    var item = await handler.HandleAsync(id, associationId);
-    return item is not null
-        ? Results.Ok(item)
-        : Results.NotFound(new { message = "Item introuvable ou non autorisé" });
-});
+    var cacheKey = $"item:{associationId}:{id}";
+    var item = await cache.GetAsync<StockItemQuery>(cacheKey);
 
+    if (item is not null)
+    {
+        return Results.Ok(item);
+    }
+
+    item = await handler.HandleAsync(id, associationId);
+
+    if (item is null)
+    {
+        return Results.NotFound(new { message = "Item introuvable" });
+    }
+
+    await cache.SetAsync(cacheKey, item, TimeSpan.FromMinutes(10));
+    return Results.Ok(item);
+});
 
 app.MapGet("/item/type/{type}", [Authorize] async (Category type, IQueryItemByType handler) =>
 {

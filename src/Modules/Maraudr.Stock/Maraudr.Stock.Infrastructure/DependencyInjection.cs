@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Maraudr.Stock.Infrastructure.Caching;
+using Microsoft.Extensions.Configuration;
 
 namespace Maraudr.Stock.Infrastructure;
 
@@ -13,5 +14,13 @@ public static class DependencyInjection
 
         services.AddDbContext<StockContext>(options =>
             options.UseNpgsql(connectionString));
+        
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+            options.InstanceName = "Maraudr.Stock:";
+        });
+        
+        services.AddSingleton<IRedisCacheService, RedisCacheService>();
     }
 }
