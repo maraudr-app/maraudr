@@ -23,6 +23,12 @@ public class Association
         Address = address;
     }
     
+    public Association(Guid id, string name)
+    {
+        Id = id;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+    }
+    
     private Association() { }
     
     public void UpdateInformation(string name, Address newAddress)

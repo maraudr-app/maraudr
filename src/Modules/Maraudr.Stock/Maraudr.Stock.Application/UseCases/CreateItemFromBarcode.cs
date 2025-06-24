@@ -17,7 +17,9 @@ public class CreateItemFromBarcodeHandler(
             throw new ArgumentException("Stock introuvable pour l'association");
         }
 
-        var existingItem = await repository.GetStockItemByBarCodeAsync(barcode);
+        Console.WriteLine(stock.Id);
+
+        var existingItem = await repository.GetStockItemByBarCodeAndStockIdAsync(barcode, stock.Id);
         if (existingItem != null)
         {
             await repository.AddQuantityToStock(existingItem.Id, 1);

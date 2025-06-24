@@ -14,4 +14,5 @@ public interface IAssociations
     Task<List<Association>> SearchAssociationsByCity(string city);
     Task AddUserToAssociationAsync(Guid associationId, Guid userId);
     Task<IEnumerable<Guid>> GetAssociationIdsByUserIdAsync(Guid userId);
+    Task<IEnumerable<Association>> GetAssociationsOfUserAsync(Guid userId);
 }

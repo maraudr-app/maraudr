@@ -1,5 +1,6 @@
 ﻿
 using MailKit.Net.Smtp;
+using System.Threading.Tasks;
 using MailKit.Security;
 using MimeKit;
 using Maraudr.EmailSender.Domain.Interfaces;

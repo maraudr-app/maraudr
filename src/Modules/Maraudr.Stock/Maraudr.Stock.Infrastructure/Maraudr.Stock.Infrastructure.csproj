@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Maraudr.Stock.Domain\Maraudr.Stock.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

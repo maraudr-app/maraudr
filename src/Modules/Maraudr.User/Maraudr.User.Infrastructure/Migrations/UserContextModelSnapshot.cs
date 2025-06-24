@@ -114,13 +114,15 @@ namespace Maraudr.User.Infrastructure.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Manager");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
+                        .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0]);
 
                     b.Property<string>("UserType")
                         .IsRequired()
@@ -156,7 +158,7 @@ namespace Maraudr.User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssociationId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Disponibilities", (string)null);
                 });
@@ -265,7 +267,7 @@ namespace Maraudr.User.Infrastructure.Migrations
                 {
                     b.HasOne("Maraudr.User.Domain.Entities.Users.AbstractUser", null)
                         .WithMany("Disponibilities")
-                        .HasForeignKey("AssociationId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
