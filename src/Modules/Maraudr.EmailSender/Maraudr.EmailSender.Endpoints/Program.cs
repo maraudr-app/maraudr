@@ -3,6 +3,7 @@ using Maraudr.EmailSender.Application.Dtos;
 using Maraudr.EmailSender.Application.UseCases;
 using Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail;
 using Maraudr.EmailSender.Domain.Interfaces;
+using Maraudr.EmailSender.Endpoints.Identity;
 using Maraudr.EmailSender.Endpoints.MailSettings;
 using Maraudr.EmailSender.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseApiKeyAuth();
 
 
 

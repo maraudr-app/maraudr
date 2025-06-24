@@ -18,7 +18,13 @@ public class MailSenderRepository(HttpClient httpClient, IOptions<ApiSettings> o
                 name = name
             };
 
-            var response = await httpClient.PostAsJsonAsync(url, payload);
+          
+            using var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = JsonContent.Create(payload);
+
+            request.Headers.Add("X-API-KEY", options.Value.EmailSenderApiKey);
+        
+            var response = await httpClient.SendAsync(request);
         
             if (!response.IsSuccessStatusCode)
             {
@@ -37,8 +43,12 @@ public class MailSenderRepository(HttpClient httpClient, IOptions<ApiSettings> o
             name = name,
             token= token
         };
+        using var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Content = JsonContent.Create(payload);
 
-        var response = await httpClient.PostAsJsonAsync(url, payload);
+        request.Headers.Add("X-API-KEY", options.Value.EmailSenderApiKey);
+        
+        var response = await httpClient.SendAsync(request);
         
         if (!response.IsSuccessStatusCode)
         {
