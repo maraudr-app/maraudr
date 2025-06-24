@@ -240,3 +240,11 @@ C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoint
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\obj\Debug\net8.0\Maraudr.Geo.Endpoints.pdb
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\obj\Debug\net8.0\Maraudr.Geo.Endpoints.genruntimeconfig.cache
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\obj\Debug\net8.0\ref\Maraudr.Geo.Endpoints.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

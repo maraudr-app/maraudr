@@ -6,6 +6,7 @@ using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
 using Maraudr.Geo.Infrastructure.WebSocket;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -59,8 +60,15 @@ app.MapPost("/geo", [Authorize] async (
     return Results.Created($"/geo/store/{response.Id}", new { response.Id });
 });
 
-app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreForAnAssociation handler) =>
+app.MapPost("/geo/store", async (
+    CreateGeoStoreRequest request,
+    ICreateGeoStoreForAnAssociation handler,
+    [FromHeader(Name = "X-Geo-Api-Key")] string apiKey) =>
 {
+    if (apiKey != Environment.GetEnvironmentVariable("GEO_API_KEY"))
+    {
+        return Results.Unauthorized();
+    }
     try
     {
         var response = await handler.HandleAsync(request);

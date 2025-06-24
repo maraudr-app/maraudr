@@ -65,6 +65,12 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         throw new Exception("Failed to create association.");
 
     using var stockClient = stockHttpFactory.CreateClient("stock");
+    
+    stockClient.DefaultRequestHeaders.Add("X-Stock-Api-Key", Environment.GetEnvironmentVariable("STOCK_API_KEY"));
+    Console.WriteLine($"Envoi à /create-stock avec AssociationId = {result.Id}");
+    Console.WriteLine($"Stock endpoint: {stockClient.BaseAddress}");
+    Console.WriteLine(Environment.GetEnvironmentVariable("STOCK_API_KEY"));
+
     var stockResponse = await stockClient.PostAsJsonAsync("/create-stock", new { AssociationId = result.Id });
     if (!stockResponse.IsSuccessStatusCode)
         throw new Exception("Stock creation failed");
@@ -77,6 +83,10 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
 
     planningClient.DefaultRequestHeaders.Add("X-Api-Key", Environment.GetEnvironmentVariable("ASSOCIATION_API_KEY"));
 
+    Console.WriteLine($"Envoi à /create-planning avec AssociationId = {result.Id}");
+    Console.WriteLine($"Stock endpoint: {planningClient.BaseAddress}");
+    Console.WriteLine(Environment.GetEnvironmentVariable("ASSOCIATION_API_KEY"));
+    
     var planningResponse = await planningClient.PostAsJsonAsync("/api/planning/create-planning", new { AssociationId = result.Id });
 
     if (!planningResponse.IsSuccessStatusCode)
@@ -87,6 +97,9 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         throw new Exception("Invalid response from planning API");
 
     using var geoClient = geoHttpFactory.CreateClient("geo"); 
+    
+    geoClient.DefaultRequestHeaders.Add("X-Geo-Api-Key", Environment.GetEnvironmentVariable("GEO_API_KEY"));
+    
     var geoResponse = await geoClient.PostAsJsonAsync("/geo/store", new CreateGeoStoreRequest(result.Id));
     if (!geoResponse.IsSuccessStatusCode)
         throw new Exception("GeoStore creation failed");
@@ -96,8 +109,7 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
         throw new Exception("Invalid response from geo API");
 
     return new AssociationWithStockResponse(result.Id, stockData.Id, geoData.Id, planningData.Id);}
-
-
+    
     private static HeadquartersAddress GetBestAddress(Coordinates coords)
     {
         var primary = coords.HeadquartersAddress;
@@ -112,9 +124,7 @@ public class CreateAssociationSiretIncluded(IAssociations associations) : ICreat
 public record AssociationWithStockResponse(Guid AssociationId, Guid StockId, Guid GeoStoreId,Guid PlanningId);
 public record StockResponse(Guid Id);
 public record PlanningResponse(Guid Id);
-
 public record CreateGeoStoreRequest(Guid AssociationId);
-
 public record SiretApiResponse(
     [property: JsonPropertyName("identite")] Identity Identity,
     [property: JsonPropertyName("coordonnees")] Coordinates Coordinates

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.Stock.Infrastructure.Migrations
 {
     [DbContext(typeof(StockContext))]
-    [Migration("20250623084829_InitStock")]
+    [Migration("20250624160613_InitStock")]
     partial class InitStock
     {
         /// <inheritdoc />
