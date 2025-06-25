@@ -1,5 +1,6 @@
 ﻿using Maraudr.Geo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace Maraudr.Geo.Infrastructure;
 
@@ -17,10 +18,10 @@ public class GeoContext : DbContext
             .HasForeignKey(data => data.GeoStoreId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Shadow property de type point
         modelBuilder.Entity<Domain.Entities.GeoData>()
-            .Property<NetTopologySuite.Geometries.Point>("Location")
+            .Property<Point>("Location")
             .HasColumnType("geography (point)");
+
 
         base.OnModelCreating(modelBuilder);
     }

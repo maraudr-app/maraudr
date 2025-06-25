@@ -1,9 +1,11 @@
 ﻿using System.Globalization;
+using System.Net.Http.Json;
 using Maraudr.Geo.Domain.Entities;
 using Maraudr.Geo.Domain.Interfaces;
 using Maraudr.Geo.Infrastructure.GeoData;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace Maraudr.Geo.Infrastructure;
@@ -31,49 +33,75 @@ public class GeoRepository : IGeoRepository
             .ToListAsync();
     }
 
-    public async Task<(string?, string)> GetRouteAsync(Guid associationId, double lat, double lng, double radiusKm)
+public async Task<(List<double[]> Coordinates, string GeoJson, double Distance, double Duration, string GoogleMapsUrl)>
+    GetRouteAsync(Guid associationId, double centerLat, double centerLng, double radiusKm, double startLat, double startLng)
+{
+    var centerPoint = new Point(centerLng, centerLat) { SRID = 4326 };
+
+    var events = await _context.GeoEvents
+        .Include(e => e.GeoStore)
+        .Where(e => e.GeoStore.AssociationId == associationId)
+        .Where(e =>
+            EF.Property<Point>(e, "Location") != null &&
+            EF.Property<Point>(e, "Location")!.Distance(centerPoint) <= radiusKm * 1000)
+        .OrderBy(e => e.ObservedAt)
+        .ToListAsync();
+
+    if (events.Count == 0)
+        return ([], "", 0, 0, "");
+
+    var coordinates = new List<double[]>
     {
-        var radiusMeters = radiusKm * 1000;
-        var centerPoint = new Point(lng, lat) { SRID = 4326 };
+        new[] { startLng, startLat }
+    };
+    coordinates.AddRange(events.Select(e => new[] { e.Longitude, e.Latitude }));
 
-        // 1. Récupérer les GeoData proches
-        var events = await _context.GeoEvents
-            .Where(e => e.GeoStore!.AssociationId == associationId)
-            .Select(e => new
-            {
-                e.Latitude,
-                e.Longitude,
-                e.ObservedAt
-            })
-            .ToListAsync();
+    var httpClient = new HttpClient();
+    var orsKey = Environment.GetEnvironmentVariable("ORS_API_KEY");
 
-        // 2. Filtrer en mémoire avec distance Haversine (pas ST_DWithin)
-        var close = events
-            .Where(e => GeoUtils.GetDistanceInKm(lat, lng, e.Latitude, e.Longitude) <= radiusKm)
-            .OrderBy(e => e.ObservedAt)
-            .ToList();
+    if (string.IsNullOrWhiteSpace(orsKey))
+        return ([], "", 0, 0, "");
 
-        if (close.Count == 0)
-            return (null, "");
+    httpClient.DefaultRequestHeaders.Add("Authorization", orsKey);
 
-        // 3. Créer une LineString
-        var coordinates = close.Select(p =>
-            new Coordinate(p.Longitude, p.Latitude)).ToArray();
+    var requestBody = new
+    {
+        coordinates = coordinates
+    };
 
-        var line = new LineString(coordinates) { SRID = 4326 };
+    var response = await httpClient.PostAsJsonAsync(
+        "https://api.openrouteservice.org/v2/directions/foot-walking/geojson", requestBody);
 
-        var geoJsonWriter = new NetTopologySuite.IO.GeoJsonWriter();
-        var geoJson = geoJsonWriter.Write(line);
+    if (!response.IsSuccessStatusCode)
+        return ([], "", 0, 0, "");
 
-        // 4. URL Google Maps
-        var gmapsUrl = "https://www.google.com/maps/dir/" +
-                       string.Join("/", close.Select(p =>
-                           $"{p.Latitude.ToString(CultureInfo.InvariantCulture)},{p.Longitude.ToString(CultureInfo.InvariantCulture)}"));
+    var json = await response.Content.ReadFromJsonAsync<OpenRouteServiceResponse>();
+    var feature = json?.features?.FirstOrDefault();
 
-        return (geoJson, gmapsUrl);
+    if (feature == null)
+        return ([], "", 0, 0, "");
+
+    var routeCoordinates = feature.geometry?.coordinates ?? new List<double[]>();
+    var distance = feature.properties?.summary?.distance ?? 0;
+    var duration = feature.properties?.summary?.duration ?? 0;
+
+    var gmapsUrl = BuildGoogleMapsUrl(coordinates);
+    var geoJson = JsonConvert.SerializeObject(json);
+
+    return (routeCoordinates, geoJson, distance, duration, gmapsUrl);
+}
+
+
+    private static string BuildGoogleMapsUrl(List<double[]> coords)
+    {
+        const string baseUrl = "https://www.google.com/maps/dir/";
+        var segments = coords.Select(c =>
+            string.Create(CultureInfo.InvariantCulture, $"{c[1]},{c[0]}")); // Lat,Lng
+
+        return baseUrl + string.Join("/", segments);
     }
 
-
+    
     public async Task<GeoStore?> GetGeoStoreByAssociationAsync(Guid associationId)
     {
         return await _context.GeoStores.FirstOrDefaultAsync(x => x.AssociationId == associationId);

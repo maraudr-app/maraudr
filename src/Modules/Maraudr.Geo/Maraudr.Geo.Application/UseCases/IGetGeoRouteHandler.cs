@@ -5,17 +5,29 @@ namespace Maraudr.Geo.Application.UseCases;
 
 public interface IGetGeoRouteHandler
 {
-    Task<GeoRouteResponse?> HandleAsync(Guid associationId, double latitude, double longitude, double radiusKm);
+    Task<GeoRouteResponse?> HandleAsync(
+        Guid associationId,
+        double centerLat,
+        double centerLng,
+        double radiusKm,
+        double startLat,
+        double startLng);
 }
-
 
 public class GetGeoRouteHandler(IGeoRepository repository) : IGetGeoRouteHandler
 {
-    
-    public async Task<GeoRouteResponse?> HandleAsync(Guid associationId, double latitude, double longitude, double radiusKm)
+    public async Task<GeoRouteResponse?> HandleAsync(
+        Guid associationId,
+        double centerLat,
+        double centerLng,
+        double radiusKm,
+        double startLat,
+        double startLng)
     {
-        var (geoJson, gmapsUrl) = await repository.GetRouteAsync(associationId, latitude, longitude, radiusKm);
+        var (coordinates, geoJson, distance, duration, gmapsUrl) =
+            await repository.GetRouteAsync(associationId, centerLat, centerLng, radiusKm, startLat, startLng);
 
-        return geoJson is null ? null : new GeoRouteResponse(geoJson, gmapsUrl);
+        return coordinates.Count == 0 ? null : new GeoRouteResponse(coordinates, geoJson, distance, duration, gmapsUrl);
     }
 }
+

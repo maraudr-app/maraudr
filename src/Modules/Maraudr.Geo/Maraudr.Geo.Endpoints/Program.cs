@@ -105,19 +105,24 @@ app.MapGet("/geo/route", [Authorize] async (
     double latitude,
     double longitude,
     double radiusKm,
+    double startLat,
+    double startLng,
     IGetGeoRouteHandler handler) =>
 {
-    var result = await handler.HandleAsync(associationId, latitude, longitude, radiusKm);
+    var result = await handler.HandleAsync(associationId, latitude, longitude, radiusKm, startLat, startLng);
 
-    return result is null
-        ? Results.NotFound("No route found for the selected association.")
-        : Results.Ok(new
-        {
-            geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson),
-            googleMapsUrl = result.GoogleMapsUrl
-        });
+    if (result is null)
+        return Results.NotFound("No route found for the selected association.");
+
+    return Results.Ok(new
+    {
+        geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson),
+        result.Distance,
+        result.Duration,
+        result.Coordinates,
+        result.GoogleMapsUrl
+    });
 });
-
 
 app.Map("/geo/live", async context =>
 {
