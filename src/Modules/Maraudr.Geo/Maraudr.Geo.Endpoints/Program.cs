@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using System.Text.Json;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
@@ -98,6 +99,25 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
         ? Results.Ok(new { id })
         : Results.NotFound("GeoStore not found for this association.");
 });
+
+app.MapGet("/geo/route", [Authorize] async (
+    Guid associationId,
+    double latitude,
+    double longitude,
+    double radiusKm,
+    IGetGeoRouteHandler handler) =>
+{
+    var result = await handler.HandleAsync(associationId, latitude, longitude, radiusKm);
+
+    return result is null
+        ? Results.NotFound("No route found for the selected association.")
+        : Results.Ok(new
+        {
+            geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson),
+            googleMapsUrl = result.GoogleMapsUrl
+        });
+});
+
 
 app.Map("/geo/live", async context =>
 {

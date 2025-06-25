@@ -10,8 +10,8 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartAttribute("Microsoft.AspNetCore.OpenApi")]
-[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartAttribute("Swashbuckle.AspNetCore.SwaggerGen")]
+[assembly: Microsoft.EntityFrameworkCore.Design.DesignTimeServicesReferenceAttribute("Npgsql.EntityFrameworkCore.PostgreSQL.Design.Internal.NpgsqlNetTopologySuiteDesig" +
+    "nTimeServices, Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite", "Npgsql.EntityFrameworkCore.PostgreSQL")]
 
 // Généré par la classe MSBuild WriteCodeFragment.
 

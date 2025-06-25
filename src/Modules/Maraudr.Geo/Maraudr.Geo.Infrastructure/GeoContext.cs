@@ -7,9 +7,8 @@ public class GeoContext : DbContext
 {
     public GeoContext(DbContextOptions<GeoContext> options) : base(options) { }
 
-    public DbSet<GeoData> GeoEvents => Set<GeoData>();
+    public DbSet<Domain.Entities.GeoData> GeoEvents => Set<Domain.Entities.GeoData>();
     public DbSet<GeoStore> GeoStores => Set<GeoStore>();
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<GeoStore>()
@@ -18,6 +17,13 @@ public class GeoContext : DbContext
             .HasForeignKey(data => data.GeoStoreId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Shadow property de type point
+        modelBuilder.Entity<Domain.Entities.GeoData>()
+            .Property<NetTopologySuite.Geometries.Point>("Location")
+            .HasColumnType("geography (point)");
+
         base.OnModelCreating(modelBuilder);
     }
+
+
 }
