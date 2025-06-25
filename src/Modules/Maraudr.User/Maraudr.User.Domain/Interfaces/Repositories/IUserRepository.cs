@@ -33,6 +33,9 @@ public interface IUserRepository
     Task AddInvitationToken(InvitationToken token);
 
 
+    Task<Guid> GetManagerIdByInvitationTokenAsync(string token);
+
+
 
 
 }

@@ -23,15 +23,11 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             await mailSenderRepository.SendWelcomeEmailTo(manager.ContactInfo.Email, manager.Firstname);
             return manager.Id;
         }else{
-            
-            if (!createUserDto.ManagerId.HasValue)
-            { 
-                throw new InvalidOperationException("Un utilisateur non-manager doit avoir un manager assigné.");
-            }  
-            var manager = await repository.GetByIdAsync(createUserDto.ManagerId.Value);
+            var managerId = await repository.GetManagerIdByInvitationTokenAsync(createUserDto.ManagerToken);
+            var manager = await repository.GetByIdAsync(managerId);
             if (manager is not { Role: Role.Manager })
             {
-                throw new InvalidOperationException($"Le manager avec l'ID {createUserDto.ManagerId} n'existe pas.");
+                throw new InvalidOperationException($"Le manager avec le token {createUserDto.ManagerToken} n'existe pas.");
             }
             
 
