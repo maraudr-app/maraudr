@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using Application.DTOs.AuthenticationQueriesDto.Requests;
+using Application.DTOs.InvitationDto;
+using Application.UseCases.Tokens;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
 using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.RefreshPasswordToken;
@@ -113,6 +115,29 @@ public class AuthController: ControllerBase
         return Ok(new { message = "Mot de passe réinitialisé avec succès" });
     }
 
+    [HttpPost("invitation-link/send")]
+    [Authorize]
+    public async Task<IActionResult> SendInvitation([FromBody] SendInvitationRequest request, [FromServices] ISendInvitationRequestHandler handler)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var currentUserId = User.GetUserId();
+        
+        try
+        {
+            await handler.HandleAsync(
+                currentUserId, request);
+
+            return Ok(new { message = "Invitation envoyée avec succès" });
+
+
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
 
 

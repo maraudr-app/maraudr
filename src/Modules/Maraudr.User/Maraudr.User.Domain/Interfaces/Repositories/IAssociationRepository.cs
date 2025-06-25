@@ -8,4 +8,8 @@ public interface IAssociationRepository
     
     public  Task<bool> IsUserMemberOfAssociationAsync(Guid userId, Guid associationId);
 
+
+    public Task<string> GetAssociationName(Guid associationId);
+
+
 }

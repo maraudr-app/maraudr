@@ -27,6 +27,14 @@ public interface IUserRepository
 
     Task UpdateResetPasswordTokenAsync(PasswordResetToken token);
 
+    Task InvalidateExistingInvitationsAsync(string email);
+
+
+    Task AddInvitationToken(InvitationToken token);
+
+
+    Task<Guid> GetManagerIdByInvitationTokenAsync(string token);
+
 
 
 

@@ -67,7 +67,7 @@ public class Manager : AbstractUser
     public void AddMemberToTeam(AbstractUser member)
     {
         if (member == null) throw new ArgumentNullException(nameof(member));
-        if (EFTeam.Any(m => m.Equals(member)))
+        if (EFTeam.Any(m => m.Id.Equals(member.Id)))
             throw new ArgumentException("Member already in team");
 
         EFTeam.Add((User)member);
