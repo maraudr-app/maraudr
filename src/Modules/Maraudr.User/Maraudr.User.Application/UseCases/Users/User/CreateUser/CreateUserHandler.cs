@@ -36,11 +36,12 @@ public class CreateUserHandler(IUserRepository repository,IPasswordManager passw
             {
                 throw new InvalidOperationException("Erreur lors de la création de l'utilisateur.");
             }
-            await repository.AddAsync(user);
+            
             var cManager = (Maraudr.User.Domain.Entities.Users.Manager)manager;
             cManager.AddMemberToTeam(user);
+            await repository.AddAsync(user);
             await repository.UpdateAsync(cManager);
-
+            await repository.InvalidateExistingInvitationsAsync(createUserDto.Email);
             await mailSenderRepository.SendWelcomeEmailTo(user.ContactInfo.Email, user.Firstname);
             return user.Id;
         }
