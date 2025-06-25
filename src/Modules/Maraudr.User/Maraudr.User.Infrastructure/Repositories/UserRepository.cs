@@ -139,6 +139,29 @@ namespace Maraudr.User.Infrastructure.Repositories
             await context.SaveChangesAsync();
 
         }
+        
+        
+        public async Task InvalidateExistingInvitationsAsync(string email)
+        {
+            var existingInvitations = await context.InvitationTokens
+                .Where(i => i.InvitedEmail.ToLower() == email.ToLower() && 
+                            !i.IsUsed && 
+                            i.ExpiresAt > DateTime.UtcNow)
+                .ToListAsync();
+
+            foreach (var invitation in existingInvitations)
+            {
+                invitation.IsUsed = true;
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task AddInvitationToken(InvitationToken token)
+        {
+            context.InvitationTokens.Add(token);
+            await context.SaveChangesAsync();
+        }
     }
 }
     

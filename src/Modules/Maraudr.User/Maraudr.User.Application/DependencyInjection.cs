@@ -1,9 +1,11 @@
+using Application.DTOs.InvitationDto;
 using Application.UseCases.Disponibilities.CreateDisponibility;
 using Application.UseCases.Disponibilities.DeleteDisponiblity;
 using Application.UseCases.Disponibilities.GetAllAssociationUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersFutureDisponibilities;
 using Application.UseCases.Disponibilities.UpdateDisponibility;
+using Application.UseCases.Tokens;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
 using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
@@ -56,6 +58,7 @@ public static class DependencyInjection
         services.AddScoped<IInitiatePasswordResetAsync, InitiatePasswordResetAsync>();
         services.AddScoped<IResetPasswordHandler, ResetPasswordHandler>();
         services.AddScoped<IValidateResetTokenHandler, ValidateResetTokenHandler>();
+        services.AddScoped<ISendInvitationRequestHandler, SendInvitationRequestHandler>();
 
     }
 }

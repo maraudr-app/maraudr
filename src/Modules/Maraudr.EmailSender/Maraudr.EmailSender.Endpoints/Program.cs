@@ -31,7 +31,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseApiKeyAuth();
+//app.UseApiKeyAuth();
 
 
 
@@ -53,6 +53,16 @@ app.MapPost("/email/send-welcome", async (
 app.MapPost("/email/send-reset-link", async (
     [FromBody] ResetPasswordMailRequest query,
     ISendResetLinkEmailHandler handler) =>
+{
+
+    await handler.HandleAsync(query);
+
+});
+
+
+app.MapPost("/email/send-invit-link", async (
+    [FromBody] SendInvitationRequest query,
+    ISendInvitationMailHandler handler) =>
 {
 
     await handler.HandleAsync(query);

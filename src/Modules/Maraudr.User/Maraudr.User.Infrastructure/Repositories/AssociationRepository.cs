@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Application.DTOs;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Options;
@@ -26,9 +27,7 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     public async Task<bool> IsUserMemberOfAssociationAsync(Guid userId,Guid associationId)
     {
         var url = options.Value.AssociationApiUrl + $"association/is-member/{associationId}/{userId}";
-        Console.WriteLine($"URL: {url}");
-        Console.WriteLine($"AssociationId: {associationId}");
-        Console.WriteLine($"UserId: {userId}");
+      
         try
         {
             var response = await httpClient.GetAsync(url);
@@ -50,5 +49,30 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
         }
 
     }
+
+    public async Task<string> GetAssociationName(Guid associationId)
+    {
+        var url = options.Value.AssociationApiUrl + $"association/?id={associationId}";
+
+        try
+        {
+            var response = await httpClient.GetAsync(url);
+        
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Erreur: Code HTTP {response.StatusCode}");
+                throw new HttpRequestException($"Impossible de récupérer les informations de l'association: {response.StatusCode}");
+            }
+        
+            var association = await response.Content.ReadFromJsonAsync<AssociationDto>();
+            return association.name;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erreur lors de la récupération du nom de l'association: {e.Message}");
+            throw;
+        }
+    }
     
+
 }    
