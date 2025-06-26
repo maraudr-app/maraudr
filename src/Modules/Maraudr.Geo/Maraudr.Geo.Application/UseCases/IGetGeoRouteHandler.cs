@@ -7,6 +7,7 @@ public interface IGetGeoRouteHandler
 {
     Task<GeoRouteResponse?> HandleAsync(
         Guid associationId,
+        Guid eventId,
         double centerLat,
         double centerLng,
         double radiusKm,
@@ -18,6 +19,7 @@ public class GetGeoRouteHandler(IGeoRepository repository) : IGetGeoRouteHandler
 {
     public async Task<GeoRouteResponse?> HandleAsync(
         Guid associationId,
+        Guid eventId,
         double centerLat,
         double centerLng,
         double radiusKm,
@@ -25,7 +27,7 @@ public class GetGeoRouteHandler(IGeoRepository repository) : IGetGeoRouteHandler
         double startLng)
     {
         var (coordinates, geoJson, distance, duration, gmapsUrl) =
-            await repository.GetRouteAsync(associationId, centerLat, centerLng, radiusKm, startLat, startLng);
+            await repository.GetRouteAsync(associationId, eventId, centerLat, centerLng, radiusKm, startLat, startLng);
 
         return coordinates.Count == 0 ? null : new GeoRouteResponse(coordinates, geoJson, distance, duration, gmapsUrl);
     }

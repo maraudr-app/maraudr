@@ -3,6 +3,7 @@ using System;
 using Maraudr.Geo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.Geo.Infrastructure.Migrations
 {
     [DbContext(typeof(GeoContext))]
-    partial class GeoContextModelSnapshot : ModelSnapshot
+    [Migration("20250626103038_CreateItineraryTable")]
+    partial class CreateItineraryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,55 +26,6 @@ namespace Maraudr.Geo.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Itinerary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AssociationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("CenterLat")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("CenterLng")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("DistanceKm")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("DurationMinutes")
-                        .HasColumnType("double precision");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("GeoJson")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("GoogleMapsUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("RadiusKm")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("StartLat")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("StartLng")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Itineraries");
-                });
 
             modelBuilder.Entity("Maraudr.Geo.Domain.Entities.GeoData", b =>
                 {
@@ -116,6 +70,34 @@ namespace Maraudr.Geo.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GeoStores");
+                });
+
+            modelBuilder.Entity("Maraudr.Geo.Domain.Entities.Itinerary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("DistanceKm")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("DurationMinutes")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("GeoJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("GoogleMapsUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Itineraries");
                 });
 
             modelBuilder.Entity("Maraudr.Geo.Domain.Entities.GeoData", b =>

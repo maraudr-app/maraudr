@@ -102,6 +102,7 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
 
 app.MapGet("/geo/route", [Authorize] async (
     Guid associationId,
+    Guid eventId,
     double latitude,
     double longitude,
     double radiusKm,
@@ -109,7 +110,7 @@ app.MapGet("/geo/route", [Authorize] async (
     double startLng,
     IGetGeoRouteHandler handler) =>
 {
-    var result = await handler.HandleAsync(associationId, latitude, longitude, radiusKm, startLat, startLng);
+    var result = await handler.HandleAsync(associationId, eventId,latitude, longitude, radiusKm, startLat, startLng);
 
     if (result is null)
         return Results.NotFound("No route found for the selected association.");
@@ -123,6 +124,33 @@ app.MapGet("/geo/route", [Authorize] async (
         result.GoogleMapsUrl
     });
 });
+
+app.MapPost("/itineraries", [Authorize] async (
+    CreateItineraryRequest dto,
+    ICreateItineraryHandler handler) =>
+{
+    var result = await handler.HandleAsync(dto);
+
+    if (result is null)
+        return Results.BadRequest("Unable to generate route or event not found.");
+
+    return Results.Created($"/itineraries/{result.Id}", new
+    {
+        result.Id,
+        result.AssociationId,
+        result.EventId,
+        result.DistanceKm,
+        result.DurationMinutes,
+        result.GoogleMapsUrl,
+        result.StartLat,
+        result.StartLng,
+        result.CenterLat,
+        result.CenterLng,
+        result.RadiusKm,
+        geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson)
+    });
+});
+
 
 app.Map("/geo/live", async context =>
 {

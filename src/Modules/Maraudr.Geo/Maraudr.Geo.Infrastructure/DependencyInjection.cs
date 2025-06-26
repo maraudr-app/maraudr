@@ -15,5 +15,6 @@ public static class DependencyInjection
             ));
 
         services.AddScoped<IGeoRepository, GeoRepository>();
+        services.AddScoped<IItineraryRepository, ItineraryRepository>();
     }
 }

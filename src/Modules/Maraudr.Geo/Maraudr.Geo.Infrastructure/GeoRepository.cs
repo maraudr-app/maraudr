@@ -34,7 +34,7 @@ public class GeoRepository : IGeoRepository
     }
 
 public async Task<(List<double[]> Coordinates, string GeoJson, double Distance, double Duration, string GoogleMapsUrl)>
-    GetRouteAsync(Guid associationId, double centerLat, double centerLng, double radiusKm, double startLat, double startLng)
+    GetRouteAsync(Guid associationId, Guid eventId,double centerLat, double centerLng, double radiusKm, double startLat, double startLng)
 {
     var centerPoint = new Point(centerLng, centerLat) { SRID = 4326 };
 

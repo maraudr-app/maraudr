@@ -10,6 +10,8 @@ public class GeoContext : DbContext
 
     public DbSet<Domain.Entities.GeoData> GeoEvents => Set<Domain.Entities.GeoData>();
     public DbSet<GeoStore> GeoStores => Set<GeoStore>();
+    public DbSet<Itinerary> Itineraries => Set<Itinerary>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<GeoStore>()
@@ -22,9 +24,13 @@ public class GeoContext : DbContext
             .Property<Point>("Location")
             .HasColumnType("geography (point)");
 
+        modelBuilder.Entity<Itinerary>()
+            .HasKey(i => i.Id);
+
+        modelBuilder.Entity<Itinerary>()
+            .Property(i => i.GeoJson).HasColumnType("text");
 
         base.OnModelCreating(modelBuilder);
     }
-
 
 }

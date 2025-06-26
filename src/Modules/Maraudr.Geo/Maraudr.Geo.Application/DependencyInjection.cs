@@ -12,5 +12,7 @@ public static class DependencyInjection
         services.AddScoped<IGetAllGeoDataForAnAssociation, GetAllGeoDataForAnAssociation>();
         services.AddScoped<IGetGeoStoreInfoForAnAssociation, GetGeoStoreInfoForAnAssociation>();
         services.AddScoped<IGetGeoRouteHandler, GetGeoRouteHandler>();
+        services.AddScoped<ICreateItineraryHandler, CreateItineraryHandler>();
+
     }
 }
