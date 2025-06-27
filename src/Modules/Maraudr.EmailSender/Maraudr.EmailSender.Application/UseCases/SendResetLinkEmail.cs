@@ -18,9 +18,7 @@ public class SendResetLinkEmailHandler(IMailService mailService) : ISendResetLin
     {
         try
         {
-
-
-            var resetLink = $"https://localhost:3000/reset-password?token={Uri.EscapeDataString(query.Token)}";
+            var resetLink = $"http://localhost:3000/reset-password?token={Uri.EscapeDataString(query.Token)}";
             await mailService.SendEmailAsync(new MailRequest
             {
                 ToEmail = query.ToEmail,

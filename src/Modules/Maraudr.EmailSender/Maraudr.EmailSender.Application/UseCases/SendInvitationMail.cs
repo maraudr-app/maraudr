@@ -12,7 +12,7 @@ public class SendInvitationMailHandler(IMailService service):ISendInvitationMail
 {
     public async Task HandleAsync(SendInvitationRequest request)
     {
-        var invitationLink = $"https://localhost:3000/accept-invitation?token={Uri.EscapeDataString(request.Token)}";
+        var invitationLink = $"http://localhost:3000/accept-invitation?token={Uri.EscapeDataString(request.Token)}";
           await service.SendEmailAsync(new MailRequest
             {
                 ToEmail = request.InvitedEmail,
