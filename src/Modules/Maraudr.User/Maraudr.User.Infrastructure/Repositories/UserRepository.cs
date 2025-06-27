@@ -176,6 +176,20 @@ namespace Maraudr.User.Infrastructure.Repositories
 
             return invitation.InvitedByUserId;
         }
+        public async Task<Guid> GetAssociationIdByInvitationTokenAsync(string token)
+        {
+            var invitation = await context.InvitationTokens
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Token == token && !i.IsUsed && i.ExpiresAt > DateTime.UtcNow);
+
+            if (invitation == null)
+            {
+                throw new InvalidOperationException("Le token d'invitation est invalide ou a expiré.");
+            }
+
+            return invitation.AssociationId;
+        }
+        
     }
 }
     

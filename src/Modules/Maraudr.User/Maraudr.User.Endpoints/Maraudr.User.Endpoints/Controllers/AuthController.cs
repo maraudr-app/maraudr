@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Application.DTOs;
 using Application.DTOs.AuthenticationQueriesDto.Requests;
 using Application.DTOs.InvitationDto;
 using Application.UseCases.Tokens;
@@ -7,6 +8,7 @@ using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.RefreshPasswordToken;
 using Application.UseCases.Users.User.LogoutUser;
 using FluentValidation;
+using Maraudr.User.Domain.Entities.Tokens;
 using Maraudr.User.Endpoints.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -139,6 +141,21 @@ public class AuthController: ControllerBase
         }
     }
 
+    
+    [HttpPost("invitation-token/validate/{token}")]
+    public async Task<IActionResult> ValidateToken(string token,[FromServices] IValidateInvitationTokenHandler handler)
+    {
+        try
+        { 
+            InvitatonTokenDto invitToken = await  handler.HandleAsync(
+                token);
 
+            return Ok(invitToken);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
 }

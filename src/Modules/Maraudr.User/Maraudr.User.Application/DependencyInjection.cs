@@ -59,6 +59,7 @@ public static class DependencyInjection
         services.AddScoped<IResetPasswordHandler, ResetPasswordHandler>();
         services.AddScoped<IValidateResetTokenHandler, ValidateResetTokenHandler>();
         services.AddScoped<ISendInvitationRequestHandler, SendInvitationRequestHandler>();
+        services.AddScoped<IValidateInvitationTokenHandler, ValidateInvitationTokenHandler>();
 
     }
 }
