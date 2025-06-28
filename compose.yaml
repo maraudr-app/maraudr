@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   maraudr-db:
-    image: postgres:15
+    image: postgis/postgis:15-3.4 
     container_name: maraudr-db
     restart: always
     environment:
@@ -13,7 +13,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - maraudr-db-data:/var/lib/postgresql/data
+      - maraudr-db-data:/var/lib/postgresql/data  
+
 
   association:
     build:
@@ -37,6 +38,7 @@ services:
       - "8084:8080"
     environment:
       - GEO_API_KEY=${GEO_API_KEY}
+      - ORS_API_KEY=${ORS_API_KEY} 
       - Jwt__Secret=${JWT_SECRET}
     depends_on:
       - maraudr-db

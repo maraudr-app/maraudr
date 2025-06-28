@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -12,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Maraudr.Geo.Infrastructure.Migrations
 {
     [DbContext(typeof(GeoContext))]
-    [Migration("20250624160749_InitGeo")]
+    [Migration("20250625172000_InitGeo")]
     partial class InitGeo
     {
         /// <inheritdoc />
@@ -23,6 +24,7 @@ namespace Maraudr.Geo.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Maraudr.Geo.Domain.Entities.GeoData", b =>
@@ -36,6 +38,9 @@ namespace Maraudr.Geo.Infrastructure.Migrations
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
+
+                    b.Property<Point>("Location")
+                        .HasColumnType("geography (point)");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");

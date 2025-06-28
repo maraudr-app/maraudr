@@ -8,5 +8,6 @@ public class GeoData
     public double Longitude { get; init; }
     public DateTime ObservedAt { get; init; } = DateTime.UtcNow;
     public string? Notes { get; init; }
+
     public GeoStore? GeoStore { get; set; }
 }

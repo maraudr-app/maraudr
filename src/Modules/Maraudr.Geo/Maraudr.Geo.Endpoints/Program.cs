@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using System.Text.Json;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
@@ -97,6 +98,33 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
     return id is not null
         ? Results.Ok(new { id })
         : Results.NotFound("GeoStore not found for this association.");
+});
+
+app.MapPost("/itineraries", [Authorize] async (
+    [FromBody] CreateItineraryRequest dto,
+    ICreateItineraryHandler handler) =>
+{
+    var result = await handler.HandleAsync(dto);
+
+    return result is null
+        ? Results.BadRequest("Unable to generate route or event not found.")
+        : Results.Created($"/itineraries/{result.Id}", result);
+});
+
+app.MapGet("/itineraries/{id:guid}", [Authorize] async (
+    Guid id,
+    IGetItineraryHandler handler) =>
+{
+    var result = await handler.GetByIdAsync(id);
+    return result is null ? Results.NotFound() : Results.Ok(result);
+});
+
+app.MapGet("/itineraries", [Authorize] async (
+    Guid associationId,
+    IGetItineraryHandler handler) =>
+{
+    var results = await handler.GetByAssociationIdAsync(associationId);
+    return Results.Ok(results);
 });
 
 app.Map("/geo/live", async context =>

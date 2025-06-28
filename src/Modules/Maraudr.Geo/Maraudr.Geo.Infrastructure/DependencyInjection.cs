@@ -10,8 +10,11 @@ public static class DependencyInjection
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<GeoContext>(
-            options => options.UseNpgsql(configuration.GetConnectionString("GeoDb")));
+            options => options.UseNpgsql(configuration.GetConnectionString("GeoDb"),         
+                o => o.UseNetTopologySuite()
+            ));
 
         services.AddScoped<IGeoRepository, GeoRepository>();
+        services.AddScoped<IItineraryRepository, ItineraryRepository>();
     }
 }
