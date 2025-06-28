@@ -2,6 +2,11 @@
 # Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
 ################################################################################
 
+compose.yaml
+
+/src/Modules/**/Endpoints/appsettings.json
+/src/Modules/**/Endpoints/appsettings.Development.json
+
 /src/.idea/.idea.Maraudr/.idea
 /src/.vs/Maraudr
 /src/Modules/Maraudr.User/Maraudr.User.Application/bin/Debug/net8.0
