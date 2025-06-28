@@ -1,6 +1,10 @@
 ﻿using Maraudr.Geo.Application.Dtos;
+using Maraudr.Geo.Application.UseCases;
 using Maraudr.Geo.Domain.Entities;
 using Maraudr.Geo.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Maraudr.Geo.Application.UseCases;
 
@@ -31,19 +35,18 @@ public class CreateItineraryHandler(
             return null;
 
         var itinerary = new Itinerary(
-            request.EventId,
             request.AssociationId,
-            distance / 1000,
-            duration / 60,
-            geoJson,
-            gmapsUrl,
+            request.EventId,
             request.StartLat,
             request.StartLng,
             request.CenterLat,
             request.CenterLng,
-            request.RadiusKm
+            request.RadiusKm,
+            geoJson,
+            gmapsUrl,
+            distance / 1000,
+            duration / 60
         );
-
 
         await itineraryRepo.AddAsync(itinerary);
         return itinerary;

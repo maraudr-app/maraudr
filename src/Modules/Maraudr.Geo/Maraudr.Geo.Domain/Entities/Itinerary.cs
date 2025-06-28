@@ -1,41 +1,42 @@
-﻿public class Itinerary
+﻿namespace Maraudr.Geo.Domain.Entities;
+
+public class Itinerary
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
-    public Guid EventId { get; private set; }
-    public Guid AssociationId { get; private set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid AssociationId { get; set; }
+    public Guid EventId { get; set; }
 
-    public string GeoJson { get; private set; }
-    public string GoogleMapsUrl { get; private set; }
+    public double StartLat { get; set; }
+    public double StartLng { get; set; }
 
-    public double DistanceKm { get; private set; }
-    public double DurationMinutes { get; private set; }
+    public double CenterLat { get; set; }
+    public double CenterLng { get; set; }
 
-    public double StartLat { get; private set; }
-    public double StartLng { get; private set; }
+    public double RadiusKm { get; set; }
 
-    public double CenterLat { get; private set; }
-    public double CenterLng { get; private set; }
+    public string GeoJson { get; set; } = string.Empty;
+    public string GoogleMapsUrl { get; set; } = string.Empty;
 
-    public double RadiusKm { get; private set; }
+    public double DistanceKm { get; set; }
+    public double DurationMinutes { get; set; }
 
-    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public Itinerary(Guid eventId, Guid associationId, double distanceKm, double durationMinutes,
-        string geoJson, string googleMapsUrl,
-        double startLat, double startLng, double centerLat, double centerLng, double radiusKm)
+    public Itinerary() { }
+
+    public Itinerary(Guid associationId, Guid eventId, double startLat, double startLng, double centerLat, double centerLng, double radiusKm,
+        string geoJson, string gmapsUrl, double distanceKm, double durationMinutes)
     {
-        EventId = eventId;
         AssociationId = associationId;
-        DistanceKm = distanceKm;
-        DurationMinutes = durationMinutes;
-        GeoJson = geoJson;
-        GoogleMapsUrl = googleMapsUrl;
+        EventId = eventId;
         StartLat = startLat;
         StartLng = startLng;
         CenterLat = centerLat;
         CenterLng = centerLng;
         RadiusKm = radiusKm;
+        GeoJson = geoJson;
+        GoogleMapsUrl = gmapsUrl;
+        DistanceKm = distanceKm;
+        DurationMinutes = durationMinutes;
     }
-
-    private Itinerary() {}
 }

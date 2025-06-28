@@ -100,57 +100,32 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
         : Results.NotFound("GeoStore not found for this association.");
 });
 
-app.MapGet("/geo/route", [Authorize] async (
-    Guid associationId,
-    Guid eventId,
-    double latitude,
-    double longitude,
-    double radiusKm,
-    double startLat,
-    double startLng,
-    IGetGeoRouteHandler handler) =>
-{
-    var result = await handler.HandleAsync(associationId, eventId,latitude, longitude, radiusKm, startLat, startLng);
-
-    if (result is null)
-        return Results.NotFound("No route found for the selected association.");
-
-    return Results.Ok(new
-    {
-        geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson),
-        result.Distance,
-        result.Duration,
-        result.Coordinates,
-        result.GoogleMapsUrl
-    });
-});
-
 app.MapPost("/itineraries", [Authorize] async (
-    CreateItineraryRequest dto,
+    [FromBody] CreateItineraryRequest dto,
     ICreateItineraryHandler handler) =>
 {
     var result = await handler.HandleAsync(dto);
 
-    if (result is null)
-        return Results.BadRequest("Unable to generate route or event not found.");
-
-    return Results.Created($"/itineraries/{result.Id}", new
-    {
-        result.Id,
-        result.AssociationId,
-        result.EventId,
-        result.DistanceKm,
-        result.DurationMinutes,
-        result.GoogleMapsUrl,
-        result.StartLat,
-        result.StartLng,
-        result.CenterLat,
-        result.CenterLng,
-        result.RadiusKm,
-        geoJson = JsonSerializer.Deserialize<JsonElement>(result.GeoJson)
-    });
+    return result is null
+        ? Results.BadRequest("Unable to generate route or event not found.")
+        : Results.Created($"/itineraries/{result.Id}", result);
 });
 
+app.MapGet("/itineraries/{id:guid}", [Authorize] async (
+    Guid id,
+    IGetItineraryHandler handler) =>
+{
+    var result = await handler.GetByIdAsync(id);
+    return result is null ? Results.NotFound() : Results.Ok(result);
+});
+
+app.MapGet("/itineraries", [Authorize] async (
+    Guid associationId,
+    IGetItineraryHandler handler) =>
+{
+    var results = await handler.GetByAssociationIdAsync(associationId);
+    return Results.Ok(results);
+});
 
 app.Map("/geo/live", async context =>
 {

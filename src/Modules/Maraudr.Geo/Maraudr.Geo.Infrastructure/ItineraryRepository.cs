@@ -12,8 +12,12 @@ public class ItineraryRepository(GeoContext context) : IItineraryRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task<Itinerary?> GetByEventIdAsync(Guid eventId)
-    {
-        return await context.Itineraries.FirstOrDefaultAsync(i => i.EventId == eventId);
-    }
+    public async Task<Itinerary?> GetByIdAsync(Guid id)
+        => await context.Itineraries.FindAsync(id);
+
+    public async Task<List<Itinerary>> GetByAssociationIdAsync(Guid associationId)
+        => await context.Itineraries
+            .Where(i => i.AssociationId == associationId)
+            .OrderByDescending(i => i.CreatedAt)
+            .ToListAsync();
 }
