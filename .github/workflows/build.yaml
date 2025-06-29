@@ -47,6 +47,20 @@ jobs:
           name: emailsender-image
           path: /tmp/emailsender.tar
 
+      - name: Build  image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Planning
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:planning-latest
+          outputs: type=docker,dest=/tmp/planning.tar
+
+      - name: Upload Planning image
+        uses: actions/upload-artifact@v4
+        with:
+          name: emailsender-image
+          path: /tmp/planning.tar
+
       - name: Build Geo image
         uses: docker/build-push-action@v5
         with:
@@ -106,6 +120,7 @@ jobs:
           docker load -i /tmp/images/geo-image/geo.tar
           docker load -i /tmp/images/stock-image/stock.tar
           docker load -i /tmp/images/user-image/user.tar
+          docker load -i /tmp/images/user-image/planning.tar
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -120,3 +135,4 @@ jobs:
           docker push ${{ env.IMAGE_REPO }}:geo-latest
           docker push ${{ env.IMAGE_REPO }}:stock-latest
           docker push ${{ env.IMAGE_REPO }}:user-latest
+          docker push ${{ env.IMAGE_REPO }}:-latest
