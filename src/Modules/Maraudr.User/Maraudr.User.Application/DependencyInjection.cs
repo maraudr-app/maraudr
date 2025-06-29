@@ -1,14 +1,17 @@
+using Application.DTOs.InvitationDto;
 using Application.UseCases.Disponibilities.CreateDisponibility;
 using Application.UseCases.Disponibilities.DeleteDisponiblity;
 using Application.UseCases.Disponibilities.GetAllAssociationUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersDipsonibilities;
 using Application.UseCases.Disponibilities.GetUsersFutureDisponibilities;
 using Application.UseCases.Disponibilities.UpdateDisponibility;
+using Application.UseCases.Tokens;
 using Application.UseCases.Tokens.Authentication.AuthenticateUser;
 using Application.UseCases.Tokens.Authentication.RefreshToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateAccessToken;
 using Application.UseCases.Tokens.JwtManagement.GenerateRefreshToken;
 using Application.UseCases.Tokens.JwtManagement.RefreshToken;
+using Application.UseCases.Tokens.RefreshPasswordToken;
 using Application.UseCases.Users.Manager.AddUserToManagersTeam;
 using Application.UseCases.Users.Manager.QueryManagersTeam;
 using Application.UseCases.Users.Manager.RemoveUserFromManagersTeam;
@@ -52,6 +55,11 @@ public static class DependencyInjection
         services.AddScoped<IGetUsersFutureDipsonibilitiesHandler, GetUsersFutureDipsonibilitiesHandler>();
         services.AddScoped<IDeleteDisponibilityHandler, DeleteDisponibilityHandler>();
         services.AddScoped<IGetAllAssociationUsersDipsonibilitiesHandler, GetAllAssociationUsersDipsonibilitiesHandler>();
+        services.AddScoped<IInitiatePasswordResetAsync, InitiatePasswordResetAsync>();
+        services.AddScoped<IResetPasswordHandler, ResetPasswordHandler>();
+        services.AddScoped<IValidateResetTokenHandler, ValidateResetTokenHandler>();
+        services.AddScoped<ISendInvitationRequestHandler, SendInvitationRequestHandler>();
+        services.AddScoped<IValidateInvitationTokenHandler, ValidateInvitationTokenHandler>();
 
     }
 }

@@ -15,7 +15,9 @@ public class UserContext : DbContext
     public DbSet<AbstractUser> Users { get; set; }
     public DbSet<RefreshToken?> RefreshTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
-    public DbSet<Disponibility> Disponibilities { get; set; } // Ajoutez cette ligne
+    public DbSet<Disponibility> Disponibilities { get; set; }
+    
+    public DbSet<InvitationToken> InvitationTokens { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -154,6 +156,43 @@ public class UserContext : DbContext
                 .IsRequired(); 
     
             
+        });
+        
+        modelBuilder.Entity<InvitationToken>(entity =>
+        {
+            entity.HasKey(i => i.Id);
+        
+            entity.Property(i => i.InvitedByUserId).IsRequired();
+            entity.Property(i => i.InvitedEmail).IsRequired().HasMaxLength(255);
+            entity.Property(i => i.Token).IsRequired().HasMaxLength(500);
+        
+            entity.Property(i => i.CreatedAt)
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                )
+                .IsRequired();
+        
+            entity.Property(i => i.ExpiresAt)
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                )
+                .IsRequired();
+        
+            entity.Property(i => i.IsUsed).IsRequired();
+        
+        
+            entity.HasOne<AbstractUser>()
+                .WithMany()
+                .HasForeignKey(i => i.InvitedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        
+            entity.HasOne<AbstractUser>()
+                .WithMany()
+                .HasForeignKey(i => i.CreatedUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<AbstractUser>()

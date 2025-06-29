@@ -24,6 +24,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<PlanningContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 // Configure authorization
 builder.Services.AddAuthorization();
 
@@ -37,6 +48,7 @@ var app = builder.Build();
 
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend"); 
 
 app.UseAuthorization();
 

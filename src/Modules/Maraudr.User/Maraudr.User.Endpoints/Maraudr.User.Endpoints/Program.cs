@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Threading.RateLimiting;
 using Application;
 using Application.DTOs.UsersQueriesDtos.Requests;
 using Application.UseCases.Users.Manager.AddUserToManagersTeam;
@@ -11,6 +12,7 @@ using Maraudr.User.Endpoints.Identity;
 using Maraudr.User.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,30 +29,42 @@ builder.Services.AddControllers();
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
+
+// limite de temps pour mdp refresh
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter(policyName: "password-reset", opt =>
+    {
+        opt.PermitLimit = 3; 
+        opt.Window = TimeSpan.FromMinutes(10); 
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0; 
+    });
+    
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend3000");
+app.UseCors("AllowFrontend");
 app.MapControllers(); 
-
-
-
-
-
 
 // MANAGER TEAM
 app.MapGet("/managers/team/{managerGuid:guid}", [Authorize] async (

@@ -4,6 +4,7 @@ using Maraudr.Geo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -20,7 +21,57 @@ namespace Maraudr.Geo.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Itinerary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AssociationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("CenterLat")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("CenterLng")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("DistanceKm")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("DurationMinutes")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("GeoJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("GoogleMapsUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("RadiusKm")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("StartLat")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("StartLng")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Itineraries");
+                });
 
             modelBuilder.Entity("Maraudr.Geo.Domain.Entities.GeoData", b =>
                 {
@@ -33,6 +84,9 @@ namespace Maraudr.Geo.Infrastructure.Migrations
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
+
+                    b.Property<Point>("Location")
+                        .HasColumnType("geography (point)");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
