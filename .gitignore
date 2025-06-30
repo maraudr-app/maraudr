@@ -4,12 +4,6 @@
 
 compose.yaml
 
-/src/Modules/**/Endpoints/appsettings.json
-/src/Modules/**/Endpoints/appsettings.Development.json
-
-**/appsettings*.json
-**/bin/**/appsettings*.json
-
 /src/.idea/.idea.Maraudr/.idea
 /src/.vs/Maraudr
 /src/Modules/Maraudr.User/Maraudr.User.Application/bin/Debug/net8.0
