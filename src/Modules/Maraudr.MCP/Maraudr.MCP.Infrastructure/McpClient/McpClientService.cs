@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol.Client;
-using IMcpClient = McpToolkit.Client.IMcpClient;
-using StdioClientTransport = McpToolkit.Client.StdioClientTransport;
+using IMcpClient = ModelContextProtocol.Client.IMcpClient;
+using McpClientFactory = ModelContextProtocol.Client.McpClientFactory;
 
 namespace Maraudr.MCP.Infrastructure.McpClient;
 
@@ -11,12 +11,14 @@ public class McpClientService
     private static IMcpClient? _mcpClient;
     private static readonly SemaphoreSlim _initSemaphore = new(1, 1);
     private readonly McpClientOptions _options;
+    private readonly ILoggerFactory _loggerFactory;
 
     public McpClientService(
         IOptions<McpClientOptions> options,
-        ILogger<McpClientService> logger)
+        ILoggerFactory loggerFactory)
     {
         _options = options.Value;
+        _loggerFactory = loggerFactory;
     }
 
     public async Task<IMcpClient> GetClientAsync()
@@ -30,16 +32,17 @@ public class McpClientService
             if (_mcpClient != null)
                 return _mcpClient;
 
-                
-            _mcpClient = await McpClientFactory.CreateAsync(
-                new StdioClientTransport(new()
-                {
-                    Command = _options.Command,
-                    Arguments = _options.Arguments?.ToArray() ?? Array.Empty<string>(),
-                    Name = _options.Name,
-                    WorkingDirectory = _options.WorkingDirectory
-                }));
-                    
+            var transportOptions = new StdioClientTransportOptions
+            {
+                Command = _options.Command,
+                Arguments = _options.Arguments,
+                WorkingDirectory = _options.WorkingDirectory
+            };
+
+            var transport = new StdioClientTransport(transportOptions, _loggerFactory);
+            
+            _mcpClient = await McpClientFactory.CreateAsync(transport);
+
             return _mcpClient;
         }
         finally

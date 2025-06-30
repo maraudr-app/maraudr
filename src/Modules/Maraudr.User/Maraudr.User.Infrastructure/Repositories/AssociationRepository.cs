@@ -12,10 +12,8 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     public async Task<bool> AssociationExists(Guid id)
     {
         var url = options.Value.AssociationApiUrl + $"association?id={id}";
-        Console.WriteLine(
-            "---------------------------------------------------------------------");
 
-        Console.WriteLine(url);
+
     
         try 
         {

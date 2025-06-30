@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using Maraudr.MCP.Domain.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
 
 namespace Maraudr.MCP.Server.Tools;
@@ -14,17 +16,12 @@ public static class Tools
         _serviceProvider = serviceProvider;
     }
 
-    [McpServerTool, Description("Gets current weather for a location")]
-    public static async Task<string> GetStock(string location)
+    [McpServerTool, Description("Gets the data of an item given its barcode for an association")]
+    public static async Task<StockItemDto> GetStock(string barcode,Guid associationId)
     {
-        var weatherService = _serviceProvider?.GetService<IStockService>();
-        return await weatherService?.GetWeatherAsync(location) ?? "Weather service unavailable";
+        var stockRepository  = _serviceProvider?.GetService<IStockRepository>();
+        return await stockRepository.GetStockItemByBarCodeAsync(barcode,associationId) ?? null;
     }
 
-    [McpServerTool, Description("Queries the database")]
-    public static async Task<string> QueryDatabase(string query)
-    {
-        var dbService = _serviceProvider?.GetService<IDatabaseService>();
-        return await dbService?.ExecuteQueryAsync(query) ?? "Database service unavailable";
-    }
+    
 }

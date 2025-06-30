@@ -22,3 +22,5 @@ public record ToolCallRequestDto(
     );
 
 public record ToolCallResponseDto(object Result, bool IsSuccess, string? ErrorMessage = null);
+
+

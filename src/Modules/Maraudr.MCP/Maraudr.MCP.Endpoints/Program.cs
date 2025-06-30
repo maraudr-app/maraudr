@@ -1,33 +1,39 @@
-// McpApi.Presentation/Program.cs
+using Maraudr.MCP.Infrastructure;
+using MCP.Maraudr.Application;
+using Microsoft.Extensions.AI;
+using OpenAI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Clean Architecture layers
 builder.Services.AddApplication();
 builder.Services.AddMcpClient(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add Chat Client
 builder.Services.AddSingleton<IChatClient>(serviceProvider =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    return new ChatClientBuilder(
-            new AzureOpenAIClient(
-                    new Uri(configuration["AzureOpenAI:Endpoint"]!),
-                    new DefaultAzureCredential())
-                .GetChatClient(configuration["AzureOpenAI:ModelName"]!)
-                .AsIChatClient())
+    var apiKey = configuration["OpenAI:ApiKey"];
+    var modelName = configuration["OpenAI:ModelName"];
+
+    if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(modelName))
+    {
+        throw new InvalidOperationException("OpenAI ApiKey or ModelName is not configured.");
+    }
+
+    var openAiClient = new OpenAIClient(apiKey);
+    var chatClient = openAiClient.GetChatClient(modelName);
+    
+    return new ChatClientBuilder(chatClient as IChatClient ?? throw new InvalidOperationException("ChatClient does not implement IChatClient"))
         .UseFunctionInvocation()
         .Build();
 });
-
 var app = builder.Build();
 
-// Configure pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
