@@ -1,5 +1,7 @@
 using Maraudr.MCP.Infrastructure;
 using MCP.Maraudr.Application;
+
+using System.ClientModel;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
@@ -17,21 +19,28 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton<IChatClient>(serviceProvider =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var apiKey = configuration["OpenAI:ApiKey"];
-    var modelName = configuration["OpenAI:ModelName"];
+    var apiKey = configuration["OpenRouter:ApiKey"];
+    var baseUrl = configuration["OpenRouter:BaseUrl"];
+    var modelName = configuration["OpenRouter:ModelName"];
 
     if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(modelName))
     {
-        throw new InvalidOperationException("OpenAI ApiKey or ModelName is not configured.");
+        throw new InvalidOperationException("OpenRouter ApiKey or ModelName is not configured.");
     }
 
-    var openAiClient = new OpenAIClient(apiKey);
+    // OpenRouter est compatible avec l'API OpenAI
+    var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), new OpenAIClientOptions
+    {
+        Endpoint = new Uri(baseUrl)
+    });
+    
     var chatClient = openAiClient.GetChatClient(modelName);
     
-    return new ChatClientBuilder(chatClient as IChatClient ?? throw new InvalidOperationException("ChatClient does not implement IChatClient"))
+    return new ChatClientBuilder(chatClient.AsIChatClient())
         .UseFunctionInvocation()
         .Build();
 });
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

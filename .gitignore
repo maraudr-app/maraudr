@@ -353,3 +353,5 @@
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Debug/net8.0/Maraudr.User.Endpoints.csproj.AssemblyReference.cache
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Debug/net8.0/Maraudr.User.Endpoints.RazorAssemblyInfo.cache
 /src/Modules/Maraudr.User/Maraudr.User.Endpoints/Maraudr.User.Endpoints/obj/Debug/net8.0/Maraudr.User.Endpoints.RazorAssemblyInfo.cs
+/src/Modules/Maraudr.MCP/Maraudr.MCP.Application/bin/Debug/net8.0/Maraudr.MCP.Application.deps.json
+/src/Modules/Maraudr.MCP/Maraudr.MCP.Application/bin/Debug/net8.0/Maraudr.MCP.Application.dll

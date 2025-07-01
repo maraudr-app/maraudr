@@ -68,6 +68,6 @@ services:
       - MailSettings__Port=587
     depends_on:
       - maraudr-db
-
+  
 volumes:
   maraudr-db-data:
