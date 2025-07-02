@@ -29,13 +29,19 @@ public static class Tools
         return await stockRepository.GetStockItemsAsync(associationId) ?? null;
     }
 
-    [McpServerTool,
-     Description("Gets all the items of the stock given the id of an association where the type matches entry")]
+    [McpServerTool, Description("Gets all the geoloclisation points of a given association")]
+    public static async Task<IEnumerable<StockItemDto>> GetAllGeolocalisationPoints(Category type, Guid associationId)
+    {
+        var geoRepository  = _serviceProvider?.GetService<IGeoRepository>();
+        return await geoRepository.GetAllGeolocalisationPoints(associationId) ?? null;
+    }
+   
+    
+    [McpServerTool, Description("Gets all the items of the stock given the id of an association where the type matches entry")]
     public static async Task<IEnumerable<StockItemDto>> GetStock(Category type, Guid associationId)
     {
         var stockRepository  = _serviceProvider?.GetService<IStockRepository>();
         return await stockRepository.GetStockItemByTypeAsync(type,associationId) ?? null;
     }
-   
     
 }
