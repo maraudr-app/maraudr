@@ -10,8 +10,7 @@ public static class Tools
 {
     private static IServiceProvider? _serviceProvider;
     
-    // This would be injected by the MCP server framework
-    public static void SetServiceProvider(IServiceProvider serviceProvider)
+        public static void SetServiceProvider(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
