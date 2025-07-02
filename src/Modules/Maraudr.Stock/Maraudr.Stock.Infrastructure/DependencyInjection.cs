@@ -17,8 +17,21 @@ public static class DependencyInjection
         
         services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = configuration.GetConnectionString("Redis");
-            options.InstanceName = "Maraudr.Stock:";
+            var redisHost = configuration["REDIS_HOST"];
+            var redisPassword = configuration["REDIS_PASSWORD"];
+    
+            options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+            {
+                ConnectTimeout = 10000,
+                SyncTimeout = 5000,
+                AsyncTimeout = 10000,
+                ConnectRetry = 3,
+                KeepAlive = 180,
+                AbortOnConnectFail = false,
+                EndPoints = { redisHost },
+                Ssl = true,
+                Password = redisPassword
+            };
         });
         
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
