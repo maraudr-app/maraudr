@@ -28,8 +28,45 @@ public class StockRepository(HttpClient httpClient, IOptions<ApiSettings> option
     
 
 
-    public Task<IEnumerable<StockItemDto?>> GetStockItemByTypeAsync(Category type,Guid associationId)
+    public async Task<IEnumerable<StockItemDto?>> GetStockItemByTypeAsync(Category type,Guid associationId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var url = $"{options.Value.StockApiUrl}items?associationId={associationId}&category={type}";        
+            var response = await httpClient.GetAsync(url);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<StockItemDto?>>();
+            }
+            
+            return null;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+        
+    }
+
+    public async Task<IEnumerable<StockItemDto>> GetStockItemsAsync(Guid associationId)
+    {
+        try
+        {
+            var url = options.Value.StockApiUrl + $"items?associationId={associationId}";
+            var response = await httpClient.GetAsync(url);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<StockItemDto?>>();
+            }
+            
+            return null;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+        
     }
 }

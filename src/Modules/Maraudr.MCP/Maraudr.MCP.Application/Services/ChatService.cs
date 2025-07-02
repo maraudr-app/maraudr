@@ -45,6 +45,7 @@ public class ChatService(
         private Conversation BuildConversation(ChatRequestDto request)
         {
             var conversation = new Conversation();
+            conversation.AddMessage(new ChatMessage("system", "Tu es un assistant spécialisé dans la gestion d'une association, des stocks d'une association, de la geolocalisation des utilisateurs et de signalements émis,. Réponds uniquement aux questions liées à ce domaine.Si la requête est hors contexte refuse poliment"));
             
             if (request.ConversationHistory != null)
             {

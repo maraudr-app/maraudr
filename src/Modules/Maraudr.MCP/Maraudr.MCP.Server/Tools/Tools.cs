@@ -22,5 +22,20 @@ public static class Tools
         return await stockRepository.GetStockItemByBarCodeAsync(barcode,associationId) ?? null;
     }
 
+    [McpServerTool, Description("Gets all the items of the stock given the id of an association")]
+    public static async Task<IEnumerable<StockItemDto>> GetStock(Guid associationId)
+    {
+        var stockRepository  = _serviceProvider?.GetService<IStockRepository>();
+        return await stockRepository.GetStockItemsAsync(associationId) ?? null;
+    }
+
+    [McpServerTool,
+     Description("Gets all the items of the stock given the id of an association where the type matches entry")]
+    public static async Task<IEnumerable<StockItemDto>> GetStock(Category type, Guid associationId)
+    {
+        var stockRepository  = _serviceProvider?.GetService<IStockRepository>();
+        return await stockRepository.GetStockItemByTypeAsync(type,associationId) ?? null;
+    }
+   
     
 }

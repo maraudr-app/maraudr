@@ -23,5 +23,8 @@ public interface IStockRepository
     
     Task<StockItemDto?> GetStockItemByBarCodeAsync(string code,Guid associationId);
     Task<IEnumerable<StockItemDto?>> GetStockItemByTypeAsync(Category type,Guid associationId);
+    
+    Task<IEnumerable<StockItemDto>> GetStockItemsAsync(Guid associationId);
+
 
 }
