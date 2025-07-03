@@ -8,7 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.2" />
+        <PackageReference Include="AWSSDK.S3" Version="4.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.16"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
 
@@ -16,6 +20,11 @@
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Maraudr.Document.Domain\Maraudr.Document.Domain.csproj" />
+      <ProjectReference Include="..\Maraudr.Document.Infrastructure\Maraudr.Document.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

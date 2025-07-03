@@ -1,44 +1,59 @@
+using System.Security.Claims;
+using Amazon.S3;
+using Maraudr.Document.Application;
+using Maraudr.Document.Domain;
+using Maraudr.Document.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DocumentContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentStorageService, S3DocumentStorageService>();
+builder.Services.AddScoped<DocumentService>();
+
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = builder.Configuration["Jwt:Authority"];
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false
+        };
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/api/associations/{associationId:guid}/documents", async (
+    [FromForm] UploadDocumentRequest request,
+    Guid associationId,
+    DocumentService service,
+    ClaimsPrincipal user
+) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    // TODO: check if user is allowed
+    await service.UploadDocumentAsync(request, associationId);
+    return Results.Ok();
+}).RequireAuthorization();
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
+app.MapGet("/api/associations/{associationId:guid}/documents", async (
+    Guid associationId,
+    DocumentService service,
+    ClaimsPrincipal user
+) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+    // TODO: check if user is allowed
+    var docs = await service.GetDocumentsAsync(associationId);
+    return Results.Ok(docs);
+}).RequireAuthorization();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
