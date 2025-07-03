@@ -1,0 +1,7 @@
+﻿services:
+  maraudr.document.endpoints:
+    image: maraudr.document.endpoints
+    build:
+      context: .
+      dockerfile: Modules/Maraudr.Document/Maraudr.Document.Endpoints/Dockerfile
+
