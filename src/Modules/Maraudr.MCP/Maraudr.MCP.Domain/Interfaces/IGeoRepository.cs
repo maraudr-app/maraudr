@@ -2,5 +2,5 @@
 
 public interface IGeoRepository
 {
-    public Task<IEnumerable<GeoDataDto>> GetAllTodayGeolocalisationPoints(Guid associationId);
+   // public Task<IEnumerable<GeoDataDto>> GetAllTodayGeolocalisationPoints(Guid associationId);
 }

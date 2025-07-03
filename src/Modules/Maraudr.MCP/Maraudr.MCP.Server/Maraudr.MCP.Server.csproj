@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Maraudr.MCP.Domain\Maraudr.MCP.Domain.csproj" />
+      <ProjectReference Include="..\Maraudr.MCP.Infrastructure\Maraudr.MCP.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

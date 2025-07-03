@@ -24,9 +24,9 @@ public record ToolCallRequestDto(
 public record ToolCallResponseDto(object Result, bool IsSuccess, string? ErrorMessage = null);
 
 
-public record GeoDataDto(Guid Id, 
- Guid GeoStoreId ,
- double Latitude ,
- double Longitude ,
- DateTime ObservedAt, 
- string? Notes , GeoStore? GeoStore)
+// public record GeoDataDto(Guid Id, 
+//  Guid GeoStoreId ,
+//  double Latitude ,
+//  double Longitude ,
+//  DateTime ObservedAt, 
+//  string? Notes , GeoStore? GeoStore)

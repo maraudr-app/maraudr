@@ -21,7 +21,7 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/item/{id}", [Authorize] async (
+app.MapGet("/item/{id}", async (
     Guid id,
     Guid associationId,
     IQueryItemByAssociationHandler handler) =>
@@ -36,18 +36,29 @@ app.MapGet("/item/{id}", [Authorize] async (
 });
 
 
-app.MapGet("/item/type/{type}", [Authorize] async (Category type, IQueryItemByType handler) =>
+app.MapGet("/item/type/{type}",  async (Category type, IQueryItemByType handler) =>
 {
     var item = await handler.HandleAsync(type);
     return Results.Ok(item);
 });
 
-app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode, IQueryItemWithBarCodeHandler handler) =>
+app.MapGet("/item/barcode/{barcode}", async (string barcode, Guid associationId, IQueryItemWithBarCodeHandler handler) =>
 {
-    var item = await handler.HandleAsync(barcode);
-    return Results.Ok(item);
+    if (associationId == Guid.Empty)
+        return Results.BadRequest(new { message = "associationId requis" });
+    try
+    {
+        var item = await handler.HandleAsync(barcode, associationId);
+        return item is not null
+            ? Results.Ok(item)
+            : Results.NotFound(new { message = "Article non trouvé ou association non autorisée" });
+    }
+    catch (Exception e)
+    {
+        return Results.NotFound("Item nt found");
+    }
+    
 });
-
 /*
 app.MapPatch("/item/{id}/quantity", async (Guid id, [FromBody] int quantity, IRemoveQuantityFromStockHandler handler) =>
 {
@@ -63,7 +74,7 @@ app.MapPatch("/item/{id}/quantity", async (Guid id, [FromBody] int quantity, IRe
 });
 */
 
-app.MapPost("/item/{barcode}", [Authorize] async (
+app.MapPost("/item/{barcode}",  async (
     string barcode,
     Guid associationId,
     ICreateItemFromBarcodeHandler handler) =>
@@ -84,7 +95,7 @@ app.MapPost("/item/{barcode}", [Authorize] async (
     }
 });
 
-app.MapPost("/item", [Authorize] async (
+app.MapPost("/item",  async (
     CreateItemCommand item,
     ICreateItemHandler handler,
     IValidator<CreateItemCommand> validator) =>
@@ -120,7 +131,7 @@ app.MapDelete("/item/{id}", async (Guid id, IDeleteItemHandler handler) =>
 });
 */
 
-app.MapGet("/stock/items", [Authorize] async (
+app.MapGet("/stock/items",  async (
     Guid associationId,
     string? category,
     string? name,
@@ -135,7 +146,7 @@ app.MapGet("/stock/items", [Authorize] async (
     return Results.Ok(items);
 });
 
-app.MapDelete("/stock/item", [Authorize] async (
+app.MapDelete("/stock/item",  async (
     Guid associationId,
     Guid itemId,
     IDeleteItemFromStockHandler handler) =>
@@ -150,7 +161,7 @@ app.MapDelete("/stock/item", [Authorize] async (
         : Results.NotFound(new { message = "Item not found or does not belong to this association" });
 });
 
-app.MapGet("/stock/id", [Authorize] async (
+app.MapGet("/stock/id",  async (
     Guid associationId,
     IGetStockIdByAssociationHandler handler) =>
 {
