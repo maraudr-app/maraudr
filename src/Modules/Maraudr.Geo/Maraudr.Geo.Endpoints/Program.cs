@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddHttpClient();
 
 builder.Services.AddCors(options =>
 {
@@ -99,6 +100,29 @@ app.MapGet("/geo/store/{associationId}", [Authorize] async (
         ? Results.Ok(new { id })
         : Results.NotFound("GeoStore not found for this association.");
 });
+
+
+app.MapGet("/autocomplete", [Authorize] async (
+    [FromQuery] string text,
+    [FromServices] IHttpClientFactory httpClientFactory) =>
+{
+    var client = httpClientFactory.CreateClient();
+
+    const string apiKey = "b2236921472b41f193b1bdd4debb6929"; 
+    var url = $"https://api.geoapify.com/v1/geocode/autocomplete?text={Uri.EscapeDataString(text)}&apiKey={apiKey}";
+
+    var response = await client.GetAsync(url);
+
+    if (!response.IsSuccessStatusCode)
+    {
+        var errorContent = await response.Content.ReadAsStringAsync();
+        return Results.BadRequest(errorContent);
+    }
+
+    var content = await response.Content.ReadAsStringAsync();
+    return Results.Content(content, "application/json");
+});
+
 
 app.MapPost("/itineraries", [Authorize] async (
     [FromBody] CreateItineraryRequest dto,
