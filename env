@@ -1,0 +1,18 @@
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=maraudr-dev
+
+# Shared Secrets
+JWT_SECRET=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+ASSOCIATION_API_KEY=zokieie,oifenfeihubfuybecfubcurry-test
+STOCK_API_KEY=nzCSAmgJzdIK7seKrLBiAlB72KtXM6EAcf09ypnTdaA57Ix2wRg1ozJ8PqHYpoJksTUDJr3Ngf8O7tCIwwmBCZ2KY0NSmvXCjTrhJDPQFfXewaCkIgyqj7guFSBwzQ5Z
+GEO_API_KEY=F5ZcIl8afZ5pvXnsgtdwuKI426PJGjrnoGGhTiC8DQoWDZd82GLXSmjXHiU427esNBcK5aJnWXRY4s2supBgKdt0UKUQANnO1AAFMTy1kb5MB2ugafoV3Vocw1kY2wKM
+
+# Email Sender
+EMAIL_SENDER_API_URL=http://email-sender:8080/
+MAIL_PASSWORD=argentBiff2$$$$
+MAIL_ADDRESS=app@maraudr.eu
+MAIL_HOST=smtp.hostinger.com
+MAIL_PORT=587
+EMAIL_SENDER_API_KEY=OExnJBqwGdkDXO0AsZkgqiMHAENk3GzC2qmp2BBL5G5rXZQq0Zp8V7VbZJQzxlZmDwNypiH99MzVJz52ls9kr4RyvbJO9autFZvMz4hvbBVRV3p7idQgkYiafRgLEkIq

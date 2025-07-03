@@ -1,49 +1,75 @@
 using System.Net.WebSockets;
+using System.Text.Json;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
-using Maraudr.Geo.Domain.Entities;
-using Maraudr.Geo.Domain.Interfaces;
+using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
 using Maraudr.Geo.Infrastructure.WebSocket;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<GeoContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("GeoDb")));
-builder.Services.AddScoped<IGeoRepository, GeoRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddAuthenticationServices(builder.Configuration);
 
-var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseWebSockets();
-
-app.MapPost("/geo", async (CreateGeoDataRequest dto, IGeoRepository repo) =>
+builder.Services.AddCors(options =>
 {
-    var store = await repo.GetGeoStoreByAssociationAsync(dto.AssociationId);
-    if (store is null) return Results.NotFound("GeoStore not found");
-
-    var data = new GeoData
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        Id = Guid.NewGuid(),
-        GeoStoreId = store.Id,
-        Latitude = dto.Latitude,
-        Longitude = dto.Longitude,
-        Notes = dto.Notes,
-        ObservedAt = DateTime.UtcNow
-    };
-
-    await repo.AddEventAsync(data);
-
-    var response = new GeoDataResponse(data.Id, data.GeoStoreId, data.Latitude, data.Longitude, data.Notes, data.ObservedAt);
-    return Results.Ok(response);
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
-app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreForAnAssociation handler) =>
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+app.UseCors("AllowFrontend");
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseWebSockets();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/geo", [Authorize] async (
+    HttpContext httpContext,
+    CreateGeoDataRequest dto,
+    ICreateGeoDataForAnAssociation handler) =>
 {
+    var response = await handler.HandleAsync(dto);
+
+    if (response == null)
+        return Results.BadRequest();
+
+    await GeoWebSocketManager.BroadcastAsync(
+        response.Latitude,
+        response.Longitude,
+        response.ObservedAt,
+        response.Notes,
+        dto.AssociationId);
+
+    return Results.Created($"/geo/store/{response.Id}", new { response.Id });
+});
+
+app.MapPost("/geo/store", async (
+    CreateGeoStoreRequest request,
+    ICreateGeoStoreForAnAssociation handler,
+    [FromHeader(Name = "X-Geo-Api-Key")] string apiKey) =>
+{
+    if (apiKey != Environment.GetEnvironmentVariable("GEO_API_KEY"))
+    {
+        return Results.Unauthorized();
+    }
     try
     {
         var response = await handler.HandleAsync(request);
@@ -55,27 +81,72 @@ app.MapPost("/geo/store", async (CreateGeoStoreRequest request, ICreateGeoStoreF
     }
 });
 
-app.MapGet("/geo/{associationId}", async (Guid associationId, int days, IGeoRepository repo) =>
+app.MapGet("/geo/{associationId}", [Authorize] async (
+    Guid associationId,
+    int days,
+    IGetAllGeoDataForAnAssociation handler) =>
 {
-    var from = DateTime.UtcNow.AddDays(-days);
-    var data = await repo.GetEventsAsync(associationId, from);
-    return Results.Ok(data);
+    var response = await handler.HandleAsync(associationId, days);
+    return Results.Ok(response);
 });
 
-app.MapGet("/geo/store/{associationId}", async (Guid associationId, IGeoRepository repo) =>
+app.MapGet("/geo/store/{associationId}", [Authorize] async (
+    Guid associationId,
+    IGetGeoStoreInfoForAnAssociation handler) =>
 {
-    var geoStore = await repo.GetGeoStoreByAssociationAsync(associationId);
-    return geoStore is not null
-        ? Results.Ok(new { geoStore.Id })
+    var id = await handler.HandleAsync(associationId);
+    return id is not null
+        ? Results.Ok(new { id })
         : Results.NotFound("GeoStore not found for this association.");
+});
+
+app.MapPost("/itineraries", [Authorize] async (
+    [FromBody] CreateItineraryRequest dto,
+    ICreateItineraryHandler handler) =>
+{
+    var result = await handler.HandleAsync(dto);
+
+    return result is null
+        ? Results.BadRequest("Unable to generate route or event not found.")
+        : Results.Created($"/itineraries/{result.Id}", result);
+});
+
+app.MapGet("/itineraries/{id:guid}", [Authorize] async (
+    Guid id,
+    IGetItineraryHandler handler) =>
+{
+    var result = await handler.GetByIdAsync(id);
+    return result is null ? Results.NotFound() : Results.Ok(result);
+});
+
+app.MapGet("/itineraries", [Authorize] async (
+    Guid associationId,
+    IGetItineraryHandler handler) =>
+{
+    var results = await handler.GetByAssociationIdAsync(associationId);
+    return Results.Ok(results);
 });
 
 app.Map("/geo/live", async context =>
 {
+    if (!context.User.Identity?.IsAuthenticated ?? true)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return;
+    }
+
+    var associationIdQuery = context.Request.Query["associationId"];
+    if (!Guid.TryParse(associationIdQuery, out var associationId))
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        return;
+    }
+
     if (context.WebSockets.IsWebSocketRequest)
     {
         var socket = await context.WebSockets.AcceptWebSocketAsync();
-        GeoWebSocketManager.Add(socket);
+        GeoWebSocketManager.Add(socket, associationId);
+
         while (socket.State == WebSocketState.Open)
         {
             var buffer = new byte[1024];
@@ -84,8 +155,9 @@ app.Map("/geo/live", async context =>
     }
     else
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
-}); 
+});
+
 
 app.Run();

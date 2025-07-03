@@ -1,24 +1,30 @@
 services:
 
   maraudr-db:
-    image: postgres:15
+    image: postgis/postgis:15-3.4 
     container_name: maraudr-db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: maraudr-dev
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
-      - maraudr-db-data:/var/lib/postgresql/data
-    
+      - maraudr-db-data:/var/lib/postgresql/data  
+
+
   association:
     build:
       context: ./src/Modules/Maraudr.Association/
       target: final
     ports:
-      - 8080:8080
+      - "8080:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - ASSOCIATION_API_KEY=${ASSOCIATION_API_KEY}
+      - GEO_API_KEY=${GEO_API_KEY}
+      - STOCK_API_KEY=${STOCK_API_KEY}
     depends_on:
       - maraudr-db
 
@@ -27,7 +33,11 @@ services:
       context: ./src/Modules/Maraudr.Geo/
       target: final
     ports:
-      - 8084:8080
+      - "8084:8080"
+    environment:
+      - GEO_API_KEY=${GEO_API_KEY}
+      - ORS_API_KEY=${ORS_API_KEY} 
+      - Jwt__Secret=${JWT_SECRET}
     depends_on:
       - maraudr-db
 
@@ -36,9 +46,10 @@ services:
       context: ./src/Modules/Maraudr.Stock/
       target: final
     ports:
-      - 8081:8080
+      - "8081:8080"
     environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
+      - STOCK_API_KEY=${STOCK_API_KEY}
+      - Jwt__Secret=${JWT_SECRET}
     depends_on:
       - maraudr-db
 
@@ -47,10 +58,12 @@ services:
       context: ./src/Modules/Maraudr.User/
       target: final
     ports:
-      - 8082:8080
+      - "8082:8080"
     environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-      - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/ 
+      - Jwt__Secret=${JWT_SECRET}
+      - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
+      - ApiSettings__EmailSenderApiKey=${EMAIL_SENDER_API_KEY}
+
     depends_on:
       - maraudr-db
 
@@ -59,15 +72,38 @@ services:
       context: ./src/Modules/Maraudr.EmailSender/
       target: final
     ports:
-      - 8083:8080
+      - "8083:8080"
     environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-      - MailSettings__Password=
-      - MailSettings__Mail=
-      - MailSettings__Host=smtp.mailersend.net
-      - MailSettings__Port=587
+      - Jwt__Secret=${JWT_SECRET}
+      - MailSettings__Password=${MAIL_PASSWORD}
+      - MailSettings__Mail=${MAIL_ADDRESS}
+      - MailSettings__Host=${MAIL_HOST}
+      - MailSettings__Port=${MAIL_PORT}
+      - ApiKey=${EMAIL_SENDER_API_KEY}
+
     depends_on:
       - maraudr-db
-  
+
+  planning:
+    build:
+      context: ./src/Modules/Maraudr.Planning/
+      target: final
+    ports:
+      - "8085:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - ASSOCIATION_API_KEY=${ASSOCIATION_API_KEY}
+    depends_on:
+      - maraudr-db
+
+  redis:
+    image: redis:8
+    container_name: maraudr-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
 volumes:
   maraudr-db-data:
+  redis-data:

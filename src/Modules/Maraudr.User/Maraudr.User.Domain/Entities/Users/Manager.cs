@@ -5,7 +5,6 @@ namespace Maraudr.User.Domain.Entities.Users;
 
 public class Manager : AbstractUser
 {
-    public override Role Role { get; protected set; } = Role.Manager;
 
     [NotMapped]
     public List<AbstractUser> Team
@@ -29,6 +28,7 @@ public class Manager : AbstractUser
         : base(firstname, lastname, createdAt, contactInfo, address, languages, passwordHash)
     {
         Team = teamMembers;
+        Role = Role.Manager;
     }
 
     public Manager(
@@ -44,6 +44,8 @@ public class Manager : AbstractUser
         : base(id, firstname, lastname, createdAt, contactInfo, address, languages)
     {
         Team = teamMembers;
+        Role = Role.Manager;
+
     }
 
     public Manager() { }
@@ -65,7 +67,7 @@ public class Manager : AbstractUser
     public void AddMemberToTeam(AbstractUser member)
     {
         if (member == null) throw new ArgumentNullException(nameof(member));
-        if (EFTeam.Any(m => m.Equals(member)))
+        if (EFTeam.Any(m => m.Id.Equals(member.Id)))
             throw new ArgumentException("Member already in team");
 
         EFTeam.Add((User)member);

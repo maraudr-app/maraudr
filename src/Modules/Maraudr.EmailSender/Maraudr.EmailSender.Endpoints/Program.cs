@@ -1,11 +1,15 @@
 using Maraudr.EmailSender.Application;
 using Maraudr.EmailSender.Application.Dtos;
+using Maraudr.EmailSender.Application.UseCases;
 using Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail;
 using Maraudr.EmailSender.Domain.Interfaces;
+using Maraudr.EmailSender.Endpoints.Identity;
 using Maraudr.EmailSender.Endpoints.MailSettings;
 using Maraudr.EmailSender.Infrastructure;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); 
@@ -27,9 +31,9 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+//app.UseApiKeyAuth();
 
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -45,4 +49,28 @@ app.MapPost("/email/send-welcome", async (
     await handler.HandleAsync(query);
 
 });
+
+app.MapPost("/email/send-reset-link", async (
+    [FromBody] ResetPasswordMailRequest query,
+    ISendResetLinkEmailHandler handler) =>
+{
+
+    await handler.HandleAsync(query);
+
+});
+
+
+app.MapPost("/email/send-invit-link", async (
+    [FromBody] SendInvitationRequest query,
+    ISendInvitationMailHandler handler) =>
+{
+
+    await handler.HandleAsync(query);
+
+});
+
+
+
+
+
 app.Run();

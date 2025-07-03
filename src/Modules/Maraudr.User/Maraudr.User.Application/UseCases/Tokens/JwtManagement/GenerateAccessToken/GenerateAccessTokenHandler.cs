@@ -27,8 +27,9 @@ public class GenerateAccessTokenHandler(IConfiguration configuration): IGenerate
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), 
-            new Claim(JwtRegisteredClaimNames.Email, user.ContactInfo.Email), 
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.ToString()), // Format standard
+            new Claim("Role", user.Role.ToString()), 
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) 
         };
 

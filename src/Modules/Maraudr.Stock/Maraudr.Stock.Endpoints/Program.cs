@@ -1,5 +1,6 @@
 using Maraudr.Stock.Application.Dtos;
 using Maraudr.Stock.Endpoints;
+using Maraudr.Stock.Infrastructure.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,81 +13,79 @@ builder.Services.AddApplication();
 builder.Services.AddValidation();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddAuthenticationServices(builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>(),builder.Configuration);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/item/{id}", async (
+app.MapGet("/item/{id}", [Authorize] async (
     Guid id,
-    Guid associationId,
-    IQueryItemByAssociationHandler handler) =>
+    [FromQuery] Guid associationId,
+    IQueryItemByAssociationHandler handler,
+    IRedisCacheService cache) =>
 {
     if (associationId == Guid.Empty)
         return Results.BadRequest(new { message = "associationId requis" });
 
-    var item = await handler.HandleAsync(id, associationId);
-    return item is not null
-        ? Results.Ok(item)
-        : Results.NotFound(new { message = "Item introuvable ou non autorisé" });
-});
+    var cacheKey = $"item:{associationId}:{id}";
+    var item = await cache.GetAsync<StockItemQuery>(cacheKey);
 
+    if (item is not null)
+    {
+        return Results.Ok(item);
+    }
 
-app.MapGet("/item/type/{type}",  async (Category type, IQueryItemByType handler) =>
-{
-    var item = await handler.HandleAsync(type);
+    item = await handler.HandleAsync(id, associationId);
+
+    if (item is null)
+    {
+        return Results.NotFound(new { message = "Item introuvable" });
+    }
+
+    await cache.SetAsync(cacheKey, item, TimeSpan.FromMinutes(10));
     return Results.Ok(item);
 });
 
-app.MapGet("/item/barcode/{barcode}", async (string barcode, Guid associationId, IQueryItemWithBarCodeHandler handler) =>
+app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode, IQueryItemWithBarCodeHandler handler) =>
 {
-    if (associationId == Guid.Empty)
-        return Results.BadRequest(new { message = "associationId requis" });
-    try
-    {
-        var item = await handler.HandleAsync(barcode, associationId);
-        return item is not null
-            ? Results.Ok(item)
-            : Results.NotFound(new { message = "Article non trouvé ou association non autorisée" });
-    }
-    catch (Exception e)
-    {
-        return Results.NotFound("Item nt found");
-    }
-    
+    var item = await handler.HandleAsync(barcode);
+    return Results.Ok(item);
 });
-/*
-app.MapPatch("/item/{id}/quantity", async (Guid id, [FromBody] int quantity, IRemoveQuantityFromStockHandler handler) =>
-{
-    try
-    {
-        await handler.HandleAsync(id, quantity);
-        return Results.Ok(id);
-    }
-    catch (Exception e)
-    {
-        return Results.BadRequest(e.Message);
-    }
-});
-*/
 
-app.MapPost("/item/{barcode}",  async (
+app.MapPost("/item/{barcode}", [Authorize] async (
     string barcode,
-    Guid associationId,
+    [FromBody] CreateItemRequest request,
     ICreateItemFromBarcodeHandler handler) =>
 {
-    if (associationId == Guid.Empty)
+    Console.WriteLine(request.AssociationId);
+    if (request.AssociationId == Guid.Empty)
     {
         return Results.BadRequest(new { message = "associationId requis" });
     }
 
     try
     {
-        var id = await handler.HandleAsync(barcode, associationId);
+        Console.WriteLine(request.AssociationId);
+        var id = await handler.HandleAsync(barcode, request.AssociationId);
         return Results.Created($"/item/{id}", new { id });
     }
     catch (Exception e)
@@ -95,7 +94,30 @@ app.MapPost("/item/{barcode}",  async (
     }
 });
 
-app.MapPost("/item",  async (
+app.MapPut("/item/reduce/{barcode}", [Authorize] async (
+    string barcode,
+    [FromBody] UpdateItemQuantityInStockRequest request,
+    IReduceQuantityFromItemHandler handler) =>
+{
+    if (request.AssociationId == Guid.Empty)
+        return Results.BadRequest(new { message = "associationId requis" });
+
+    var quantity = request.Quantity.GetValueOrDefault(1);
+    if (quantity <= 0)
+        return Results.BadRequest(new { message = "La quantité doit être > 0" });
+
+    try
+    {
+        await handler.HandleAsync(barcode, request.AssociationId, quantity);
+        return Results.Ok(new { message = "Quantité réduite ou item supprimé" });
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new { message = e.Message });
+    }
+});
+
+app.MapPost("/item", [Authorize] async (
     CreateItemCommand item,
     ICreateItemHandler handler,
     IValidator<CreateItemCommand> validator) =>
@@ -112,8 +134,16 @@ app.MapPost("/item",  async (
     return Results.Created($"/item/{id}", new { id });
 });
 
-app.MapPost("/create-stock", async (CreateStockRequest request, ICreateStockHandler handler) =>
+app.MapPost("/create-stock", async (
+    CreateStockRequest request, 
+    ICreateStockHandler handler, 
+    [FromHeader(Name = "X-Stock-Api-Key")] string apiKey) =>
 {
+    if (apiKey != Environment.GetEnvironmentVariable("STOCK_API_KEY"))
+    {
+        return Results.Unauthorized();
+    }
+    
     if (request.AssociationId == Guid.Empty)
     {
         return Results.BadRequest("associationId is required");
@@ -123,15 +153,7 @@ app.MapPost("/create-stock", async (CreateStockRequest request, ICreateStockHand
     return Results.Created($"/create-stock/{id}", new { Id = id });
 });
 
-/*
-app.MapDelete("/item/{id}", async (Guid id, IDeleteItemHandler handler) =>
-{
-    await handler.HandleAsync(id);
-    return Results.Ok();
-});
-*/
-
-app.MapGet("/stock/items",  async (
+app.MapGet("/stock/items", [Authorize] async (
     Guid associationId,
     string? category,
     string? name,
@@ -146,22 +168,29 @@ app.MapGet("/stock/items",  async (
     return Results.Ok(items);
 });
 
-app.MapDelete("/stock/item",  async (
-    Guid associationId,
+app.MapDelete("/stock/item/{itemId}", [Authorize] async (
     Guid itemId,
-    IDeleteItemFromStockHandler handler) =>
+    [FromQuery] Guid associationId,
+    IDeleteItemFromStockHandler handler,
+    IRedisCacheService cache) =>
 {
     if (associationId == Guid.Empty || itemId == Guid.Empty)
         return Results.BadRequest(new { message = "Invalid parameters" });
 
     var success = await handler.HandleAsync(associationId, itemId);
 
-    return success
-        ? Results.NoContent()
-        : Results.NotFound(new { message = "Item not found or does not belong to this association" });
+    if (!success)
+    {
+        return Results.NotFound(new { message = "L'item n'existe pas ou n'appartient pas à cette association" });
+    }
+
+    var cacheKey = $"item:{associationId}:{itemId}";
+    await cache.RemoveAsync(cacheKey);
+
+    return Results.NoContent();
 });
 
-app.MapGet("/stock/id",  async (
+app.MapGet("/stock/{associationId}", [Authorize] async (
     Guid associationId,
     IGetStockIdByAssociationHandler handler) =>
 {

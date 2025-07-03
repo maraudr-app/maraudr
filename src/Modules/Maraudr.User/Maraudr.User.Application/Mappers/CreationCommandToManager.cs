@@ -30,7 +30,7 @@ public static class CreationCommandToManager
             address,
             domainLanguages,
             [],
-            passwordManager.HashPassword(createUserDto.Password) // TODO : check if this is correct
+            passwordManager.HashPassword(createUserDto.Password) 
         );
     }
 }

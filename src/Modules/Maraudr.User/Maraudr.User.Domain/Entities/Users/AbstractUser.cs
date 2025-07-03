@@ -5,7 +5,7 @@ namespace Maraudr.User.Domain.Entities.Users;
 
 public abstract class AbstractUser
 {
-    public virtual Role Role { get; protected set; }
+    public  Role Role { get; set; }
     public Guid Id { get;  set; }
     public string Firstname { get;  set; }
     public string Lastname { get;  set; }
@@ -30,7 +30,7 @@ public abstract class AbstractUser
     
     public List<Language> Languages { get; set; }
     [Timestamp]
-    public byte[] RowVersion { get; set; }
+    public byte[]? RowVersion { get; set; }
 
     protected AbstractUser( string firstname, string lastname, DateTime createdAt,
         ContactInfo contactInfo, Address address,List<Language> languages,string passwordHash)
@@ -248,4 +248,6 @@ public abstract class AbstractUser
     {
         return Id.GetHashCode();
     }
+
+  
 }

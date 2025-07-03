@@ -7,8 +7,10 @@ public interface IStockRepository
     Task DeleteStockItemAsync(Guid id);
     Task<IEnumerable<StockItem?>> GetStockItemByTypeAsync(Category type);
     Task<StockItem?> GetStockItemByBarCodeAsync(string code);
+    Task<StockItem?> GetStockItemByBarCodeAndStockIdAsync(string code, Guid stockId);
     Task RemoveQuantityFromStock(Guid id, int quantity);
     Task AddQuantityToStock(Guid id, int newQuantity);
+    Task ReduceQuantityFromStockAsync(Guid itemId, int quantity);
     Task CreateStockAsync(Entities.Stock stock);
     Task<IEnumerable<StockItem>> GetItemsByStockIdAsync(Guid stockId);
     Task<StockItem?> GetStockItemByBarCodeAsync(string code, Guid stockId);

@@ -71,6 +71,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.MCP.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.MCP.Server", "Modules\Maraudr.MCP\Maraudr.MCP.Server\Maraudr.MCP.Server.csproj", "{8FB5DFB2-E73D-4578-A9BD-1D37A0DAF66F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Planning", "Planning", "{3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Domain", "Modules\Maraudr.Planning\Maraudr.Planning.Domain\Maraudr.Planning.Domain\Maraudr.Planning.Domain.csproj", "{652C38FC-6D0E-4B89-A3B9-03561252597C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Application", "Modules\Maraudr.Planning\Maraudr.Planning.Application\Maraudr.Planning.Application.csproj", "{C35DC36B-CE15-4DAD-9C86-BA84D5A10842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Infrastructure", "Modules\Maraudr.Planning\Maraudr.Planning.Infrastructure\Maraudr.Planning.Infrastructure.csproj", "{9904B881-EB21-4A65-9A1B-2429568AA470}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Endpoints", "Modules\Maraudr.Planning\Maraudr.Planning.Endpoints\Maraudr.Planning.Endpoints.csproj", "{21DBFEF4-E019-493C-8553-669183749E55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +171,22 @@ Global
 		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A9FF144-23E2-463F-AF8A-4EDFAB82C7CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{652C38FC-6D0E-4B89-A3B9-03561252597C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{652C38FC-6D0E-4B89-A3B9-03561252597C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{652C38FC-6D0E-4B89-A3B9-03561252597C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{652C38FC-6D0E-4B89-A3B9-03561252597C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9904B881-EB21-4A65-9A1B-2429568AA470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9904B881-EB21-4A65-9A1B-2429568AA470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9904B881-EB21-4A65-9A1B-2429568AA470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9904B881-EB21-4A65-9A1B-2429568AA470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DBFEF4-E019-493C-8553-669183749E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DBFEF4-E019-493C-8553-669183749E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DBFEF4-E019-493C-8553-669183749E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DBFEF4-E019-493C-8553-669183749E55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1BB372A-812E-4D19-B3C7-D1313B9DF4CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1BB372A-812E-4D19-B3C7-D1313B9DF4CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1BB372A-812E-4D19-B3C7-D1313B9DF4CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -214,6 +240,10 @@ Global
 		{7ED908C1-937A-417D-B8EA-B02DD035391D} = {9EDB9FDE-5356-472A-8930-6328425D72DD}
 		{4697322F-9091-4FF2-84F2-C480D46B84AC} = {9EDB9FDE-5356-472A-8930-6328425D72DD}
 		{8FB5DFB2-E73D-4578-A9BD-1D37A0DAF66F} = {9EDB9FDE-5356-472A-8930-6328425D72DD}
+		{652C38FC-6D0E-4B89-A3B9-03561252597C} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
+		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
+		{9904B881-EB21-4A65-9A1B-2429568AA470} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
+		{21DBFEF4-E019-493C-8553-669183749E55} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BCD56F0-98C0-4AB6-A596-4EA261D31C8D}

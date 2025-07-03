@@ -6,9 +6,7 @@ namespace Maraudr.User.Domain.Entities.Users
 
     public class User : AbstractUser
     {
-
-        public override Role Role { get; protected set; } = Role.Member;
-
+        
         public Guid? ManagerId { get; set; }
 
         [ForeignKey(nameof(ManagerId))]
@@ -23,7 +21,8 @@ namespace Maraudr.User.Domain.Entities.Users
             {
                 throw new ArgumentException("User role should be manager");
             }
-            this.Manager = (Manager)manager;
+            Manager = (Manager)manager;
+            Role = Role.Member;
         }
         
         public User(Guid id,string firstname, string lastname, DateTime createdAt,
@@ -31,7 +30,12 @@ namespace Maraudr.User.Domain.Entities.Users
             Manager manager)
             : base( id,firstname, lastname, createdAt, contactInfo, address, languages)
         {
-            this.Manager = manager;
+            if (!manager.IsUserManager())
+            {
+                throw new ArgumentException("User role should be manager");
+            }
+            Manager = manager;
+            Role = Role.Member;
         }
 
         public User() { }
