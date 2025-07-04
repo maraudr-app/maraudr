@@ -9,7 +9,7 @@ public class S3DocumentStorageService(IAmazonS3 s3) : IDocumentStorageService
 {
     private const string BucketName = "maraudr-files";
 
-    public async Task<string> UploadAsync(IFormFile file, Guid associationId)
+    public async Task<(string Url, string Key)> UploadAsync(IFormFile file, Guid associationId)
     {
         var key = $"{associationId}/{Guid.NewGuid()}_{file.FileName}";
 
@@ -26,6 +26,20 @@ public class S3DocumentStorageService(IAmazonS3 s3) : IDocumentStorageService
 
         await s3.PutObjectAsync(request);
 
-        return $"https://{BucketName}.s3.amazonaws.com/{key}";
+        var url = $"https://{BucketName}.s3.{s3.Config.RegionEndpoint.SystemName}.amazonaws.com/{Uri.EscapeDataString(key)}";
+        return (url, key);
     }
+
+    
+    public async Task DeleteAsync(string key)
+    {
+        var request = new DeleteObjectRequest
+        {
+            BucketName = BucketName,
+            Key = key
+        };
+
+        await s3.DeleteObjectAsync(request);
+    }
+
 }

@@ -4,5 +4,6 @@ namespace Maraudr.Document.Application;
 
 public interface IDocumentStorageService
 {
-    Task<string> UploadAsync(IFormFile file, Guid associationId);
+    Task<(string Url, string Key)> UploadAsync(IFormFile file, Guid associationId);
+    Task DeleteAsync(string key);
 }

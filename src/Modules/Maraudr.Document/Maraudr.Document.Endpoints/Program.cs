@@ -65,6 +65,23 @@ app.MapGet("/document/download/{associationId:guid}", [Authorize] async (
 {
     var docs = await service.GetDocumentsAsync(associationId);
     return Results.Ok(docs);
-}).RequireAuthorization();
+});
+
+app.MapDelete("/document/delete/{associationId:guid}/document/{documentId:guid}", [Authorize] async (
+    Guid associationId,
+    Guid documentId,
+    DocumentService service
+) =>
+{
+    try
+    {
+        await service.DeleteDocumentAsync(documentId, associationId);
+        return Results.NoContent();
+    }
+    catch (KeyNotFoundException)
+    {
+        return Results.NotFound();
+    }
+});
 
 app.Run();

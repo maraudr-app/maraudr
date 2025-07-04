@@ -17,4 +17,15 @@ public class DocumentRepository(DocumentContext context) : IDocumentRepository
             .Where(d => d.AssociationId == associationId)
             .ToListAsync();
     }
+    
+    public async Task<Domain.Document?> GetByIdAsync(Guid id)
+    {
+        return await context.Documents.FindAsync(id);
+    }
+    
+    public async Task DeleteAsync(Domain.Document document)
+    {
+        context.Documents.Remove(document);
+        await context.SaveChangesAsync();
+    }
 }

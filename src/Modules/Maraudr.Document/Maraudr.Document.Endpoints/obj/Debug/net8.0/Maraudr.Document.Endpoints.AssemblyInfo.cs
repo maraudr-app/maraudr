@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.Document.Endpoints")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+496f33007002457964eff40773b020b5be0b362c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb8434996518b1b37481b4bf8dd7116185a607dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.Document.Endpoints")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.Document.Endpoints")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

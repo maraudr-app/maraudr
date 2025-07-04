@@ -6,7 +6,7 @@ public class DocumentService(IDocumentRepository repository, IDocumentStorageSer
 {
     public async Task UploadDocumentAsync(UploadDocumentRequest request, Guid associationId)
     {
-        var url = await storage.UploadAsync(request.File, associationId);
+        var (url, key) = await storage.UploadAsync(request.File, associationId);
 
         var document = new Domain.Document(
             request.File.FileName,
@@ -17,7 +17,7 @@ public class DocumentService(IDocumentRepository repository, IDocumentStorageSer
 
         await repository.AddAsync(document);
     }
-
+    
     public async Task<IEnumerable<DocumentDto>> GetDocumentsAsync(Guid associationId)
     {
         var documents = await repository.GetByAssociationAsync(associationId);
@@ -29,5 +29,20 @@ public class DocumentService(IDocumentRepository repository, IDocumentStorageSer
             ContentType = d.ContentType,
             UploadedAt = d.UploadedAt
         });
+    }
+    
+    public async Task DeleteDocumentAsync(Guid documentId, Guid associationId)
+    {
+        var document = await repository.GetByIdAsync(documentId);
+        if (document == null || document.AssociationId != associationId)
+        {
+            throw new KeyNotFoundException("Document not found or unauthorized.");
+        }
+
+        var url = new Uri(document.Url);
+        var bucketKey = Uri.UnescapeDataString(url.AbsolutePath.TrimStart('/'));
+
+        await storage.DeleteAsync(bucketKey);
+        await repository.DeleteAsync(document);
     }
 }
