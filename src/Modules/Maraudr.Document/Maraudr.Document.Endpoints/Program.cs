@@ -1,11 +1,11 @@
-using System.Security.Claims;
 using Amazon.S3;
 using Maraudr.Document.Application;
 using Maraudr.Document.Domain;
+using Maraudr.Document.Endpoints;
 using Maraudr.Document.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,42 +16,53 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentStorageService, S3DocumentStorageService>();
 builder.Services.AddScoped<DocumentService>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        options.Authority = builder.Configuration["Jwt:Authority"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false
-        };
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
+});
+
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/api/associations/{associationId:guid}/documents", async (
-    [FromForm] UploadDocumentRequest request,
+app.MapPost("/document/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async (
+    IFormFile file,
     Guid associationId,
-    DocumentService service,
-    ClaimsPrincipal user
+    DocumentService service
 ) =>
 {
-    // TODO: check if user is allowed
+    var request = new UploadDocumentRequest { File = file };
     await service.UploadDocumentAsync(request, associationId);
     return Results.Ok();
-}).RequireAuthorization();
+});
 
-app.MapGet("/api/associations/{associationId:guid}/documents", async (
+
+app.MapGet("/document/download/{associationId:guid}", [Authorize] async (
     Guid associationId,
-    DocumentService service,
-    ClaimsPrincipal user
+    DocumentService service
 ) =>
 {
-    // TODO: check if user is allowed
     var docs = await service.GetDocumentsAsync(associationId);
     return Results.Ok(docs);
 }).RequireAuthorization();

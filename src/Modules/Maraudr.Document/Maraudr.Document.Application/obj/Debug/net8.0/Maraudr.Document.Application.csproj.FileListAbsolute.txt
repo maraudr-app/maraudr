@@ -1,0 +1,16 @@
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\bin\Debug\net8.0\Maraudr.Document.Application.deps.json
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\bin\Debug\net8.0\Maraudr.Document.Application.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\bin\Debug\net8.0\Maraudr.Document.Application.pdb
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\bin\Debug\net8.0\Maraudr.Document.Domain.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\bin\Debug\net8.0\Maraudr.Document.Domain.pdb
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.csproj.AssemblyReference.cache
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.AssemblyInfoInputs.cache
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.AssemblyInfo.cs
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.csproj.CoreCompileInputs.cache
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.sourcelink.json
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr..97EDBF04.Up2Date
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\refint\Maraudr.Document.Application.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\Maraudr.Document.Application.pdb
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Application\obj\Debug\net8.0\ref\Maraudr.Document.Application.dll
