@@ -46,7 +46,7 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/document/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async (
+app.MapPost("/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async (
     IFormFile file,
     Guid associationId,
     DocumentService service
@@ -58,7 +58,7 @@ app.MapPost("/document/upload/{associationId:guid}", [Authorize, IgnoreAntiforge
 });
 
 
-app.MapGet("/document/download/{associationId:guid}", [Authorize] async (
+app.MapGet("/download/{associationId:guid}", [Authorize] async (
     Guid associationId,
     DocumentService service
 ) =>
@@ -67,7 +67,7 @@ app.MapGet("/document/download/{associationId:guid}", [Authorize] async (
     return Results.Ok(docs);
 });
 
-app.MapDelete("/document/delete/{associationId:guid}/document/{documentId:guid}", [Authorize] async (
+app.MapDelete("/delete/{associationId:guid}/document/{documentId:guid}", [Authorize] async (
     Guid associationId,
     Guid documentId,
     DocumentService service
