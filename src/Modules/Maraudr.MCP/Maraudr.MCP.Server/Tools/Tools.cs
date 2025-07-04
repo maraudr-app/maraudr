@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Maraudr.MCP.Domain.Interfaces;
+using MCP.Maraudr.Application.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
 
@@ -114,5 +115,102 @@ public static class Tools
             return null;
         }
     }
+
+
+    [McpServerTool, Description("Gets all the events of an association given by user")]
+    public static async Task<IEnumerable<EventDto>?> GetAllEventsOfAnAssociation(Guid associationId)
+    {
+        LogMessage($"Début de récupération des évènements de l'association avec l'ID {associationId}");
+        LogMessage($"--------------------------------------------------------------------------------");
+        try
+        {
+            if (_serviceProvider == null)
+            {
+                LogMessage("ServiceProvider est null, impossible de continuer");
+                return null;
+            }
+
+            LogMessage("Création du scope");
+            using var scope = _serviceProvider.CreateScope();
+
+            LogMessage("Tentative d'obtention de IPlanningRepository");
+            var repository = scope.ServiceProvider.GetService<IPlanningRepository>();
+
+            if (repository == null)
+            {
+                LogMessage("IPlanningRepository est null - service non disponible");
+                throw new InvalidOperationException("IStockRepository service is not available.");
+            }
+
+            LogMessage($"IPlanningRepository obtenu, type: {repository.GetType().FullName}");
+            LogMessage($"Appel de GetAllAssociationEventsAsync");
+
+            var result = await repository.GetAllAssociationEventsAsync(associationId);
+
+            LogMessage($"Résultat obtenu");
+
+        return result;
+
+        }
+        catch (Exception e)
+        {
+            LogMessage($"Une erreur s'est déclenchée lors de la récupération des évènements de l'association avec l'ID {associationId}");
+            LogMessage($"Erreur : {e.Message}");
+            LogMessage($"StackTrace : {e.StackTrace}");
+            
+            LogMessage($"--------------------------------------------------------------------------------");
+            return null;
+        }
+    }
+    
+    
+    
+    
+    [McpServerTool, Description("Gets all the events of an association given by user")]
+    public static async Task<IEnumerable<EventDto>?> GetAllMyEventsOfAnAssociation(Guid associationId,Guid userId)
+    {
+        LogMessage($"Début de récupération des évènements de l'association avec l'ID {associationId}");
+        LogMessage($"--------------------------------------------------------------------------------");
+        try
+        {
+            if (_serviceProvider == null)
+            {
+                LogMessage("ServiceProvider est null, impossible de continuer");
+                return null;
+            }
+
+            LogMessage("Création du scope");
+            using var scope = _serviceProvider.CreateScope();
+
+            LogMessage("Tentative d'obtention de IPlanningRepository");
+            var repository = scope.ServiceProvider.GetService<IPlanningRepository>();
+
+            if (repository == null)
+            {
+                LogMessage("IPlanningRepository est null - service non disponible");
+                throw new InvalidOperationException("IStockRepository service is not available.");
+            }
+
+            LogMessage($"IPlanningRepository obtenu, type: {repository.GetType().FullName}");
+            LogMessage($"Appel de GetAllAssociationEventsAsync");
+
+            var result = await repository.GetAllAssociationEventsAsync(associationId);
+
+            LogMessage($"Résultat obtenu");
+
+            return result;
+
+        }
+        catch (Exception e)
+        {
+            LogMessage($"Une erreur s'est déclenchée lors de la récupération des évènements de l'association avec l'ID {associationId}");
+            LogMessage($"Erreur : {e.Message}");
+            LogMessage($"StackTrace : {e.StackTrace}");
+            
+            LogMessage($"--------------------------------------------------------------------------------");
+            return null;
+        }
+    }
+    
 
 }

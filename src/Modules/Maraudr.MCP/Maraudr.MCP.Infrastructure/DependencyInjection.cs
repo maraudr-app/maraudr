@@ -12,6 +12,7 @@ public static class DependencyInjection
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IStockRepository, StockRepository>();
+        services.AddScoped<IPlanningRepository, PlanningRepository>();
         
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IMCPRepository, MCPRepository>();

@@ -65,9 +65,9 @@ app.MapGet("/item/{id}", [Authorize] async (
     return Results.Ok(item);
 });
 
-app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode, IQueryItemWithBarCodeHandler handler) =>
+app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode,Guid associationId, IQueryItemWithBarCodeHandler handler) =>
 {
-    var item = await handler.HandleAsync(barcode);
+    var item = await handler.HandleAsync(barcode,associationId);
     return Results.Ok(item);
 });
 

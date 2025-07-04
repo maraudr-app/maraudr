@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Application.DTOs;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Options;

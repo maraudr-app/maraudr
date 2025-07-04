@@ -69,7 +69,6 @@ public class ChatRepository(IChatClient chatClient,McpClientService mcpClientSer
         JsonSerializerOptions? serializerOptions = null, 
         CancellationToken cancellationToken = default)
     {
-        // Récupère les outils via le client MCP
         var tools = await client.ListToolsAsync(serializerOptions, cancellationToken);
         return tools.ToList();
     }
@@ -80,7 +79,6 @@ public class ChatRepository(IChatClient chatClient,McpClientService mcpClientSer
         JsonSerializerOptions? serializerOptions = null, 
         CancellationToken cancellationToken = default)
     {
-        // Appelle la méthode pour récupérer les outils
         return await GetMcpClientToolsAsync(client, serializerOptions, cancellationToken);
     }
 

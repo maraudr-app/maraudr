@@ -1,0 +1,16 @@
+﻿namespace Maraudr.MCP.Domain.Interfaces;
+public record EventDto(
+    Guid Id,
+    Guid PlanningId,
+    Guid OrganizerdId,
+    List<Guid> ParticipantsIds,
+    DateTime BeginningDate,
+    DateTime EndDate,
+    string Title,
+    string Description,
+    string Location
+);
+public interface IPlanningRepository
+{
+    public Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId);
+}

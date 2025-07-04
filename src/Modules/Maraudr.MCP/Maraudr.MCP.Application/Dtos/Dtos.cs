@@ -24,6 +24,8 @@ public record ToolCallRequestDto(
 public record ToolCallResponseDto(object Result, bool IsSuccess, string? ErrorMessage = null);
 
 
+
+
 // public record GeoDataDto(Guid Id, 
 //  Guid GeoStoreId ,
 //  double Latitude ,
