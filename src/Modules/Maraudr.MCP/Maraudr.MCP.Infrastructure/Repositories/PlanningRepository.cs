@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Maraudr.MCP.Infrastructure.Repositories;
 
-public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> options):IPlanningRepository
+public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> options,IMCPRepository mcpRepository):IPlanningRepository
 {
     private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "planning_repository.log");
     
@@ -26,6 +26,33 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
     public async Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId)
     {
         var planningUrl = $"{options.Value.PlanningApiUrl}all-events/{associationId}";
+        var jwt =mcpRepository.GetUserJwt();
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        var response = await httpClient.GetAsync(planningUrl);
+        try
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<EventDto?>>();
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            LogToFile("Error while getting all events from PlanningRepository");
+            LogToFile($"Error:{ex.StackTrace}");
+            return null;
+        }
+
+    }
+    
+    
+    public async Task<IEnumerable<EventDto>> GetAllMyEventsAsync()
+    {
+        var planningUrl = $"{options.Value.PlanningApiUrl}my-events";
+        var jwt =mcpRepository.GetUserJwt();
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
         try
         {

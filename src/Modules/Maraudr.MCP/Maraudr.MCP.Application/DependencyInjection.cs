@@ -9,5 +9,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IChatService,ChatService>();
         services.AddScoped<IToolService,ToolService>();
+        services.AddScoped<IRequestContext, RequestContext>();
+        
     }
 }

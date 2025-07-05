@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Maraudr.MCP.Application\Maraudr.MCP.Application.csproj" />
       <ProjectReference Include="..\Maraudr.MCP.Domain\Maraudr.MCP.Domain.csproj" />
     </ItemGroup>
 

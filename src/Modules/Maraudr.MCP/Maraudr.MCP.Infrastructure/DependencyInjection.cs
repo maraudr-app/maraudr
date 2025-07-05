@@ -11,8 +11,13 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        // Register MCP Client services first
+        services.AddMcpClient(configuration);
+        
+        // Then register repositories that depend on MCP Client
         services.AddScoped<IStockRepository, StockRepository>();
         services.AddScoped<IPlanningRepository, PlanningRepository>();
+        services.AddScoped<IAssociationRepository, AssociationRepository>();
         
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IMCPRepository, MCPRepository>();
@@ -24,6 +29,12 @@ public static class DependencyInjection
             {
                 client.BaseAddress = new Uri(stockApiUrl);
             }
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+        
+        // Also register HttpClient for AssociationRepository
+        services.AddHttpClient<AssociationRepository>(client =>
+        {
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
     }

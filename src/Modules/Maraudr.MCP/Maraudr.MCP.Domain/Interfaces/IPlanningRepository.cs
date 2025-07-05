@@ -13,4 +13,7 @@ public record EventDto(
 public interface IPlanningRepository
 {
     public Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId);
+
+    public Task<IEnumerable<EventDto>> GetAllMyEventsAsync();
+
 }

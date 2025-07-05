@@ -2,6 +2,7 @@ using Maraudr.MCP.Infrastructure;
 using MCP.Maraudr.Application;
 
 using System.ClientModel;
+using Maraudr.MCP.Endpoints;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
@@ -12,8 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
-builder.Services.AddMcpClient(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
+
 
 // Add Chat Client
 builder.Services.AddSingleton<IChatClient>(serviceProvider =>
@@ -28,7 +28,6 @@ builder.Services.AddSingleton<IChatClient>(serviceProvider =>
         throw new InvalidOperationException("OpenRouter ApiKey or ModelName is not configured.");
     }
 
-    // OpenRouter est compatible avec l'API OpenAI
     var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), new OpenAIClientOptions
     {
         Endpoint = new Uri(baseUrl)
@@ -40,6 +39,12 @@ builder.Services.AddSingleton<IChatClient>(serviceProvider =>
         .UseFunctionInvocation()
         .Build();
 });
+
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddAuthenticationServicesForPlanning(builder.Configuration);
+
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 

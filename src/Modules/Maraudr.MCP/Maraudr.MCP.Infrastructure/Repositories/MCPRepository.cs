@@ -1,12 +1,14 @@
 using Maraudr.MCP.Domain.Entities;
 using Maraudr.MCP.Domain.Interfaces;
 using Maraudr.MCP.Domain.ValueObjects;
+using MCP.Maraudr.Application.Services;
 using ModelContextProtocol.Client;
 
 namespace Maraudr.MCP.Infrastructure.Repositories;
 
-public class MCPRepository(IMcpClient mcpClient) : IMCPRepository
+public class MCPRepository(IMcpClient mcpClient,IRequestContext context) : IMCPRepository
 {
+    private string? Jwt;
     public async Task<IEnumerable<McpTool>> GetAvailableToolsAsync()
     {
         var tools = await mcpClient.ListToolsAsync();
@@ -37,4 +39,8 @@ public class MCPRepository(IMcpClient mcpClient) : IMCPRepository
         // La connexion est gérée par McpClientService
         return Task.FromResult(mcpClient != null);
     }
+
+   
+    public void SetUserJwt(string jwt) => context.CurrentUserJwt = jwt;
+    public string GetUserJwt() => context.CurrentUserJwt;
 }

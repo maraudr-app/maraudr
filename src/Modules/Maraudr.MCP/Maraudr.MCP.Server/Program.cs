@@ -1,5 +1,6 @@
 ﻿using Maraudr.MCP.Infrastructure;
 using Maraudr.MCP.Server.Tools;
+using MCP.Maraudr.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
@@ -15,6 +16,8 @@ builder.ConfigureServices((context, services) =>
         .WithStdioServerTransport()
         .WithToolsFromAssembly();
     services.AddInfrastructure(context.Configuration);
+    services.AddApplication(); // Ajoutez cette ligne
+
 });
 
 var host = builder.Build();
