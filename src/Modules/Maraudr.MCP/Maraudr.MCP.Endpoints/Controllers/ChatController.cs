@@ -1,5 +1,6 @@
 using System.Text;
 using MCP.Maraudr.Application.Dtos;
+using MCP.Maraudr.Application.Services;
 using MCP.Maraudr.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,8 @@ public class ChatController(IChatService chatService) : ControllerBase
     public async Task<ActionResult<ChatResponseDto>> ProcessChat([FromBody] ChatRequestDto request)
     {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-        var response = await chatService.ProcessChatAsync(request);
+        
+        var response = await chatService.ProcessChatAsync(request,jwt);
         return Ok(response);
     }
 
@@ -25,8 +27,7 @@ public class ChatController(IChatService chatService) : ControllerBase
     public async Task<IActionResult> ProcessStreamingChat([FromBody] ChatRequestDto request)
     {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-        var responseStream = await chatService.ProcessStreamingChatAsync(request);
+        var responseStream = await chatService.ProcessStreamingChatAsync(request,jwt);
 
         Response.Headers.Append("Content-Type", "text/plain; charset=utf-8");
         Response.Headers.Append("Cache-Control", "no-cache");

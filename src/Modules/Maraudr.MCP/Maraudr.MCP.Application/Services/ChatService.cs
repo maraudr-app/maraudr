@@ -10,11 +10,11 @@ public class ChatService(
     IChatRepository chatRepository)
     : IChatService
 {
-    public async Task<ChatResponseDto> ProcessChatAsync(ChatRequestDto request)
+    public async Task<ChatResponseDto> ProcessChatAsync(ChatRequestDto request,string jwt)
         {
             try
             {
-                var conversation = BuildConversation(request);
+                var conversation = BuildConversation(request,jwt);
                 var availableTools = await mcpRepository.GetAvailableToolsAsync();
                 
                 var response = await chatRepository.GetResponseAsync(
@@ -34,18 +34,19 @@ public class ChatService(
             }
         }
 
-        public async Task<IAsyncEnumerable<string>> ProcessStreamingChatAsync(ChatRequestDto request)
+        public async Task<IAsyncEnumerable<string>> ProcessStreamingChatAsync(ChatRequestDto request,string jwt)
         {
-            var conversation = BuildConversation(request);
+            var conversation = BuildConversation(request,jwt);
             var availableTools = await mcpRepository.GetAvailableToolsAsync();
 
             return await chatRepository.GetStreamingResponseAsync(conversation.Messages, availableTools);
         }
 
-        private Conversation BuildConversation(ChatRequestDto request)
+        private Conversation BuildConversation(ChatRequestDto request,string jwt)
         {
             var conversation = new Conversation();
             conversation.AddMessage(new ChatMessage("system", "Tu es un assistant spécialisé dans la gestion d'une association, des stocks d'une association, de la geolocalisation des utilisateurs et de signalements émis,. Réponds uniquement aux questions liées à ce domaine.Si la requête est hors contexte refuse poliment"));
+            conversation.AddMessage(new ChatMessage("system", $"L'utilisateur actuellement connecté possède le JWT suivant : {jwt} et tu dois le passer à tous les appels d'outils sans jamais le divulguer dans le chat" ));
             
             if (request.ConversationHistory != null)
             {

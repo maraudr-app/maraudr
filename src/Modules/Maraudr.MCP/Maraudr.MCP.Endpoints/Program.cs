@@ -39,6 +39,8 @@ builder.Services.AddSingleton<IChatClient>(serviceProvider =>
         .UseFunctionInvocation()
         .Build();
 });
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServicesForPlanning(builder.Configuration);

@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Maraudr.MCP.Domain.Interfaces;
+using MCP.Maraudr.Application.Services;
 using Microsoft.Extensions.Options;
 
 namespace Maraudr.MCP.Infrastructure.Repositories;
@@ -28,8 +29,7 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     {
 
         var associationUrl = $"{options.Value.PlanningApiUrl}association/membership";
-        var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZThlYmYyNi1mNjllLTRjMjEtYjIwMS1lNWFiOGFmOGI4OWEiLCJyb2xlIjoiTWFuYWdlciIsIlJvbGUiOiJNYW5hZ2VyIiwianRpIjoiMmVjOTk2NWEtM2Q5OS00YzMwLThjM2EtOTM5MmM4MDAzYmI3IiwibmJmIjoxNzUxODI4NzAwLCJleHAiOjE3NTE4MzIzMDAsImlhdCI6MTc1MTgyODcwMCwiaXNzIjoiYXV0aC1hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTQwIn0.b9x2cUXCFW04L04ZSH6bhqlNsF4Ydl4IUxTjdmc-I0M";
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer");
         var response = await httpClient.GetAsync(associationUrl);
         try
         {
@@ -52,12 +52,11 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     }
     
     
-    public async Task<IEnumerable<AssociationDto>> GetUserAssociations()
+    public async Task<IEnumerable<AssociationDto>> GetUserAssociations(string jwt)
     {
      
         
         var associationUrl = $"{options.Value.AssociationUrl}association/membership";
-        var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZThlYmYyNi1mNjllLTRjMjEtYjIwMS1lNWFiOGFmOGI4OWEiLCJyb2xlIjoiTWFuYWdlciIsIlJvbGUiOiJNYW5hZ2VyIiwianRpIjoiMmVjOTk2NWEtM2Q5OS00YzMwLThjM2EtOTM5MmM4MDAzYmI3IiwibmJmIjoxNzUxODI4NzAwLCJleHAiOjE3NTE4MzIzMDAsImlhdCI6MTc1MTgyODcwMCwiaXNzIjoiYXV0aC1hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTQwIn0.b9x2cUXCFW04L04ZSH6bhqlNsF4Ydl4IUxTjdmc-I0M";
         LogToFile("Bearer: "+jwt);
     
         LogToFile("------------------------------------------------------");
