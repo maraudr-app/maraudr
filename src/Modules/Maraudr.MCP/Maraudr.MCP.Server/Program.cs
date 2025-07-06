@@ -11,17 +11,16 @@ builder.ConfigureServices((context, services) =>
 {
     // Configurer ApiSettings
     services.Configure<ApiSettings>(context.Configuration.GetSection("ApiSettings"));
-    
+    services.AddTransient<Tools>();
     services.AddMcpServer()
         .WithStdioServerTransport()
         .WithToolsFromAssembly();
     services.AddInfrastructure(context.Configuration);
-    services.AddApplication(); // Ajoutez cette ligne
+    services.AddApplication(); 
 
 });
 
 var host = builder.Build();
 
-Tools.Configure(host.Services);
 
 await host.RunAsync();

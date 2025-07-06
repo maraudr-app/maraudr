@@ -6,7 +6,7 @@ using ModelContextProtocol.Client;
 
 namespace Maraudr.MCP.Infrastructure.Repositories;
 
-public class MCPRepository(IMcpClient mcpClient,IRequestContext context) : IMCPRepository
+public class MCPRepository(IMcpClient mcpClient) : IMCPRepository
 {
     private string? Jwt;
     public async Task<IEnumerable<McpTool>> GetAvailableToolsAsync()
@@ -40,7 +40,5 @@ public class MCPRepository(IMcpClient mcpClient,IRequestContext context) : IMCPR
         return Task.FromResult(mcpClient != null);
     }
 
-   
-    public void SetUserJwt(string jwt) => context.CurrentUserJwt = jwt;
-    public string GetUserJwt() => context.CurrentUserJwt;
+
 }

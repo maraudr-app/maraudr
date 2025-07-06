@@ -26,16 +26,16 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     
     public async Task<AssociationDto> GetAssociationByName(string name)
     {
-        var jwt =mcpRepository.GetUserJwt();
 
-        var planningUrl = $"{options.Value.PlanningApiUrl}association/membership";
+        var associationUrl = $"{options.Value.PlanningApiUrl}association/membership";
+        var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZThlYmYyNi1mNjllLTRjMjEtYjIwMS1lNWFiOGFmOGI4OWEiLCJyb2xlIjoiTWFuYWdlciIsIlJvbGUiOiJNYW5hZ2VyIiwianRpIjoiMmVjOTk2NWEtM2Q5OS00YzMwLThjM2EtOTM5MmM4MDAzYmI3IiwibmJmIjoxNzUxODI4NzAwLCJleHAiOjE3NTE4MzIzMDAsImlhdCI6MTc1MTgyODcwMCwiaXNzIjoiYXV0aC1hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTQwIn0.b9x2cUXCFW04L04ZSH6bhqlNsF4Ydl4IUxTjdmc-I0M";
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
-        var response = await httpClient.GetAsync(planningUrl);
+        var response = await httpClient.GetAsync(associationUrl);
         try
         {
             if (!response.IsSuccessStatusCode)
             {
-                LogToFile("Error while getting all events from PlanningRepository");
+                LogToFile("Error while getting all events from Association repository");
                 LogToFile($"Response status :"+response.StatusCode);
                 return null;
             }
@@ -54,13 +54,12 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     
     public async Task<IEnumerable<AssociationDto>> GetUserAssociations()
     {
-        var jwt =mcpRepository.GetUserJwt();
      
         
         var associationUrl = $"{options.Value.AssociationUrl}association/membership";
-        
+        var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZThlYmYyNi1mNjllLTRjMjEtYjIwMS1lNWFiOGFmOGI4OWEiLCJyb2xlIjoiTWFuYWdlciIsIlJvbGUiOiJNYW5hZ2VyIiwianRpIjoiMmVjOTk2NWEtM2Q5OS00YzMwLThjM2EtOTM5MmM4MDAzYmI3IiwibmJmIjoxNzUxODI4NzAwLCJleHAiOjE3NTE4MzIzMDAsImlhdCI6MTc1MTgyODcwMCwiaXNzIjoiYXV0aC1hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MTQwIn0.b9x2cUXCFW04L04ZSH6bhqlNsF4Ydl4IUxTjdmc-I0M";
         LogToFile("Bearer: "+jwt);
-
+    
         LogToFile("------------------------------------------------------");
         LogToFile("URL association url:" + associationUrl);
         LogToFile("------------------------------------------------------");
@@ -71,7 +70,7 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
             if (!response.IsSuccessStatusCode)
             {
 
-                LogToFile("Error while getting all events from PlanningRepository");
+                LogToFile("Error while getting all events from AssociationRepository");
                 LogToFile($"Response status :"+response.StatusCode);
                 return null;
                 return null;

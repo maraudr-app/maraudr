@@ -11,16 +11,10 @@ using ModelContextProtocol.Server;
 namespace Maraudr.MCP.Server.Tools;
 
 [McpServerToolType]
-public static class Tools
+public class Tools(IAssociationRepository associationRepository)
 {
-    private static IServiceProvider _serviceProvider;
     private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "mcp_server_tools.log");
-
-    public static void Configure(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
+    
     /// <summary>
     /// Logs exceptions to a local file to avoid writing to stdout.
     /// </summary>
@@ -55,7 +49,7 @@ public static class Tools
     //------------------------------------STOCK-----------------------------------------------------
 
 
-    [McpServerTool, Description("Gets the data of an item given its barcode for an association given its name")]
+    /*[McpServerTool, Description("Gets the data of an item given its barcode for an association given its name")]
     public static async Task<StockItemDto?> GetStock(string barcode, Guid associationId)
     {
         LogMessage($"Début de GetStock avec barcode={barcode}, associationId={associationId}");
@@ -117,36 +111,29 @@ public static class Tools
             LogError(e, nameof(GetAllStockItems));
             return null;
         }
-    }
+    }*/
     
     //------------------------------------ASSOCIATIONS-----------------------------------------------------
     [McpServerTool, Description("Gets all the associations which the user is a member of")]
-    public static async Task<IEnumerable<AssociationDto>?> GetUserAssociations()
+    public async Task<IEnumerable<AssociationDto>?> GetUserAssociations()
     {
         LogMessage($"Début de récupération des associations de l'utilisateur ");
         LogMessage($"--------------------------------------------------------------------------------");
         try
         {
-            if (_serviceProvider == null)
-            {
-                LogMessage("ServiceProvider est null, impossible de continuer");
-                return null;
-            }
+         
             
             LogMessage("Création du scope");
-            using var scope = _serviceProvider.CreateScope();
-
             LogMessage("Tentative d'obtention de IAssociationRepository");
-            var repository = scope.ServiceProvider.GetService<IAssociationRepository>();
 
-            if (repository == null)
+            if (associationRepository == null)
             {
                 LogMessage("IAssociationRepository est null - service non disponible");
                 throw new InvalidOperationException("IAssociationRepository service is not available.");
             }
-            LogMessage($"IAssociationRepository obtenu, type: {repository.GetType().FullName}");
+            LogMessage($"IAssociationRepository obtenu, type: {associationRepository.GetType().FullName}");
             LogMessage($"Appel de GetAllAssociations");
-            var result = await repository.GetUserAssociations();
+            var result = await associationRepository.GetUserAssociations();
             LogMessage($"Résultat obtenu");
             return result;
 
@@ -165,7 +152,7 @@ public static class Tools
     
     
     //------------------------------------EVENTS-----------------------------------------------------
-
+/*
     [McpServerTool, Description("Gets all the events of an association given its name for a user")]
     public static async Task<IEnumerable<EventDto>?> GetAllEventsOfAnAssociation(string associationName)
     {
@@ -260,7 +247,7 @@ public static class Tools
             LogMessage($"--------------------------------------------------------------------------------");
             return null;
         }
-    }
+    }*/
     
     
     

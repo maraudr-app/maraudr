@@ -26,7 +26,7 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
     public async Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId)
     {
         var planningUrl = $"{options.Value.PlanningApiUrl}all-events/{associationId}";
-        var jwt =mcpRepository.GetUserJwt();
+        var jwt = "";
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
         try
@@ -51,7 +51,7 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
     public async Task<IEnumerable<EventDto>> GetAllMyEventsAsync()
     {
         var planningUrl = $"{options.Value.PlanningApiUrl}my-events";
-        var jwt =mcpRepository.GetUserJwt();
+        var jwt = "dddddd";
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
         try

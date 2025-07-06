@@ -15,7 +15,7 @@ public class ChatController(IChatService chatService) : ControllerBase
     public async Task<ActionResult<ChatResponseDto>> ProcessChat([FromBody] ChatRequestDto request)
     {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-        var response = await chatService.ProcessChatAsync(request,jwt);
+        var response = await chatService.ProcessChatAsync(request);
         return Ok(response);
     }
 
@@ -26,7 +26,7 @@ public class ChatController(IChatService chatService) : ControllerBase
     {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-        var responseStream = await chatService.ProcessStreamingChatAsync(request,jwt);
+        var responseStream = await chatService.ProcessStreamingChatAsync(request);
 
         Response.Headers.Append("Content-Type", "text/plain; charset=utf-8");
         Response.Headers.Append("Cache-Control", "no-cache");

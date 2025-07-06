@@ -10,14 +10,12 @@ public class ChatService(
     IChatRepository chatRepository)
     : IChatService
 {
-    public async Task<ChatResponseDto> ProcessChatAsync(ChatRequestDto request,string jwt)
+    public async Task<ChatResponseDto> ProcessChatAsync(ChatRequestDto request)
         {
             try
             {
                 var conversation = BuildConversation(request);
                 var availableTools = await mcpRepository.GetAvailableToolsAsync();
-                JwtAccessor.SetCurrentJwt(jwt);
-                mcpRepository.SetUserJwt(jwt);
                 
                 var response = await chatRepository.GetResponseAsync(
                     conversation.Messages, 
@@ -36,11 +34,10 @@ public class ChatService(
             }
         }
 
-        public async Task<IAsyncEnumerable<string>> ProcessStreamingChatAsync(ChatRequestDto request,string jwt)
+        public async Task<IAsyncEnumerable<string>> ProcessStreamingChatAsync(ChatRequestDto request)
         {
             var conversation = BuildConversation(request);
             var availableTools = await mcpRepository.GetAvailableToolsAsync();
-            mcpRepository.SetUserJwt(jwt);
 
             return await chatRepository.GetStreamingResponseAsync(conversation.Messages, availableTools);
         }
