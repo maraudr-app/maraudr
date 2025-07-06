@@ -14,6 +14,6 @@ public interface IPlanningRepository
 {
     public Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId,string jwt);
 
-    public Task<IEnumerable<EventDto>> GetAllMyEventsAsync();
+    public Task<IEnumerable<EventDto>> GetAllMyEventsAsync(string jwt);
 
 }

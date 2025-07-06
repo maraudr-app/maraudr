@@ -25,11 +25,11 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
     }
     
     
-    public async Task<AssociationDto> GetAssociationByName(string name)
+    public async Task<AssociationDto> GetAssociationByName(string name,string jwt)
     {
 
-        var associationUrl = $"{options.Value.PlanningApiUrl}association/membership";
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer");
+        var associationUrl = $"{options.Value.AssociationUrl}association/membership";
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer",jwt);
         var response = await httpClient.GetAsync(associationUrl);
         try
         {
@@ -39,7 +39,9 @@ public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> 
                 LogToFile($"Response status :"+response.StatusCode);
                 return null;
             }
+            LogToFile("Association trouvée");
             var value =await response.Content.ReadFromJsonAsync<IEnumerable<AssociationDto?>>();
+            LogToFile($"Association {value.FirstOrDefault()}");
             return value.FirstOrDefault(asso => asso?.Name == name);
         }
         catch (Exception ex)

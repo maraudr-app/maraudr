@@ -22,9 +22,10 @@ public interface IStockRepository
 {
     
     Task<StockItemDto?> GetStockItemByBarCodeAsync(string code,Guid associationId);
+    Task<StockItemDto?> GetStockItemByName(string name,Guid associationId,string jwt);
     Task<IEnumerable<StockItemDto?>> GetStockItemByTypeAsync(Category type,Guid associationId);
     
-    Task<IEnumerable<StockItemDto>> GetStockItemsAsync(Guid associationId);
+    Task<IEnumerable<StockItemDto>> GetStockItemsAsync(Guid associationId,string jwt);
 
 
 }
