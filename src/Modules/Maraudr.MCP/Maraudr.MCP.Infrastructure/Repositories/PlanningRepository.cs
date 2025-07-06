@@ -23,18 +23,22 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
         }
     }
 
-    public async Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId)
+    public async Task<IEnumerable<EventDto>> GetAllAssociationEventsAsync(Guid associationId,string jwt)
     {
-        var planningUrl = $"{options.Value.PlanningApiUrl}all-events/{associationId}";
-        var jwt = "";
+        var planningUrl = $"{options.Value.PlanningApiUrl}api/planning/all-events/{associationId}";
+        LogToFile($"Tentative de récupération des évènements à partir de l'url {planningUrl} ");
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
+        LogToFile($"Réponse :  {response} ");
+
         try
         {
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<IEnumerable<EventDto?>>();
             }
+            LogToFile($"Echec :  {response} ");
+
 
             return null;
         }

@@ -148,18 +148,19 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
     //------------------------------------EVENTS-----------------------------------------------------
 
     [McpServerTool, Description("Gets all the events of an association given its name for a user")]
-    public  async Task<IEnumerable<EventDto>?> GetAllEventsOfAnAssociation(string associationName)
+    public async Task<IEnumerable<EventDto>?> GetAllEventsOfAnAssociation(string associationName,string jwt)
     {
         LogMessage($"Début de récupération des évènements de l'association avec l'ID {associationName}");
         LogMessage($"--------------------------------------------------------------------------------");
         try
         {
 
-            LogMessage("Création du scope");
-
-            LogMessage("Tentative d'obtention de IPlanningRepository");
-
-
+            if (string.IsNullOrWhiteSpace(jwt))
+            {
+                LogMessage("Bearer token null, user not logued in");
+                return null;
+            }
+            LogMessage($"Bearer {jwt}");
             if (planningRepository == null)
             {
                 LogMessage("IPlanningRepository est null - service non disponible");
@@ -173,8 +174,19 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
 
             LogMessage($"IPlanningRepository obtenu, type: {planningRepository.GetType().FullName}");
             LogMessage($"IAssociationRepository obtenu, type: {associationRepository.GetType().FullName}");
-            var association = await associationRepository.GetAssociationByName(associationName);
-            var result = await planningRepository.GetAllAssociationEventsAsync(association.Id);
+            
+            
+            var association = await associationRepository.GetAssociationByName(associationName,jwt);
+            LogMessage($"Association obtenue");
+
+            if (association == null)
+            {
+                LogMessage($"No association with name {associationName} was found");
+                throw new InvalidOperationException("IAssociationRepository service is not available.");
+            }
+            LogMessage($"Association obtenue, type: {association.Name}");
+
+            var result = await planningRepository.GetAllAssociationEventsAsync(association.Id,jwt);
             LogMessage($"Résultat obtenu {result.ToString()}");
 
         return result;
