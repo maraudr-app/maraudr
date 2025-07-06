@@ -52,10 +52,9 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
     }
     
     
-    public async Task<IEnumerable<EventDto>> GetAllMyEventsAsync()
+    public async Task<IEnumerable<EventDto>> GetAllMyEventsAsync(string jwt)
     {
-        var planningUrl = $"{options.Value.PlanningApiUrl}my-events";
-        var jwt = "dddddd";
+        var planningUrl = $"{options.Value.PlanningApiUrl}api/planning/my-events";
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
         try
@@ -64,7 +63,7 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
             {
                 return await response.Content.ReadFromJsonAsync<IEnumerable<EventDto?>>();
             }
-
+            LogToFile($"Echec d'appel API {response}");
             return null;
         }
         catch (Exception ex)
