@@ -49,7 +49,7 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
 
 
     [McpServerTool, Description("Gets the data of an item given its name for an association given its name")]
-    public  async Task<StockItemDto?> GetStock(string name, string associationName,string jwt)
+    public  async Task<IEnumerable<StockItemDto?>> GetStock(string name, string associationName,string jwt)
     {
         LogMessage($"Début de GetStock avec nom={name}, pour l'association {associationName}");
     
@@ -69,7 +69,7 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
             
             var result = await stockRepository.GetStockItemByName(name, association.Id,jwt);
         
-            LogMessage($"Résultat obtenu: {(result == null ? "null" : $"Item avec ID {result.Id}")}");
+            LogMessage($"Résultat obtenu: {(result == null ? "null" : $"Item avec ID {result}")}");
             return result;
         }
         catch (Exception e)
