@@ -28,6 +28,13 @@ services:
     environment:
       - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
       - ApiSettings__EmailSenderApiUrl=http://email-sender:8080/
+
+  mcp:
+    image: maraudr/maraudrapp:mcp
+    ports:
+      - 8086:8080
+    environment:
+      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
   
   email-sender:
     image: maraudr/maraudrapp:emailsender
