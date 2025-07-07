@@ -13,8 +13,7 @@ namespace Maraudr.MCP.Server.Tools;
 [McpServerToolType]
 public class Tools(IAssociationRepository associationRepository,IStockRepository stockRepository,IPlanningRepository planningRepository)
 {
-    private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "mcp_server_tools.log");
-    
+    private static readonly string LogFilePath = Path.Combine("/tmp", "mcp_server_tools.log");
     /// <summary>
     /// Logs exceptions to a local file to avoid writing to stdout.
     /// </summary>

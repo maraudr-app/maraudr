@@ -7,9 +7,7 @@ namespace Maraudr.MCP.Infrastructure.Repositories;
 public class StockRepository(HttpClient httpClient, IOptions<ApiSettings> options):IStockRepository
 {
     
-    private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "stock_repository.log");
-
-  
+    private static readonly string LogFilePath = Path.Combine("/tmp", "stock_repository.log");  
     
     private void LogToFile(string message)
     {

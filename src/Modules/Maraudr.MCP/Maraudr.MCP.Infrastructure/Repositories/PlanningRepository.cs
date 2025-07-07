@@ -6,9 +6,7 @@ namespace Maraudr.MCP.Infrastructure.Repositories;
 
 public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> options,IMCPRepository mcpRepository):IPlanningRepository
 {
-    private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "planning_repository.log");
-    
-    
+    private static readonly string LogFilePath = Path.Combine("/tmp", "planning_repository.log");    
     private void LogToFile(string message)
     {
         try
@@ -55,6 +53,7 @@ public class PlanningRepository(HttpClient httpClient, IOptions<ApiSettings> opt
     public async Task<IEnumerable<EventDto>> GetAllMyEventsAsync(string jwt)
     {
         var planningUrl = $"{options.Value.PlanningApiUrl}api/planning/my-events";
+        LogToFile($"API URI FOR PLANNING REPOSITORY {planningUrl}");
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
         var response = await httpClient.GetAsync(planningUrl);
         try

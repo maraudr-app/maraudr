@@ -114,6 +114,9 @@ services:
       - OpenRouter__ApiKey=${OPENROUTER_API_KEY}
       - OpenRouter__BaseUrl=${OPENROUTER_BASE_URL}
       - OpenRouter__ModelName=${OPENROUTER_MODEL_NAME}
+      - ApiSettings__StockApiUrl=${STOCK_API_URL}
+      - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
+      - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
     depends_on:
       - maraudr-db
 

@@ -7,9 +7,7 @@ namespace Maraudr.MCP.Infrastructure.Repositories;
 
 public class AssociationRepository(HttpClient httpClient, IOptions<ApiSettings> options,IMCPRepository mcpRepository):IAssociationRepository
 {
-    private static readonly string LogFilePath = Path.Combine(AppContext.BaseDirectory, "association_repository.log");
-    
-    
+    private static readonly string LogFilePath = Path.Combine("/tmp", "association-repository.log");    
     private void LogToFile(string message)
     {
         try
