@@ -81,6 +81,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Infrastruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Planning.Endpoints", "Modules\Maraudr.Planning\Maraudr.Planning.Endpoints\Maraudr.Planning.Endpoints.csproj", "{21DBFEF4-E019-493C-8553-669183749E55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{69611565-8EE5-4BF3-B921-94B5CCACF9C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Document.Endpoints", "Modules\Maraudr.Document\Maraudr.Document.Endpoints\Maraudr.Document.Endpoints.csproj", "{77855476-404C-4AA7-9488-D4FAB7E2B504}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BF98F257-60BC-409F-B192-420561D3BFFF}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Document.Infrastructure", "Modules\Maraudr.Document\Maraudr.Document.Infrastructure\Maraudr.Document.Infrastructure.csproj", "{3276125D-B930-48E1-9891-2556A7E17D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Document.Application", "Modules\Maraudr.Document\Maraudr.Document.Application\Maraudr.Document.Application.csproj", "{65AA29D3-7979-484F-9F2C-4630A0CB7B5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maraudr.Document.Domain", "Modules\Maraudr.Document\Maraudr.Document.Domain\Maraudr.Document.Domain.csproj", "{E9D6CF69-5C1D-4627-99B2-8F01358C8C16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -244,6 +259,10 @@ Global
 		{C35DC36B-CE15-4DAD-9C86-BA84D5A10842} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
 		{9904B881-EB21-4A65-9A1B-2429568AA470} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
 		{21DBFEF4-E019-493C-8553-669183749E55} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
+		{77855476-404C-4AA7-9488-D4FAB7E2B504} = {69611565-8EE5-4BF3-B921-94B5CCACF9C1}
+		{3276125D-B930-48E1-9891-2556A7E17D9F} = {69611565-8EE5-4BF3-B921-94B5CCACF9C1}
+		{65AA29D3-7979-484F-9F2C-4630A0CB7B5E} = {69611565-8EE5-4BF3-B921-94B5CCACF9C1}
+		{E9D6CF69-5C1D-4627-99B2-8F01358C8C16} = {69611565-8EE5-4BF3-B921-94B5CCACF9C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BCD56F0-98C0-4AB6-A596-4EA261D31C8D}

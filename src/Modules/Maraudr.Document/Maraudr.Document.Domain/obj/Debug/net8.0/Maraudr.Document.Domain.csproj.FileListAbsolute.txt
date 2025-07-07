@@ -1,0 +1,12 @@
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\bin\Debug\net8.0\Maraudr.Document.Domain.deps.json
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\bin\Debug\net8.0\Maraudr.Document.Domain.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\bin\Debug\net8.0\Maraudr.Document.Domain.pdb
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.AssemblyInfoInputs.cache
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.AssemblyInfo.cs
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.csproj.CoreCompileInputs.cache
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.sourcelink.json
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\refint\Maraudr.Document.Domain.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\Maraudr.Document.Domain.pdb
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Document\Maraudr.Document.Domain\obj\Debug\net8.0\ref\Maraudr.Document.Domain.dll
