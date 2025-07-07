@@ -40,8 +40,14 @@ services:
     ports:
       - 8086:8080
     environment:
-      - Jwt__Secret=azjaeiaeuhaeuohehuoeauohaehuoaehuoaeuhoaeuhaehuo
-
+      - Jwt__Secret=${JWT_SECRET}
+      - OpenRouter__ApiKey=${OPENROUTER_API_KEY}
+      - OpenRouter__BaseUrl=${OPENROUTER_BASE_URL}
+      - OpenRouter__ModelName=${OPENROUTER_MODEL_NAME}
+      - ApiSettings__StockApiUrl=${STOCK_API_URL}
+      - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
+      - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
+      
   document:
     image: maraudr/maraudrapp:document
     ports:
