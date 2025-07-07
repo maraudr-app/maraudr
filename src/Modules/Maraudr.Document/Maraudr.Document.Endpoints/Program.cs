@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Amazon.S3;
 using Maraudr.Document.Application;
 using Maraudr.Document.Domain;
@@ -18,6 +19,11 @@ builder.Services.AddScoped<DocumentService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient("association", client =>
+{
+    client.BaseAddress = new Uri("http://association:8080");
+});
 
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAuthorization();
@@ -49,9 +55,21 @@ app.UseAuthorization();
 app.MapPost("/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async (
     IFormFile file,
     Guid associationId,
-    DocumentService service
+    DocumentService service,
+    HttpContext httpContext,
+    IHttpClientFactory httpClientFactory
 ) =>
 {
+    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    
+    if (!Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+    
+    var client = httpClientFactory.CreateClient("association");
+    var response  = await client.GetAsync($"/association/is-member/{associationId}/{userIdClaim}");
+
+    if (!response.IsSuccessStatusCode) return Results.Unauthorized();
+    
     var request = new UploadDocumentRequest { File = file };
     await service.UploadDocumentAsync(request, associationId);
     return Results.Ok();
