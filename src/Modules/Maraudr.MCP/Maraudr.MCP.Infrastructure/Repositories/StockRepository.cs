@@ -47,7 +47,7 @@ public class StockRepository(HttpClient httpClient, IOptions<ApiSettings> option
         }
     }
 
-    public async Task<StockItemDto?> GetStockItemByName(string name, Guid associationId,string jwt)
+    public async Task<IEnumerable<StockItemDto?>> GetStockItemByName(string name, Guid associationId,string jwt)
     {
         try
         {
@@ -67,7 +67,7 @@ public class StockRepository(HttpClient httpClient, IOptions<ApiSettings> option
             {
                 LogToFile("Succes");
 
-                return await response.Content.ReadFromJsonAsync<StockItemDto?>();
+                return await response.Content.ReadFromJsonAsync<List<StockItemDto?>>();
             }
 
             LogToFile($"Echec : {response}");

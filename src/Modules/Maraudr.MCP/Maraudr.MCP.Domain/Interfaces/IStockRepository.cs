@@ -1,5 +1,6 @@
 ﻿namespace Maraudr.MCP.Domain.Interfaces;
-public record StockItemDto(      Guid Id ,
+public record StockItemDto(      
+    Guid Id ,
     Guid StockId,
     string Name ,
     string? Description ,
@@ -22,7 +23,7 @@ public interface IStockRepository
 {
     
     Task<StockItemDto?> GetStockItemByBarCodeAsync(string code,Guid associationId);
-    Task<StockItemDto?> GetStockItemByName(string name,Guid associationId,string jwt);
+    Task<IEnumerable<StockItemDto?>> GetStockItemByName(string name,Guid associationId,string jwt);
     Task<IEnumerable<StockItemDto?>> GetStockItemByTypeAsync(Category type,Guid associationId);
     
     Task<IEnumerable<StockItemDto>> GetStockItemsAsync(Guid associationId,string jwt);
