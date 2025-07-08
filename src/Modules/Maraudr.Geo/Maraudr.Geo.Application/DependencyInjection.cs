@@ -1,4 +1,5 @@
 ﻿using Maraudr.Geo.Application.UseCases;
+using Maraudr.Geo.Infrastructure.GeoData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Maraudr.Geo.Application;

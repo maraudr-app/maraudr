@@ -5,6 +5,7 @@ using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
 using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
+using Maraudr.Geo.Infrastructure.GeoData;
 using Maraudr.Geo.Infrastructure.WebSocket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServices(builder.Configuration);
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<IGeoAddressEnricher, GeoapifyReverseGeocodingService>();
 
 builder.Services.AddCors(options =>
 {
@@ -108,7 +110,7 @@ app.MapGet("/autocomplete", [Authorize] async (
 {
     var client = httpClientFactory.CreateClient();
 
-    const string apiKey = "b2236921472b41f193b1bdd4debb6929"; 
+    var apiKey = Environment.GetEnvironmentVariable("GEOAPIFY_API_KEY"); 
     var url = $"https://api.geoapify.com/v1/geocode/autocomplete?text={Uri.EscapeDataString(text)}&apiKey={apiKey}";
 
     var response = await client.GetAsync(url);
