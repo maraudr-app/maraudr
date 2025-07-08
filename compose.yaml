@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   maraudr-db:
@@ -120,6 +118,22 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+  mcp:
+    build:
+      context: ./src/Modules/Maraudr.MCP/
+      target: final
+    ports:
+      - "8086:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - OpenRouter__ApiKey=${OPENROUTER_API_KEY}
+      - OpenRouter__BaseUrl=${OPENROUTER_BASE_URL}
+      - OpenRouter__ModelName=${OPENROUTER_MODEL_NAME}
+      - ApiSettings__StockApiUrl=${STOCK_API_URL}
+      - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
+      - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
+    depends_on:
+      - maraudr-db
 
 volumes:
   maraudr-db-data:

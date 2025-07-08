@@ -1,5 +1,4 @@
 using Maraudr.Stock.Application.Dtos;
-using Maraudr.Stock.Domain.Entities;
 using Maraudr.Stock.Endpoints;
 using Maraudr.Stock.Infrastructure.Caching;
 using Microsoft.AspNetCore.Authorization;
@@ -66,9 +65,9 @@ app.MapGet("/item/{id}", [Authorize] async (
     return Results.Ok(item);
 });
 
-app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode, IQueryItemWithBarCodeHandler handler) =>
+app.MapGet("/item/barcode/{barcode}", [Authorize] async (string barcode,Guid associationId, IQueryItemWithBarCodeHandler handler) =>
 {
-    var item = await handler.HandleAsync(barcode);
+    var item = await handler.HandleAsync(barcode,associationId);
     return Results.Ok(item);
 });
 
@@ -203,5 +202,6 @@ app.MapGet("/stock/{associationId}", [Authorize] async (
         ? Results.Ok(new { StockId = stockId })
         : Results.NotFound(new { message = "Aucun stock trouvé pour cette association" });
 });
+
 
 app.Run();

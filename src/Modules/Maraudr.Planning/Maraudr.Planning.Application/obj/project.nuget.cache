@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "dNdywiQ6h4g=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Khali\\Desktop\\M2\\S2\\Maraudr\\maraudr\\src\\Modules\\Maraudr.Planning\\Maraudr.Planning.Application\\Maraudr.Planning.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Khali\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\Khali\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
