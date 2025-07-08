@@ -12,7 +12,8 @@ public class DocumentContext(DbContextOptions<DocumentContext> options) : DbCont
         {
             builder.HasKey(d => d.Id);
             builder.Property(d => d.FileName).IsRequired();
-            builder.Property(d => d.Url).IsRequired();
+            builder.Property(d => d.Key).IsRequired();
+            builder.Property(d => d.Url).IsRequired();  
             builder.Property(d => d.ContentType).IsRequired();
             builder.Property(d => d.AssociationId).IsRequired();
             builder.Property(d => d.UploadedAt).IsRequired();

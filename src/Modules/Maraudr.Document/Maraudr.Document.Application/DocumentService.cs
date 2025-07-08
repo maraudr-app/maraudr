@@ -9,27 +9,36 @@ public class DocumentService(IDocumentRepository repository, IDocumentStorageSer
         var (url, key) = await storage.UploadAsync(request.File, associationId);
 
         var document = new Domain.Document(
-            request.File.FileName,
-            url,
-            request.File.ContentType,
-            associationId
+            fileName: request.File.FileName,
+            key: key,
+            url: url,
+            contentType: request.File.ContentType,
+            associationId: associationId
         );
 
         await repository.AddAsync(document);
     }
-    
+
     public async Task<IEnumerable<DocumentDto>> GetDocumentsAsync(Guid associationId)
     {
         var documents = await repository.GetByAssociationAsync(associationId);
-        return documents.Select(d => new DocumentDto
+
+        var result = await Task.WhenAll(documents.Select(async d =>
         {
-            Id = d.Id,
-            FileName = d.FileName,
-            Url = d.Url,
-            ContentType = d.ContentType,
-            UploadedAt = d.UploadedAt
-        });
+            var signedUrl = await storage.GeneratePresignedUrlAsync(d.Key, TimeSpan.FromMinutes(10));
+            return new DocumentDto(
+                d.Id,
+                d.FileName,
+                d.Key,
+                d.ContentType,
+                d.UploadedAt,
+                signedUrl
+            );
+        }));
+
+        return result;
     }
+
     
     public async Task DeleteDocumentAsync(Guid documentId, Guid associationId)
     {
@@ -39,10 +48,10 @@ public class DocumentService(IDocumentRepository repository, IDocumentStorageSer
             throw new KeyNotFoundException("Document not found or unauthorized.");
         }
 
-        var url = new Uri(document.Url);
-        var bucketKey = Uri.UnescapeDataString(url.AbsolutePath.TrimStart('/'));
+        var bucketKey = document.Key;
 
         await storage.DeleteAsync(bucketKey);
         await repository.DeleteAsync(document);
     }
+
 }
