@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maraudr.Document.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+284e3b95c93a334e1584ee69cf030c248cfa26dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5632a3647fb3b4d9ea9b89283bdb6b348ab7d06f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maraudr.Document.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maraudr.Document.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
