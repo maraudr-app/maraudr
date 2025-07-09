@@ -6,6 +6,8 @@ public class ApiSettings
     public string PlanningApiUrl { get; set; } = null!;
     
     public string AssociationUrl { get; set; } = null!;
+    
+    public string GeoUrl { get; set; } = null!;
 
     
 }
