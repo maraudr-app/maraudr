@@ -11,7 +11,7 @@ using ModelContextProtocol.Server;
 namespace Maraudr.MCP.Server.Tools;
 
 [McpServerToolType]
-public class Tools(IAssociationRepository associationRepository,IStockRepository stockRepository,IPlanningRepository planningRepository)
+public class Tools(IAssociationRepository associationRepository,IStockRepository stockRepository,IPlanningRepository planningRepository,IGeoRepository geoRepository)
 {
     private static readonly string LogFilePath = Path.Combine("/tmp", "mcp_server_tools.log");
     /// <summary>
@@ -154,7 +154,7 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
     
     //------------------------------------EVENTS-----------------------------------------------------
 
-    [McpServerTool, Description("Gets all the events of an association given its name for a user")]
+    [McpServerTool, Description("Gets all the events of an association given its name")]
     public async Task<IEnumerable<EventDto>?> GetAllEventsOfAnAssociation(string associationName,string jwt)
     {
         LogMessage($"Début de récupération des évènements de l'association avec l'ID {associationName}");
@@ -211,7 +211,7 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
     }
     
     
-     [McpServerTool, Description("Gets all the events of an association given its name for a user")]
+    [McpServerTool, Description("Gets all the events a user is involved in")] 
     public  async Task<IEnumerable<EventDto>?> GetAllMyEvents(string jwt)
     {
         LogMessage($"Début de récupération des évènementsde l'utilisateur connécté");
@@ -231,6 +231,45 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
             LogMessage($"Résultat obtenu {result.ToString()}");
 
         return result;
+
+        }
+        catch (Exception e)
+        {
+            LogMessage($"Une erreur s'est déclenchée lors de la récupération de mes evenements");
+            LogMessage($"Erreur : {e.Message}");
+            LogMessage($"StackTrace : {e.StackTrace}");
+            
+            LogMessage($"--------------------------------------------------------------------------------");
+            return null;
+        }
+    }
+    
+    
+    
+    //------------------------------------GEOLOCALISATION-----------------------------------------------------
+    [McpServerTool, Description("Gets all the interest points of the given association for the given period of time in days")] 
+    public  async Task<IEnumerable<GeoDataDto>?> GetAllInterestPoints(string associationName, int days,string jwt)
+    {
+        LogMessage($"Début de récupération des points d'interets");
+        LogMessage($"--------------------------------------------------------------------------------");
+        try
+        {
+            if (geoRepository == null)
+            {
+                LogMessage("geoRepository est null - service non disponible");
+                throw new InvalidOperationException("geoRepository service is not available.");
+            }
+
+            LogMessage($"geoRepository obtenu, type: {geoRepository.GetType().FullName}");
+            LogMessage($"IAssociationRepository obtenu, type: {associationRepository.GetType().FullName}");
+            
+            
+            var association = await associationRepository.GetAssociationByName(associationName,jwt);
+            
+            var result = await geoRepository.GetAllInterestPoints(association.Id,days,jwt);
+            LogMessage($"Résultat obtenu {result.ToString()}");
+
+            return result;
 
         }
         catch (Exception e)

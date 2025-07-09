@@ -131,6 +131,7 @@ services:
       - ApiSettings__StockApiUrl=${STOCK_API_URL}
       - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
       - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
+      - ApiSettings__GeoUrl=${GEO_API_URL}
     depends_on:
       - maraudr-db
 
