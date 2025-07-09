@@ -8,7 +8,8 @@ public record EventDto(
     DateTime EndDate,
     string Title,
     string Description,
-    string Location
+    string Location,
+    string Status
 );
 public interface IPlanningRepository
 {

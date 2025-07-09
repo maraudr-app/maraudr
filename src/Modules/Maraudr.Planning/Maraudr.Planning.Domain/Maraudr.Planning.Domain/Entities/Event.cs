@@ -1,4 +1,7 @@
 ﻿
+using System.Text.Json.Serialization;
+using Maraudr.Planning.Domain.ValueObjects;
+
 namespace Maraudr.Planning.Domain.Entities;
 
 public class Event
@@ -9,6 +12,10 @@ public class Event
     public List<Guid> ParticipantsIds { get; set; }
     public DateTime BeginningDate { get; set; }
     public DateTime EndDate { get; set; }
+    
+    /*[JsonConverter(typeof(JsonStringEnumConverter))]
+    public Status Status { get; set; }*/
+    
     public string Title { get; set; }
     public string Description { get; set; }
     public string Location { get; set; }
@@ -30,6 +37,7 @@ public class Event
         Title = title;
         Description = description;
         Location = location;
+       // Status = Status.CREATED;
     }
 
     public void RemoveAParticipant(Guid participantId)
@@ -50,7 +58,7 @@ public class Event
         {
             throw new ArgumentException("User already in");
         }
-
+        
         ParticipantsIds.Add(participantId);
     }
 
@@ -69,4 +77,6 @@ public class Event
         return this.Id == other.Id && this.PlanningId == other.PlanningId;
         
     }
+    
+    
 }

@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         services.AddScoped<IPlanningRepository, PlanningRepository>();
         services.AddScoped<IAssociationRepository, AssociationRepository>();
+        services.AddScoped<IEmailingRepository, EmailingRepository>();
 
 
     }
