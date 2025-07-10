@@ -191,6 +191,24 @@ namespace Maraudr.Planning.Endpoints.Controllers
                 return Results.BadRequest(e.Message);
             }
         }
+        
+        
+        [HttpPatch("update-event/{eventId}")]
+        [Authorize]
+        public async Task<IResult> UpdateEvent(Guid eventId,[FromBody]UpdateEventRequest request,
+            [FromServices] IUpdateEventHandler handler)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                await handler.HandleAsync(userId,eventId,request);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
 
 
         
