@@ -7,5 +7,6 @@ public record GeoDataResponseWithAddress(
     double Longitude,
     string Notes,
     DateTime ObservedAt,
-    string? Address
+    string? Address,
+    bool IsActive
 );

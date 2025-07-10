@@ -10,4 +10,6 @@ public interface IGeoRepository
     Task AddEventAsync(GeoData geoEvent);
     Task<GeoStore?> GetGeoStoreByAssociationAsync(Guid associationId);
     Task<GeoStore> CreateGeoStoreAsync(Guid associationId);
+    Task ToggleGeoStatusAsync(Guid id);
+    Task ToggleItineraryStatusAsync(Guid id);
 }

@@ -30,7 +30,8 @@ public class GetAllGeoDataForAnAssociation(
                 x.Longitude,
                 x.Notes,
                 x.ObservedAt,
-                address
+                address,
+                x.IsActive
             ));
         }
 

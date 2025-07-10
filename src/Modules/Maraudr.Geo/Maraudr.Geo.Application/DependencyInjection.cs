@@ -15,5 +15,8 @@ public static class DependencyInjection
         services.AddScoped<IGetGeoRouteHandler, GetGeoRouteHandler>();
         services.AddScoped<ICreateItineraryHandler, CreateItineraryHandler>();
         services.AddScoped<IGetItineraryHandler, GetItineraryHandler>();
+        services.AddScoped<IToogleGeoStatusHandler, ToogleGeoStatusHandler>();
+        services.AddScoped<IToogleItineraryStatusHandler, ToogleItineraryStatusHandler>();
+
     }
 }
