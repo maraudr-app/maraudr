@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using FluentValidation;
 using Maraudr.Planning.Application.DTOs;
 using Maraudr.Planning.Application.UseCases;
+using Maraudr.Planning.Domain.ValueObjects;
 using Maraudr.Planning.Endpoints.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -137,6 +139,77 @@ namespace Maraudr.Planning.Endpoints.Controllers
             }
         }
         
+        
+        [HttpPost("start-event/{id}")]
+        [Authorize]
+        public async Task<IResult> StartEvent(Guid id,
+            [FromServices] IChangeEventStatusHandler handler)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                await handler.HandleAsync(userId,id,Status.ONGOING);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+        
+        [HttpPost("cancel-event/{id}")]
+        [Authorize]
+
+        public async Task<IResult> CancelEvent(Guid id,
+            [FromServices] IChangeEventStatusHandler handler)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                await handler.HandleAsync(userId,id,Status.CANCELED);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+        
+        [HttpPost("finish-event/{id}")]
+        [Authorize]
+        public async Task<IResult> FinishEvent(Guid id,
+            [FromServices] IChangeEventStatusHandler handler)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                await handler.HandleAsync(userId,id,Status.FINISHED);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+        
+        
+        [HttpPatch("update-event/{eventId}")]
+        [Authorize]
+        public async Task<IResult> UpdateEvent(Guid eventId,[FromBody]UpdateEventRequest request,
+            [FromServices] IUpdateEventHandler handler)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                await handler.HandleAsync(userId,eventId,request);
+                return Results.Ok();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+        }
+
 
         
         

@@ -70,6 +70,23 @@ app.MapPost("/email/send-invit-link", async (
 });
 
 
+app.MapPost("/email/send-event-notify-batch", async (
+    [FromBody] SendNotificationBatchQuery query,
+    ISendNotificationBatch handler) =>
+{
+    try
+    {
+        await handler.HandleAsync(query);
+    }
+    catch (Exception e)
+    {
+        Results.BadRequest(e.StackTrace+ e.Message);
+    }
+
+});
+
+
+
 
 
 

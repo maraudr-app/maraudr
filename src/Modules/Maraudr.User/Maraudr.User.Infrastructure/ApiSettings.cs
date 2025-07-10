@@ -8,6 +8,7 @@ public class ApiSettings
     public string AssociationApiUrl { get; set; } = null!;
     
     public string EmailSenderApiKey { get; set; } = string.Empty;
-
+    public string UserApiKey { get; set; } = string.Empty;
+    
 
 }

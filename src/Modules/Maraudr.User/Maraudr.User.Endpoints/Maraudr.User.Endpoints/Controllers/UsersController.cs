@@ -11,6 +11,8 @@ using Application.UseCases.Users.User.UpdateUser;
 using FluentValidation;
 using Maraudr.User.Domain.Entities.Users;
 using Maraudr.User.Endpoints.Identity;
+using Maraudr.User.Infrastructure;
+using Microsoft.Extensions.Options;
 
 namespace Maraudr.User.Endpoints;
 
@@ -60,13 +62,25 @@ public class UsersController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
-    [Authorize]
-    public async Task<IActionResult> GetUserById(Guid id, [FromServices]IQueryUserHandler handler)
+    public async Task<IActionResult> GetUserById(Guid id, 
+        [FromServices]IQueryUserHandler handler, 
+        [FromServices]IOptions<ApiSettings> options)
     {
-        var user = await handler.HandleAsync(id);
-        return user == null ? NotFound() : Ok(user);
-    }
+        if (Request.Headers.TryGetValue("X-API-KEY", out var apiKey) && 
+            apiKey.FirstOrDefault() == options.Value.UserApiKey)
+        {
+            var user = await handler.HandleAsync(id);
+            return user == null ? NotFound() : Ok(user);
+        }
+    
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var user = await handler.HandleAsync(id);
+            return user == null ? NotFound() : Ok(user);
+        }
 
+        return Unauthorized();
+    }
 
     [HttpPut("{id:guid}")]
     [Authorize]
