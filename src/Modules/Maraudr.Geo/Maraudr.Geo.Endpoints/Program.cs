@@ -145,6 +145,22 @@ app.MapGet("/itineraries/{id:guid}", [Authorize] async (
     return result is null ? Results.NotFound() : Results.Ok(result);
 });
 
+app.MapPatch("/geo/{id:guid}/status", [Authorize] async (
+    Guid id,
+    IToogleGeoStatusHandler handler) =>
+{
+    await handler.HandleAsync(id);
+    return Results.NoContent();
+});
+
+app.MapPatch("/itinerary/{id:guid}/status", [Authorize] async (
+    Guid id,
+    IToogleItineraryStatusHandler handler) =>
+{
+    await handler.HandleAsync(id);
+    return Results.NoContent();
+});
+
 app.MapGet("/itineraries", [Authorize] async (
     Guid associationId,
     IGetItineraryHandler handler) =>

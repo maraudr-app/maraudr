@@ -3,7 +3,7 @@
 public record GeoRouteResponse(
     List<double[]> Coordinates,
     string GeoJson,
-    double Distance, // en mètres
-    double Duration, // en secondes
+    double Distance, 
+    double Duration,
     string GoogleMapsUrl
 );
