@@ -62,20 +62,24 @@ public class UsersController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<IActionResult> GetUserById(Guid id, [FromServices]IQueryUserHandler handler, 
+    public async Task<IActionResult> GetUserById(Guid id, 
+        [FromServices]IQueryUserHandler handler, 
         [FromServices]IOptions<ApiSettings> options)
     {
-        if ((Request.Headers.TryGetValue("X-API-KEY", out var apiKey) && 
-            apiKey.FirstOrDefault() == options.Value.UserApiKey)||(User?.Identity?.IsAuthenticated == true))
+        if (Request.Headers.TryGetValue("X-API-KEY", out var apiKey) && 
+            apiKey.FirstOrDefault() == options.Value.UserApiKey)
         {
             var user = await handler.HandleAsync(id);
             return user == null ? NotFound() : Ok(user);
         }
     
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var user = await handler.HandleAsync(id);
+            return user == null ? NotFound() : Ok(user);
+        }
+
         return Unauthorized();
-        
-        
     }
 
     [HttpPut("{id:guid}")]

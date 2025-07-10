@@ -14,8 +14,11 @@ public class EmailingRepository(HttpClient httpClient,IOptions<ApiSettings> opti
     public async Task SendEventEmailAsync(List<Guid> usersIds, string eventTitle, string eventDescription)
     {
         var url = options.Value.EmailSenderApiUrl + "email/send-event-notify-batch";
-        Console.WriteLine("--------------------------------------------------");
+
+
         var baseUserUrl = options.Value.UserApiUrl + "api/users/";
+      
+
         
         List<string> usersEmail = [];
         foreach (var id in usersIds)

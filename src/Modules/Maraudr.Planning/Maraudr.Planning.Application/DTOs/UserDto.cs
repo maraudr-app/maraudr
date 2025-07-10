@@ -3,7 +3,7 @@ namespace Maraudr.Planning.Application;
     public class UserDto
     {
         public Guid ManagerId { get; set; }
-        public Guid Manager { get; set; }  
+        public Guid? Manager { get; set; }  
         public int Role { get; set; }
         public Guid Id { get; set; }
         public string Firstname { get; set; }
@@ -15,7 +15,7 @@ namespace Maraudr.Planning.Application;
         public AddressDto Address { get; set; }
         public string PasswordHash { get; set; }
         public List<object> Disponibilities { get; set; }  
-        public string Biography { get; set; }
+        public string? Biography { get; set; }
         public string UserType { get; set; }
         public List<int> Languages { get; set; }
         public string RowVersion { get; set; }
