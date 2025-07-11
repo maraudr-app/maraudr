@@ -6,7 +6,7 @@ namespace Maraudr.MCP.Infrastructure.Repositories;
 
 public class DisponbilityRepository(HttpClient httpClient, IOptions<ApiSettings> options):IDisponibilityRepository
 {
-    private static readonly string LogFilePath = Path.Combine("/tmp", "association-repository.log");    
+    private static readonly string LogFilePath = Path.Combine("/tmp", "disponibility-repository.log");    
     private void LogToFile(string message)
     {
         try
@@ -22,7 +22,9 @@ public class DisponbilityRepository(HttpClient httpClient, IOptions<ApiSettings>
     }
     public async Task<IEnumerable<DisponibilityDto>> GetMyDisponibilitiesInAssociation(Guid associationId,string jwt)
     {
-        var associationUrl = $"{options.Value.UserApiUrl}/{associationId}";
+        var associationUrl = $"{options.Value.UserApiUrl}api/users/disponibilities/{associationId}";
+        LogToFile("Association URL : " + associationUrl);
+
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer",jwt);
         var response = await httpClient.GetAsync(associationUrl);
         try
@@ -48,7 +50,9 @@ public class DisponbilityRepository(HttpClient httpClient, IOptions<ApiSettings>
     
     public async Task<IEnumerable<DisponibilityDto>> GetAllDisponibilitiesInAssociation(Guid associationId,string jwt)
     {
-        var associationUrl = $"{options.Value.UserApiUrl}all/{associationId}";
+        var associationUrl = $"{options.Value.UserApiUrl}api/users/disponibilities/all/{associationId}";
+        LogToFile("Association URL : " + associationUrl);
+
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer",jwt);
         var response = await httpClient.GetAsync(associationUrl);
         try
