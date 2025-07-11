@@ -11,7 +11,7 @@ using ModelContextProtocol.Server;
 namespace Maraudr.MCP.Server.Tools;
 
 [McpServerToolType]
-public class Tools(IAssociationRepository associationRepository,IStockRepository stockRepository,IPlanningRepository planningRepository,IGeoRepository geoRepository)
+public class Tools(IAssociationRepository associationRepository,IStockRepository stockRepository,IPlanningRepository planningRepository,IGeoRepository geoRepository, IDisponibilityRepository disponibilityRepository)
 {
     private static readonly string LogFilePath = Path.Combine("/tmp", "mcp_server_tools.log");
     /// <summary>
@@ -283,5 +283,91 @@ public class Tools(IAssociationRepository associationRepository,IStockRepository
         }
     }
     
+    
+    //------------------------------------DISPONIBILITIES-----------------------------------------------------
+    [McpServerTool, Description("Gets the current user disponibilities in a given association")] 
+    public async Task<IEnumerable<DisponibilityDto>> GetAllMyDisponibilities(string associationName,string jwt)
+    {
+        LogMessage($"Début de récupération des points de mes disponibilités");
+        LogMessage($"--------------------------------------------------------------------------------");
+        try
+        {
+            if (disponibilityRepository == null)
+            {
+                LogMessage("disponibilityRepository est null - service non disponible");
+                throw new InvalidOperationException("disponibilityRepository service is not available.");
+            }
+
+           
+            var association = await associationRepository.GetAssociationByName(associationName,jwt);
+            LogMessage($"Association obtenue");
+
+            if (association == null)
+            {
+                LogMessage($"No association with name {associationName} was found");
+                throw new InvalidOperationException("IAssociationRepository service is not available.");
+            }
+            LogMessage($"Association obtenue, type: {association.Name}"); 
+            
+            var disponibilities = await disponibilityRepository.GetMyDisponibilitiesInAssociation(association.Id,jwt);
+            
+            LogMessage($"Résultat obtenu {disponibilities.ToString()}");
+
+            return disponibilities;
+
+        }
+        catch (Exception e)
+        {
+            LogMessage($"Une erreur s'est déclenchée lors de la récupération de mes evenements");
+            LogMessage($"Erreur : {e.Message}");
+            LogMessage($"StackTrace : {e.StackTrace}");
+            
+            LogMessage($"--------------------------------------------------------------------------------");
+            return null;
+        }
+    }
+    
+    [McpServerTool, Description("Gets all the users disponibilities who are member of a given association")] 
+
+    public async Task<IEnumerable<DisponibilityDto>> GetAllDisponibilitiesInAssociation(string associationName,string jwt)
+    {
+        LogMessage($"Début de récupération des points de mes disponibilités");
+        LogMessage($"--------------------------------------------------------------------------------");
+        try
+        {
+            if (disponibilityRepository == null)
+            {
+                LogMessage("disponibilityRepository est null - service non disponible");
+                throw new InvalidOperationException("disponibilityRepository service is not available.");
+            }
+
+           
+            var association = await associationRepository.GetAssociationByName(associationName,jwt);
+            LogMessage($"Association obtenue");
+
+            if (association == null)
+            {
+                LogMessage($"No association with name {associationName} was found");
+                throw new InvalidOperationException("IAssociationRepository service is not available.");
+            }
+            LogMessage($"Association obtenue, type: {association.Name}");
+            
+            var disponibilities = await disponibilityRepository.GetMyDisponibilitiesInAssociation(association.Id, jwt);
+            
+            LogMessage($"Résultat obtenu {disponibilities.ToString()}");
+
+            return disponibilities;
+
+        }
+        catch (Exception e)
+        {
+            LogMessage($"Une erreur s'est déclenchée lors de la récupération de mes evenements");
+            LogMessage($"Erreur : {e.Message}");
+            LogMessage($"StackTrace : {e.StackTrace}");
+            
+            LogMessage($"--------------------------------------------------------------------------------");
+            return null;
+        }
+    }
 
 }

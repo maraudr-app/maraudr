@@ -9,5 +9,6 @@ public class ApiSettings
     
     public string GeoUrl { get; set; } = null!;
 
-    
+    public string UserApiUrl { get; set; } = null!;
+
 }
