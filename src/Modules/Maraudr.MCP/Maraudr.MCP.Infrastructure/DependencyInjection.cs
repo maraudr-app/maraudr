@@ -21,6 +21,8 @@ public static class DependencyInjection
         
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IMCPRepository, MCPRepository>();
+        services.AddScoped<IGeoRepository, GeoRepository>();
+        services.AddScoped<IDisponibilityRepository, DisponbilityRepository>();
         
         services.AddHttpClient<StockRepository>(client =>
         {

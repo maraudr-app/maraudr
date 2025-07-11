@@ -14,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 
-
 // Add Chat Client
 builder.Services.AddSingleton<IChatClient>(serviceProvider =>
 {
@@ -40,21 +39,28 @@ builder.Services.AddSingleton<IChatClient>(serviceProvider =>
         .Build();
 });
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000","https://maraudr.eu")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServicesForPlanning(builder.Configuration);
 
 builder.Services.AddAuthorization();
 
-
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 app.MapControllers();

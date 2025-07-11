@@ -1,10 +1,10 @@
 using System.Net.WebSockets;
-using System.Text.Json;
 using Maraudr.Geo.Application;
 using Maraudr.Geo.Application.Dtos;
 using Maraudr.Geo.Application.UseCases;
 using Maraudr.Geo.Endpoints;
 using Maraudr.Geo.Infrastructure;
+using Maraudr.Geo.Infrastructure.GeoData;
 using Maraudr.Geo.Infrastructure.WebSocket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +16,13 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServices(builder.Configuration);
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<IGeoAddressEnricher, GeoapifyReverseGeocodingService>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://maraudr.eu")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -108,7 +109,7 @@ app.MapGet("/autocomplete", [Authorize] async (
 {
     var client = httpClientFactory.CreateClient();
 
-    const string apiKey = "b2236921472b41f193b1bdd4debb6929"; 
+    var apiKey = Environment.GetEnvironmentVariable("GEOAPIFY_API_KEY"); 
     var url = $"https://api.geoapify.com/v1/geocode/autocomplete?text={Uri.EscapeDataString(text)}&apiKey={apiKey}";
 
     var response = await client.GetAsync(url);
@@ -141,6 +142,22 @@ app.MapGet("/itineraries/{id:guid}", [Authorize] async (
 {
     var result = await handler.GetByIdAsync(id);
     return result is null ? Results.NotFound() : Results.Ok(result);
+});
+
+app.MapPatch("/geo/{id:guid}/status", [Authorize] async (
+    Guid id,
+    IToogleGeoStatusHandler handler) =>
+{
+    await handler.HandleAsync(id);
+    return Results.NoContent();
+});
+
+app.MapPatch("/itinerary/{id:guid}/status", [Authorize] async (
+    Guid id,
+    IToogleItineraryStatusHandler handler) =>
+{
+    await handler.HandleAsync(id);
+    return Results.NoContent();
 });
 
 app.MapGet("/itineraries", [Authorize] async (

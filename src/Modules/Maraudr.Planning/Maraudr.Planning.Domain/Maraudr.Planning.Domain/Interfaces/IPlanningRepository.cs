@@ -17,6 +17,7 @@ public interface IPlanningRepository
     public Task<bool> AssociationExistsByIdAsync(Guid associationId);
 
     public Task CreatePlanningAsync(Domain.Entities.Planning planning);
+    
 
 
 

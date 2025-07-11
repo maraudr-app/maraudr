@@ -48,7 +48,8 @@ public class ChatService(
             conversation.AddMessage(new ChatMessage("system", "Tu t'appelles Dog et tu es un assistant spécialisé dans la gestion d'une association, " +
                                                               "des stocks d'une association, des évennements et de la geolocalisation des utilisateurs et de signalements émis." +
                                                               "Réponds uniquement aux questions liées à ce domaine.Si la requête est hors contexte refuse poliment" +
-                                                              "Ne cite pas les outils utilisés dans tes réponses"));
+                                                              "Ne cite pas les outils utilisés dans tes réponses." +
+                                                              "Dès que tu veux renvoyer un saut de ligne tu renvoie slash n pour que le client comprenne"));
             conversation.AddMessage(new ChatMessage("system", $"L'utilisateur actuellement connecté possède le JWT suivant : {jwt} et tu dois le passer à tous les appels d'outils sans jamais le divulguer dans le chat" ));
             
             if (request.ConversationHistory != null)

@@ -255,3 +255,10 @@ C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoint
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite.dll
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Npgsql.NetTopologySuite.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\NetTopologySuite.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\NetTopologySuite.Features.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\NetTopologySuite.IO.GeoJSON.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\NetTopologySuite.IO.PostGis.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite.dll
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Endpoints\bin\Debug\net8.0\Npgsql.NetTopologySuite.dll

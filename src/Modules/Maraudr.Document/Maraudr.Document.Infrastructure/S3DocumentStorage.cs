@@ -41,5 +41,18 @@ public class S3DocumentStorageService(IAmazonS3 s3) : IDocumentStorageService
 
         await s3.DeleteObjectAsync(request);
     }
+    
+    public async Task<string> GeneratePresignedUrlAsync(string key, TimeSpan validFor)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = BucketName,
+            Key = key,
+            Expires = DateTime.UtcNow.Add(validFor),
+            Verb = HttpVerb.GET
+        };
 
+        var url = await s3.GetPreSignedURLAsync(request);
+        return await Task.FromResult(url);
+    }
 }

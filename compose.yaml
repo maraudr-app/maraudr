@@ -13,7 +13,20 @@ services:
     volumes:
       - maraudr-db-data:/var/lib/postgresql/data  
 
-
+  document:
+    build:
+      context: ./src/Modules/Maraudr.Document/
+      target: final
+    ports:
+      - "8087:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    depends_on:
+      - maraudr-db
+      
   association:
     build:
       context: ./src/Modules/Maraudr.Association/
@@ -27,7 +40,7 @@ services:
       - STOCK_API_KEY=${STOCK_API_KEY}
     depends_on:
       - maraudr-db
-
+      
   geo:
     build:
       context: ./src/Modules/Maraudr.Geo/
@@ -36,6 +49,7 @@ services:
       - "8084:8080"
     environment:
       - GEO_API_KEY=${GEO_API_KEY}
+      - GEOAPIFY_API_KEY=${GEOAPIFY_API_KEY}
       - ORS_API_KEY=${ORS_API_KEY} 
       - Jwt__Secret=${JWT_SECRET}
     depends_on:
@@ -63,6 +77,8 @@ services:
       - Jwt__Secret=${JWT_SECRET}
       - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
       - ApiSettings__EmailSenderApiKey=${EMAIL_SENDER_API_KEY}
+      - ApiSettings__UserApiKey=${USER_API_KEY}
+
 
     depends_on:
       - maraudr-db
@@ -93,6 +109,10 @@ services:
     environment:
       - Jwt__Secret=${JWT_SECRET}
       - ASSOCIATION_API_KEY=${ASSOCIATION_API_KEY}
+      - ApiSettings__UserApiKey=${USER_API_KEY}
+      - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
+
+
     depends_on:
       - maraudr-db
 
@@ -117,6 +137,8 @@ services:
       - ApiSettings__StockApiUrl=${STOCK_API_URL}
       - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
       - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
+      - ApiSettings__GeoUrl=${GEO_API_URL}
+      - ApiSettings__UserApiUrl=${USER_API_URL}
     depends_on:
       - maraudr-db
 

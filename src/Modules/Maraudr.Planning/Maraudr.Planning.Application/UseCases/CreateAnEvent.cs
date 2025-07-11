@@ -11,7 +11,7 @@ namespace Maraudr.Planning.Application.UseCases
 
    }
 
-    public class CreateAnEventHandler(IPlanningRepository repository) : ICreateAnEventHandler
+    public class CreateAnEventHandler(IPlanningRepository repository,IEmailingRepository emailingRepository ) : ICreateAnEventHandler
     {
         public async Task<Guid> HandleAsync(Guid organizerId, CreateEventDto request)
         {
@@ -34,6 +34,7 @@ namespace Maraudr.Planning.Application.UseCases
             };
             
             await repository.AddEventAsync(@event);
+            await emailingRepository.SendEventEmailAsync(request.ParticipantsIds,request.Title,request.Description);
             return @event.Id;
         }
     }

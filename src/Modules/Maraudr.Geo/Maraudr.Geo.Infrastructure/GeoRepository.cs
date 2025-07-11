@@ -114,4 +114,30 @@ public async Task<(List<double[]> Coordinates, string GeoJson, double Distance, 
         await _context.SaveChangesAsync();
         return store;
     }
+    
+    public async Task ToggleGeoStatusAsync(Guid id)
+    {
+        var geoData = await _context.GeoEvents.FirstOrDefaultAsync(e => e.Id == id);
+
+        if (geoData == null)
+            throw new KeyNotFoundException("GeoData not found.");
+
+        geoData.IsActive = !geoData.IsActive;
+
+        _context.GeoEvents.Update(geoData);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task ToggleItineraryStatusAsync(Guid id)
+    {
+        var itinerary = await _context.Itineraries.FirstOrDefaultAsync(e => e.Id == id);
+
+        if (itinerary == null)
+            throw new KeyNotFoundException("Itinerary not found.");
+
+        itinerary.IsActive = !itinerary.IsActive;
+
+        _context.Itineraries.Update(itinerary);
+        await _context.SaveChangesAsync();
+    }
 }

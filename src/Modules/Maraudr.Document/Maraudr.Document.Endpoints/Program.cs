@@ -11,7 +11,17 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DocumentContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine);
+});
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.SetMinimumLevel(LogLevel.Debug);
+});
 
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentStorageService, S3DocumentStorageService>();
@@ -34,7 +44,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://maraudr.eu")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -43,7 +53,6 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-
 app.UseCors("AllowFrontend");
 
 app.UseSwagger();
@@ -51,6 +60,21 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("🔴 UNHANDLED EXCEPTION:");
+        Console.WriteLine(ex.ToString()); // stack complète
+        throw;
+    }
+});
 
 app.MapPost("/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async (
     IFormFile file,
@@ -60,19 +84,14 @@ app.MapPost("/upload/{associationId:guid}", [Authorize, IgnoreAntiforgery] async
     IHttpClientFactory httpClientFactory
 ) =>
 {
-    var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    
-    if (!Guid.TryParse(userIdClaim, out var userId))
-        return Results.Unauthorized();
-    
-    var client = httpClientFactory.CreateClient("association");
-    var response  = await client.GetAsync($"/association/is-member/{associationId}/{userIdClaim}");
-
-    if (!response.IsSuccessStatusCode) return Results.Unauthorized();
+    if (file.Length == 0)
+    {
+        return Results.BadRequest("File is required.");
+    }
     
     var request = new UploadDocumentRequest { File = file };
     await service.UploadDocumentAsync(request, associationId);
-    return Results.Ok();
+    return Results.Created();
 });
 
 
@@ -101,5 +120,8 @@ app.MapDelete("/delete/{associationId:guid}/document/{documentId:guid}", [Author
         return Results.NotFound();
     }
 });
+
+
+
 
 app.Run();

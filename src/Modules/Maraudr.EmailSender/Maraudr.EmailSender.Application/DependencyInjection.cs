@@ -11,6 +11,7 @@ namespace Maraudr.EmailSender.Application
             services.AddScoped<ISendWelcomeEmailHandler, SendWelcomeEmailHandler>();
             services.AddScoped<ISendResetLinkEmailHandler, SendResetLinkEmailHandler>();
             services.AddScoped<ISendInvitationMailHandler, SendInvitationMailHandler>();
+            services.AddScoped<ISendNotificationBatch, SendNotificationBatch>();
 
         }
     }

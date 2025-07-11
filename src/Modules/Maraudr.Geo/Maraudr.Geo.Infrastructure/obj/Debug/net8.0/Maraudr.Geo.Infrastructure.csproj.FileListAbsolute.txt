@@ -35,3 +35,4 @@ C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Infrastr
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Infrastructure\obj\Debug\net8.0\Maraudr.Geo.Infrastructure.genruntimeconfig.cache
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Infrastructure\obj\Debug\net8.0\ref\Maraudr.Geo.Infrastructure.dll
 C:\Users\hugo\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Infrastructure\obj\Debug\net8.0\EFCoreNpgsqlNetTopologySuite.cs
+C:\Users\hugoc\RiderProjects\maraudr\src\Modules\Maraudr.Geo\Maraudr.Geo.Infrastructure\obj\Debug\net8.0\EFCoreNpgsqlNetTopologySuite.cs

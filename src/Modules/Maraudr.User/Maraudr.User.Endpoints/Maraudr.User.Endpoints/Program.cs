@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://maraudr.eu")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -57,13 +57,13 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend");
 app.MapControllers(); 
 
 // MANAGER TEAM

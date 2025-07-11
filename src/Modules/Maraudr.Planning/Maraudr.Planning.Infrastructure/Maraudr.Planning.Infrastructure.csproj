@@ -14,7 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Maraudr.Planning.Application\Maraudr.Planning.Application.csproj" />
     <ProjectReference Include="..\Maraudr.Planning.Domain\Maraudr.Planning.Domain\Maraudr.Planning.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+ 
 </Project>

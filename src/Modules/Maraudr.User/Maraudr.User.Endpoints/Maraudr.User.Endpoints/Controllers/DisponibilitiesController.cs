@@ -87,7 +87,7 @@ public class DisponibilitiesController:ControllerBase
     
     [HttpGet("all/{associationId}")]
     [Authorize]
-    public async Task<IEnumerable<Disponibility?>> GetAllAssociationUsesrDisponbilities(Guid associationId,
+    public async Task<IEnumerable<Disponibility?>> GetAllAssociationUsersDisponbilities(Guid associationId,
         [FromServices] IGetAllAssociationUsersDipsonibilitiesHandler handler)
     {
         var userId = User.GetUserId();
