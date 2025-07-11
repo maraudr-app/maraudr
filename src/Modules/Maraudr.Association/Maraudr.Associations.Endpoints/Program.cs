@@ -27,7 +27,11 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 app.UseCors("AllowFrontend");
 
-
+app.MapHealthChecks("/health");
+app.UseAuthentication();
+app.UseAuthorization();
+    
+app.UseHttpsRedirection();
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -219,11 +223,7 @@ app.MapGet("/association/is-member/{associationId}/{userId}",
         }
     });
 
-app.MapHealthChecks("/health");
-app.UseAuthentication();
-app.UseAuthorization();
-    
-app.UseHttpsRedirection();
+
 
 app.Run();
 
