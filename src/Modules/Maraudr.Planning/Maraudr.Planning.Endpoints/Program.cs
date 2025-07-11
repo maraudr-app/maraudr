@@ -1,8 +1,6 @@
 using Maraudr.Planning.Application;
 using Maraudr.Planning.Endpoints;
-using Maraudr.Planning.Endpoints.Identity;
 using Maraudr.Planning.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,16 +38,14 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+app.UseCors("AllowFrontend"); 
 
 // Configure the HTTP request pipeline.
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend"); 
-
 app.UseAuthorization();
 
 app.MapControllers();

@@ -57,13 +57,13 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend");
 app.MapControllers(); 
 
 // MANAGER TEAM

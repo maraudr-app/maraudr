@@ -14,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 
-
 // Add Chat Client
 builder.Services.AddSingleton<IChatClient>(serviceProvider =>
 {
@@ -51,21 +50,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAuthenticationServicesForPlanning(builder.Configuration);
 
 builder.Services.AddAuthorization();
 
-
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 app.UseCors("AllowFrontend");
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 app.MapControllers();
