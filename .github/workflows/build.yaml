@@ -1,0 +1,171 @@
+name: Build and Push Docker Images to Docker Hub
+
+on:
+  push:
+    branches:
+      - deploy
+
+env:
+  IMAGE_REPO: maraudr/maraudrapp
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Association image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Association
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:association-latest
+          outputs: type=docker,dest=/tmp/association.tar
+
+      - name: Upload Association image
+        uses: actions/upload-artifact@v4
+        with:
+          name: association-image
+          path: /tmp/association.tar
+
+      - name: Build EmailSender image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.EmailSender
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:emailsender-latest
+          outputs: type=docker,dest=/tmp/emailsender.tar
+
+      - name: Upload EmailSender image
+        uses: actions/upload-artifact@v4
+        with:
+          name: emailsender-image
+          path: /tmp/emailsender.tar
+
+      - name: Build Planning image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Planning
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:planning-latest
+          outputs: type=docker,dest=/tmp/planning.tar
+
+      - name: Upload Planning image
+        uses: actions/upload-artifact@v4
+        with:
+          name: planning-image
+          path: /tmp/planning.tar
+
+      - name: Build Geo image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Geo
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:geo-latest
+          outputs: type=docker,dest=/tmp/geo.tar
+
+      - name: Upload Geo image
+        uses: actions/upload-artifact@v4
+        with:
+          name: geo-image
+          path: /tmp/geo.tar
+
+      - name: Build Stock image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Stock
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:stock-latest
+          outputs: type=docker,dest=/tmp/stock.tar
+
+      - name: Upload Stock image
+        uses: actions/upload-artifact@v4
+        with:
+          name: stock-image
+          path: /tmp/stock.tar
+
+      - name: Build User image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.User
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:user-latest
+          outputs: type=docker,dest=/tmp/user.tar
+
+      - name: Upload User image
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-image
+          path: /tmp/user.tar
+
+      - name: Build MCP image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.MCP
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:mcp-latest
+          outputs: type=docker,dest=/tmp/mcp.tar
+
+      - name: Upload MCP image
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-image
+          path: /tmp/mcp.tar
+
+      - name: Build Document image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/Modules/Maraudr.Document
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:document-latest
+          outputs: type=docker,dest=/tmp/document.tar
+
+      - name: Upload Document image
+        uses: actions/upload-artifact@v4
+        with:
+          name: document-image
+          path: /tmp/document.tar
+
+  push-images:
+    runs-on: ubuntu-latest
+    needs: build-images
+
+    steps:
+      - name: Download all images
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/images
+
+      - name: Load all images
+        run: |
+          docker load -i /tmp/images/association-image/association.tar
+          docker load -i /tmp/images/emailsender-image/emailsender.tar
+          docker load -i /tmp/images/planning-image/planning.tar
+          docker load -i /tmp/images/geo-image/geo.tar
+          docker load -i /tmp/images/stock-image/stock.tar
+          docker load -i /tmp/images/user-image/user.tar
+          docker load -i /tmp/images/mcp-image/mcp.tar
+          docker load -i /tmp/images/document-image/document.tar
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push all images to the docker hub repository
+        run: |
+          docker push ${{ env.IMAGE_REPO }}:association-latest
+          docker push ${{ env.IMAGE_REPO }}:emailsender-latest
+          docker push ${{ env.IMAGE_REPO }}:planning-latest
+          docker push ${{ env.IMAGE_REPO }}:geo-latest
+          docker push ${{ env.IMAGE_REPO }}:stock-latest
+          docker push ${{ env.IMAGE_REPO }}:user-latest
+          docker push ${{ env.IMAGE_REPO }}:mcp-latest
+          docker push ${{ env.IMAGE_REPO }}:document-latest
+
