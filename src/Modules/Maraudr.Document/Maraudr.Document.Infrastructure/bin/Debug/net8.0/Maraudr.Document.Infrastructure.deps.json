@@ -637,7 +637,8 @@
       "Maraudr.Document.Application/1.0.0": {
         "dependencies": {
           "Maraudr.Document.Domain": "1.0.0",
-          "Microsoft.AspNetCore.Http": "2.3.0"
+          "Microsoft.AspNetCore.Http": "2.3.0",
+          "Microsoft.AspNetCore.Http.Features": "2.3.0"
         },
         "runtime": {
           "Maraudr.Document.Application.dll": {

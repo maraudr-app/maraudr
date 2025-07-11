@@ -22,9 +22,5 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20250710221059_initPlanning.cs" />
-    <Compile Remove="Migrations\20250710221059_initPlanning.Designer.cs" />
-  </ItemGroup>
-
+ 
 </Project>
