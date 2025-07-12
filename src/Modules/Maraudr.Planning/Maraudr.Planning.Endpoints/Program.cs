@@ -38,6 +38,7 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+app.UseRouting(); 
 app.UseCors("AllowFrontend"); 
 
 // Configure the HTTP request pipeline.

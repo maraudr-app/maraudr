@@ -57,6 +57,7 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var app = builder.Build();
+app.UseRouting(); 
 app.UseCors("AllowFrontend");
 
 app.UseSwagger();
