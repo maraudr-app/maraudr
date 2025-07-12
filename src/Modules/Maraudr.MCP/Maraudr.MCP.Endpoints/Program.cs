@@ -57,7 +57,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UseCors("AllowFrontend");
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 
