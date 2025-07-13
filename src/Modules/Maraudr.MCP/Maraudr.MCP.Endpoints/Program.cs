@@ -59,8 +59,9 @@ var app = builder.Build();
 app.UseRouting(); 
 app.UseCors("AllowFrontend");
 
-app.UseAuthorization();
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
