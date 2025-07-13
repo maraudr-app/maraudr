@@ -10,7 +10,7 @@ public static class DependencyInjection
         services.AddScoped<IStockRepository, StockRepository>();
         services.AddHttpClient<IOpenFoodFactRepository, OpenFoodFactRepository>();
         
-        var connectionString = configuration.GetConnectionString("Stock");
+        var connectionString = configuration.GetConnectionString("Default");
 
         services.AddDbContext<StockContext>(options =>
             options.UseNpgsql(connectionString));

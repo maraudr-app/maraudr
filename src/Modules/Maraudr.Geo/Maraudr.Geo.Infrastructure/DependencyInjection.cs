@@ -9,12 +9,12 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<GeoContext>(
-            options => options.UseNpgsql(configuration.GetConnectionString("GeoDb"),         
-                o => o.UseNetTopologySuite()
-            ));
-
         services.AddScoped<IGeoRepository, GeoRepository>();
-        services.AddScoped<IItineraryRepository, ItineraryRepository>();
+        
+        // Utiliser "Default" pour correspondre à appsettings.json
+        var connectionString = configuration.GetConnectionString("Default");
+
+        services.AddDbContext<GeoContext>(options =>
+            options.UseNpgsql(connectionString, o => o.UseNetTopologySuite()));
     }
 }
