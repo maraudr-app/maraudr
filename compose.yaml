@@ -112,7 +112,6 @@ services:
       - ApiSettings__UserApiKey=${USER_API_KEY}
       - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
 
-
     depends_on:
       - maraudr-db
 

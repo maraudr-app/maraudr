@@ -37,12 +37,10 @@ public class UserContext : DbContext
         
         modelBuilder.Entity<Domain.Entities.Users.User>()
             .Property(u => u.Role)
-            .HasDefaultValue(Role.Member)
             .IsRequired();
         
         modelBuilder.Entity<Manager>()
             .Property(u => u.Role)
-            .HasDefaultValue(Role.Manager)
             .IsRequired();
         
         modelBuilder.Entity<Domain.Entities.Users.User>(builder =>
