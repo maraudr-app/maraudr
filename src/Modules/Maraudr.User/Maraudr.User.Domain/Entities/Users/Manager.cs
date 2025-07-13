@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Maraudr.User.Domain.Entities.Users;
@@ -13,6 +14,7 @@ public class Manager : AbstractUser
         set => EFTeam = value.Cast<User>().ToList();
     }
 
+    [JsonIgnore] 
     public List<User> EFTeam { get; set; } = new();
 
     public Manager(
