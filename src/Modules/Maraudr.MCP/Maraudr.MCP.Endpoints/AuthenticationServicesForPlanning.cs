@@ -27,9 +27,9 @@ public static class AuthenticationConfiguration
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                     ValidateIssuer = true,
-                    ValidIssuer = jwtSection["ValidIssuer"],
+                    ValidIssuer = "auth-api", 
                     ValidateAudience = true,
-                    ValidAudience = jwtSection["ValidAudience"],
+                    ValidAudience = "https://api.maraudr.eu",
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
