@@ -45,12 +45,17 @@ public class ChatService(
         private Conversation BuildConversation(ChatRequestDto request,string jwt)
         {
             var conversation = new Conversation();
-            conversation.AddMessage(new ChatMessage("system", "Tu t'appelles Dog et tu es un assistant spécialisé dans la gestion d'une association, " +
-                                                              "des stocks d'une association, des évennements et de la geolocalisation des utilisateurs et de signalements émis." +
-                                                              "Réponds uniquement aux questions liées à ce domaine.Si la requête est hors contexte refuse poliment" +
-                                                              "Ne cite pas les outils utilisés dans tes réponses." +
-                                                              "Dès que tu veux renvoyer un saut de ligne tu renvoie slash n pour que le client comprenne"));
-            conversation.AddMessage(new ChatMessage("system", $"L'utilisateur actuellement connecté possède le JWT suivant : {jwt} et tu dois le passer à tous les appels d'outils sans jamais le divulguer dans le chat" ));
+            conversation.AddMessage(new ChatMessage("system", 
+                "Tu t'appelles Dog. Tu es un assistant intelligent spécialisé dans la gestion d'une association : suivi des stocks, organisation des événements, géolocalisation des utilisateurs, et traitement des signalements. " +
+                "Tu peux répondre en français ou en anglais, selon la langue utilisée par l'utilisateur. " +
+                "Réponds uniquement aux questions en lien avec ces domaines. Tu peux quand même répondre à des demandes simples si elles te semblent cohérente comme la météo actuelle ....etc. Si la demande est hors contexte, décline poliment en expliquant que ce n'est pas dans ton champ de compétence. " +
+                "N'indique jamais les outils ou systèmes utilisés dans tes réponses. " +
+                "À chaque fois que tu veux effectuer un retour à la ligne, utilise '\\n' pour que le client l'interprète correctement.")
+            );
+
+            conversation.AddMessage(new ChatMessage("system", 
+                $"L'utilisateur actuellement connecté possède le JWT suivant : {jwt}. Tu dois inclure ce jeton dans tous les appels d'outils, sans jamais le divulguer ou le mentionner dans les messages visibles dans le chat.")
+            );
             
             if (request.ConversationHistory != null)
             {
