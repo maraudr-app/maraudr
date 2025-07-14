@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Application;
 using Application.DTOs.UsersQueriesDtos.Requests;
@@ -54,6 +55,11 @@ builder.Services.AddRateLimiter(options =>
     });
     
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
 var app = builder.Build();
