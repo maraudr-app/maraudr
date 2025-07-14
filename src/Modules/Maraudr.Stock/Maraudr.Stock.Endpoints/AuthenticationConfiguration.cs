@@ -23,13 +23,15 @@ public static class AuthenticationConfiguration
             })
             .AddJwtBearer(options =>
             {
+                var jwtSection = configuration.GetSection("JWT");
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "auth-api", 
-                    ValidAudience = "https://localhost:7140", 
+                    ValidAudience = jwtSection["ValidAudience"], 
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
