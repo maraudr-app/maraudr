@@ -1,11 +1,17 @@
 
-Quels sont les points d'interets des deux derniers jours chez ASSOCIATION POUR LES ENFANTS?
-Quels sont les points d'interets de le semaine pour ASSOCIATION POUR LES ENFANTS, quels sont les plus critiuqes selon toi ?
-Quels sont les addresses à traiter dans le 15ème arrondissement de Paris pour l'association ASSOCIATION POUR LES ENFANTS?
-
-DOnnes moi les points urgents à traiter dans l'association ASSOCIATION POUR LES ENFANTS et de qels items ai je besoin ? Ai je ces derniers dans mon stock ?
+Suivi des activités récentes :
+Quels ont été les points d’intérêt ou événements notables des deux derniers jours au sein de l'association ASSOCIATION POUR LES ENFANTS ?
 
 
-Donnes moi les points urgents à traiter dans l'association ASSOCIATION POUR LES ENFANTS ? Trie tout ça en fonction des arrondissements et dis moi dansq quels arrondissement une intervention te parait elle le plus urgente ! De quels items ai je besoin ? Ai je ces derniers dans mon stock ?
+Analyse hebdomadaire :
+Quels sont les points d’intérêt de la semaine en cours pour ASSOCIATION POUR LES ENFANTS ? Peux-tu identifier ceux qui te semblent les plus critiques ?
 
-Donnes moi les points urgents à traiter dans l'association TOUS ENSEMBLES ? Trie tout ça en fonction des arrondissements et dis moi dansq quels arrondissement une intervention te parait elle le plus urgente ! De quels items ai je besoin ? Ai je ces derniers dans mon stock et dis moi Quels sont tous les membres disponibles dans l'association pour la période de la semaine pro ?
+Ciblage géographique :
+Quelles sont les adresses à traiter dans le 15ᵉ arrondissement de Paris pour l'association ASSOCIATION POUR LES ENFANTS ?
+
+Gestion des urgences et des stocks :
+Quels sont les points urgents à traiter actuellement pour l'association ASSOCIATION POUR LES ENFANTS ? De quels articles ai-je besoin pour y répondre, et sont-ils disponibles dans mon stock ?
+
+
+Prompt plus complexe :
+Quels sont les points urgents à traiter pour l'association TOUS ENSEMBLES ? Classe-les par arrondissement et précise dans lesquels une intervention te paraît la plus urgente. Quels articles sont requis pour ces interventions, et sont-ils présents dans mon stock ? Peux-tu également me donner la liste des membres disponibles la semaine prochaine ?
