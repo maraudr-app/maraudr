@@ -17,7 +17,7 @@ namespace Maraudr.Planning.Infrastructure
         private static DbContextOptions<PlanningContext> GetDefaultOptions()
         {
             var builder = new DbContextOptionsBuilder<PlanningContext>();
-            builder.UseNpgsql("Host=maraudr-db;Port=5432;Database=maraudr-dev;Username=postgres;Password=postgres");      
+            builder.UseNpgsql("Host=dpg-d1bcf6muk2gs739kcn7g-a.frankfurt-postgres.render.com;Port=5432;Database=maraudr;Username=maraudr;Password=X3IngarW8rCflxzhVaqDTAljF450g5DY");      
             return builder.Options;
         }
 
