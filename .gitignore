@@ -2,6 +2,12 @@
 # Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
 ################################################################################
 
+/src/Modules/Maraudr.Association/Maraudr.Associations.Endpoints/appsettings.json
+/src/Modules/Maraudr.Document/Maraudr.Document.Endpoints/appsettings.json
+/src/Modules/Maraudr.Geo/Maraudr.Geo.Endpoints/appsettings.json
+/src/Modules/Maraudr.Planning/Maraudr.Planning.Endpoints/appsettings.json
+/src/Modules/Maraudr.Stock/Maraudr.Stock.Endpoints/appsettings.json
+
 /src/.idea/.idea.Maraudr/.idea
 /src/.vs/Maraudr
 /src/Modules/Maraudr.User/Maraudr.User.Application/bin/Debug/net8.0
