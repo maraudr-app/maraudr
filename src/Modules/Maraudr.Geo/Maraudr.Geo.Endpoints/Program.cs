@@ -33,10 +33,10 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
-
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors("AllowFrontend");
 
 app.UseWebSockets();
 
