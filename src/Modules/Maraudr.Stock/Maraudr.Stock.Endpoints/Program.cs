@@ -115,7 +115,26 @@ app.MapPut("/item/reduce/{barcode}", [Authorize] async (
         return Results.BadRequest(new { message = e.Message });
     }
 });
+app.MapPut("/item/update-quantity/{id}", [Authorize] async (
+    Guid id,
+    [FromBody] UpdateItemQuantityInStockRequest request,
+    IUpdateQuantityFromItemHandler handler) =>
+{
+    if (request.AssociationId == Guid.Empty)
+        return Results.BadRequest(new { message = "associationId requis" });
 
+    var quantity = request.Quantity.GetValueOrDefault(1);
+    
+    try
+    {
+        await handler.HandleAsync(id, request.AssociationId, quantity);
+        return Results.Ok(new { message = "Quantité réduite ou item supprimé" });
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new { message = e.Message });
+    }
+});
 app.MapPost("/item", [Authorize] async (
     CreateItemCommand item,
     ICreateItemHandler handler,
