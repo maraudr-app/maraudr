@@ -23,7 +23,9 @@ public class RedisCacheService(
         var json = JsonSerializer.Serialize(value);
         await cache.SetStringAsync(key, json, options);
     }
-    
+
+    public Task RemoveAsync(string key) => cache.RemoveAsync(key);
+
     public async Task RemoveByPatternAsync(string pattern)
     {
         var endpoints = redis.GetEndPoints();
