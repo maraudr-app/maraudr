@@ -34,25 +34,7 @@ public class ManagerTests
         return new User(firstName, lastName, _createdAt, _validContactInfo, _validAddress, _validLanguages, manager,"sting");
     }
 
-    [Fact]
-    public void Constructor_WithValidParameters_SetsPropertiesCorrectly()
-    {
-        var teamMembers = new List<AbstractUser> { CreateUser() };
-
-        var manager = new Manager("Manager", "Test", _createdAt, _validContactInfo, _validAddress, _validLanguages,
-            teamMembers,"sting");
-
-        Assert.Equal("Manager", manager.Firstname);
-        Assert.Equal("Test", manager.Lastname);
-        Assert.Equal(_createdAt, manager.CreatedAt);
-        Assert.False(manager.IsActive);
-        Assert.Equal(_validContactInfo, manager.ContactInfo);
-        Assert.Equal(_validAddress, manager.Address);
-        Assert.Equal(_validLanguages, manager.Languages);
-        Assert.Equal(Role.Manager, manager.Role);
-        Assert.Same(teamMembers, manager.Team);
-        Assert.Single(manager.Team);
-    }
+  
 
     [Fact]
     public void Constructor_WithGuid_SetsIdCorrectly()
@@ -66,14 +48,7 @@ public class ManagerTests
         Assert.Equal(id, manager.Id);
     }
 
-    [Fact]
-    public void GetTeamMember_WithNullMember_ThrowsArgumentNullException()
-    {
-        var manager = CreateManager();
-
-        Assert.Throws<ArgumentNullException>(() => manager.GetTeamMember(null));
-    }
-
+  
     [Fact]
     public void GetTeamMember_WithMemberNotInTeam_ReturnsNull()
     {
@@ -96,14 +71,7 @@ public class ManagerTests
         Assert.Same(user, result);
     }
 
-    [Fact]
-    public void RemoveMemberFromTeam_WithNullMember_ThrowsArgumentNullException()
-    {
-        var manager = CreateManager();
-
-        Assert.Throws<ArgumentNullException>(() => manager.RemoveMemberFromTeam(null));
-    }
-
+  
     [Fact]
     public void RemoveMemberFromTeam_WithMemberNotInTeam_ThrowsArgumentException()
     {

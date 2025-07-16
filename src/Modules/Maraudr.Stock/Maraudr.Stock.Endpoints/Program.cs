@@ -116,13 +116,34 @@ app.MapPut("/item/reduce/{barcode}", [Authorize] async (
     }
 });
 
+app.MapPut("/item/update-quantity/{id}", [Authorize] async (
+    Guid id,
+    [FromBody] UpdateItemQuantityInStockRequest request,
+    IUpdateQuantityFromItemHandler handler) =>
+{
+    if (request.AssociationId == Guid.Empty)
+        return Results.BadRequest(new { message = "associationId requis" });
+
+    var quantity = request.Quantity.GetValueOrDefault(1);
+    
+    try
+    {
+        await handler.HandleAsync(id, request.AssociationId, quantity);
+        return Results.Ok(new { message = "Quantité réduite ou item supprimé" });
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new { message = e.Message });
+    }
+});
+
 app.MapPost("/item", [Authorize] async (
     CreateItemCommand item,
     ICreateItemHandler handler,
-    IValidator<CreateItemCommand> validator) =>
+    IValidator<CreateItemCommand> validator,
+    IRedisCacheService cache) =>
 {
     var result = validator.Validate(item);
-
     if (!result.IsValid)
     {
         var messages = result.Errors.ToDictionary(e => e.PropertyName, e => e.ErrorMessage);
@@ -130,6 +151,9 @@ app.MapPost("/item", [Authorize] async (
     }
 
     var id = await handler.HandleAsync(item);
+
+    await cache.RemoveByPatternAsync($"items:{item.StockId}:*");
+
     return Results.Created($"/item/{id}", new { id });
 });
 
@@ -156,13 +180,22 @@ app.MapGet("/stock/items", [Authorize] async (
     Guid associationId,
     string? category,
     string? name,
-    IGetItemsOfAssociationHandler handler) =>
+    IGetItemsOfAssociationHandler handler,
+    IRedisCacheService redis) =>
 {
     if (associationId == Guid.Empty)
         return Results.BadRequest(new { message = "Missing or invalid association ID." });
 
     var filter = new ItemFilter(category, name);
-    var items = await handler.HandleAsync(associationId, filter);
+    var cacheKey = $"items:{associationId}:{category}:{name}";
+
+    var cachedItems = await redis.GetAsync<IEnumerable<StockItemQuery>>(cacheKey);
+    if (cachedItems is not null)
+        return Results.Ok(cachedItems);
+
+    var items = (await handler.HandleAsync(associationId, filter)).ToList();
+
+    await redis.SetAsync(cacheKey, items, TimeSpan.FromMinutes(10));
 
     return Results.Ok(items);
 });

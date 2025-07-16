@@ -1,5 +1,6 @@
 ﻿using Maraudr.Stock.Infrastructure.Caching;
 using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 
 namespace Maraudr.Stock.Infrastructure;
 
@@ -15,24 +16,25 @@ public static class DependencyInjection
         services.AddDbContext<StockContext>(options =>
             options.UseNpgsql(connectionString));
         
-        services.AddStackExchangeRedisCache(options =>
+        var redisHost = configuration["REDIS_HOST"];
+        var redisPassword = configuration["REDIS_PASSWORD"];
+
+        var options = new ConfigurationOptions
         {
-            var redisHost = configuration["REDIS_HOST"];
-            var redisPassword = configuration["REDIS_PASSWORD"];
-    
-            options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
-            {
-                ConnectTimeout = 10000,
-                SyncTimeout = 5000,
-                AsyncTimeout = 10000,
-                ConnectRetry = 3,
-                KeepAlive = 180,
-                AbortOnConnectFail = false,
-                EndPoints = { redisHost },
-                Ssl = true,
-                Password = redisPassword
-            };
-        });
+            ConnectTimeout = 10000,
+            SyncTimeout = 5000,
+            AsyncTimeout = 10000,
+            ConnectRetry = 3,
+            KeepAlive = 180,
+            AbortOnConnectFail = false,
+            EndPoints = { redisHost },
+            Ssl = true,
+            Password = redisPassword
+        };
+
+        var multiplexer = ConnectionMultiplexer.Connect(options);
+        services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+        services.AddStackExchangeRedisCache(opt => opt.ConfigurationOptions = options);
         
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
     }
