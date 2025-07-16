@@ -152,7 +152,8 @@ app.MapPost("/item", [Authorize] async (
 
     var id = await handler.HandleAsync(item);
 
-    await cache.RemoveByPatternAsync($"items:{item.StockId}:*");
+    await cache.RemoveAsync($"item:{item.StockId}:{id}");
+    await cache.RemoveAllForAssociationAsync(item.StockId);
 
     return Results.Created($"/item/{id}", new { id });
 });
