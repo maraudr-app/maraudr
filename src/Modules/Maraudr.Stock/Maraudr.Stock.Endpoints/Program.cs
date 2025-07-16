@@ -178,15 +178,7 @@ app.MapDelete("/stock/item/{itemId}", [Authorize] async (
 
     var success = await handler.HandleAsync(associationId, itemId);
 
-    if (!success)
-    {
-        return Results.NotFound(new { message = "L'item n'existe pas ou n'appartient pas à cette association" });
-    }
-
-    var cacheKey = $"item:{associationId}:{itemId}";
-    await cache.RemoveAsync(cacheKey);
-
-    return Results.NoContent();
+    return !success ? Results.NotFound(new { message = "L'item n'existe pas ou n'appartient pas à cette association" }) : Results.NoContent();
 });
 
 app.MapGet("/stock/{associationId}", [Authorize] async (
