@@ -104,8 +104,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPTests", "Modules\Maraudr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanningTests", "Modules\Maraudr.Planning\PlanningTests\PlanningTests.csproj", "{F8B75A42-6F95-42BE-8310-09FCA2B6306F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserTests", "Modules\Maraudr.User\UserTests\UserTests.csproj", "{656C51BD-74F5-4271-B552-2DA70DB363BB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -256,10 +254,6 @@ Global
 		{F8B75A42-6F95-42BE-8310-09FCA2B6306F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8B75A42-6F95-42BE-8310-09FCA2B6306F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8B75A42-6F95-42BE-8310-09FCA2B6306F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{656C51BD-74F5-4271-B552-2DA70DB363BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{656C51BD-74F5-4271-B552-2DA70DB363BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{656C51BD-74F5-4271-B552-2DA70DB363BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{656C51BD-74F5-4271-B552-2DA70DB363BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -305,7 +299,6 @@ Global
 		{1DAC172F-EBCB-412D-ABDF-BA832B4850E9} = {D00280FC-F6DD-458A-A9C0-A41FB631B57D}
 		{9C330081-EB8E-4FE0-8E3E-760F895F7DE5} = {9EDB9FDE-5356-472A-8930-6328425D72DD}
 		{F8B75A42-6F95-42BE-8310-09FCA2B6306F} = {3DEF640D-4241-4102-9C2A-E0CDBA7F0D27}
-		{656C51BD-74F5-4271-B552-2DA70DB363BB} = {536B076D-5EAD-4314-BCDC-99EC5C78D6B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BCD56F0-98C0-4AB6-A596-4EA261D31C8D}
