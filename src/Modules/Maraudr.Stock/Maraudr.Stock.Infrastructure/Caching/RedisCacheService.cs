@@ -20,48 +20,23 @@ public class RedisCacheService(
         {
             AbsoluteExpirationRelativeToNow = expiry ?? TimeSpan.FromMinutes(5)
         };
-
         var json = JsonSerializer.Serialize(value);
         await cache.SetStringAsync(key, json, options);
-
-        var associationKey = GetAssociationKeyFrom(key);
-        var indexKey = $"cache-index:{associationKey}";
-
-        var existing = await GetAsync<List<string>>(indexKey) ?? new List<string>();
-        if (!existing.Contains(key))
-        {
-            existing.Add(key);
-            await SetAsync(indexKey, existing);
-        }
     }
-    
-    private string GetAssociationKeyFrom(string key)
-    {
-        
-        var parts = key.Split(':', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length < 2 || parts[0] != "items")
-            throw new ArgumentException($"Clé de cache invalide ou non prise en charge : {key}");
-
-        return $"items:{parts[1]}"; 
-    }
-
 
     public Task RemoveAsync(string key) => cache.RemoveAsync(key);
 
-    public async Task RemoveAllForAssociationAsync(Guid associationId)
+    public async Task RemoveByPatternAsync(string pattern)
     {
-        var indexKey = $"cache-index:items:{associationId}";
-        var keys = await GetAsync<List<string>>(indexKey);
+        var endpoints = redis.GetEndPoints();
+        var server = redis.GetServer(endpoints.First());
 
-        if (keys is not null)
+        var db = redis.GetDatabase();
+        var keys = server.Keys(pattern: $"*{pattern}*");
+
+        foreach (var key in keys)
         {
-            foreach (var key in keys)
-            {
-                await RemoveAsync(key);
-            }
-
-            await RemoveAsync(indexKey); // Nettoyage de l’index
+            await db.KeyDeleteAsync(key);
         }
     }
 }
