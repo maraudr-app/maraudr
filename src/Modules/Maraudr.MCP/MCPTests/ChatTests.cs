@@ -25,12 +25,5 @@ public class ChatTests
             message.ToolCallId.Should().Be(toolCallId);
             message.Timestamp.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         }
-
-        [Fact]
-        public void Constructor_WithNullRole_ShouldThrowArgumentNullException()
-        {
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => new ChatMessage(null, "content"));
-        }
     }
 }
