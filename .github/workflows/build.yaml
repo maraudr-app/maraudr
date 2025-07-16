@@ -181,6 +181,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /maraudr
+            cd /root/maraudr
             docker compose pull
             docker compose up -d
