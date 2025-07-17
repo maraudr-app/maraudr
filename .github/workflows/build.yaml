@@ -26,11 +26,16 @@ jobs:
           run: dotnet restore ./src
 
         - name: Run tests
-          run: dotnet test ./src --no-build --verbosity normal
+          run: |
+            dotnet test ./src/Modules/Maraudr.Geo/GeoTest/GeoTest.csproj --no-build --verbosity normal
+            dotnet test ./src/DocumentTests/DocumentTests.csproj --no-build --verbosity normal
+            dotnet test ./src/Modules/Maraudr.MCP/MCPTests/MCPTests.csproj --no-build --verbosity normal
+            dotnet test ./src/Modules/Maraudr.Planning/PlanningTests/PlanningTests.csproj --no-build --verbosity normal
 
   build-images:
     runs-on: ubuntu-latest
-
+    needs: run-tests  
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
