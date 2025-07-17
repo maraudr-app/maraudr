@@ -9,6 +9,25 @@ env:
   IMAGE_REPO: maraudr/maraudrapp
 
 jobs:
+
+  run-tests:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Set up .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0'
+
+        - name: Restore dependencies
+          run: dotnet restore ./src
+
+        - name: Run tests
+          run: dotnet test ./src --no-build --verbosity normal
+
   build-images:
     runs-on: ubuntu-latest
 
