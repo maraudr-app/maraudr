@@ -136,11 +136,12 @@ public abstract class AbstractUser
     }
 
     public void UpdateUserDetails(string? firstname, string? lastname,
-        string? email, string? phoneNumber, string? street, string? city, string? state, string? postalCode,
+        string? email, string? phoneNumber, string? street, string? city, string? state, string? postalCode,string? biography,
         string? country,List<string>? languages)
     {
         Firstname = firstname ?? Firstname;
         Lastname = lastname ?? Lastname;
+        Biography = biography ?? Biography;
         
         if (email != null || phoneNumber != null)
         {

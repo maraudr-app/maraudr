@@ -134,7 +134,6 @@ public class UsersController : ControllerBase
         return Results.Ok();
     }
 
-    //todo : à revoir
     [HttpGet("email/{email}")]
     [Authorize]
     public async Task<IResult> GetUSerByEmail(string email, [FromServices] IQueryUserByEmailHandler handler)

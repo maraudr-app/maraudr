@@ -266,6 +266,7 @@ namespace Domain
                 city: newCity,
                 state: null,
                 postalCode: null,
+                "bio",
                 country: newCountry,
                 languages: newLanguages
             );
