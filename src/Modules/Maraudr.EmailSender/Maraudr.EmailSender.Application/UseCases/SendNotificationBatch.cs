@@ -47,7 +47,7 @@ public class SendNotificationBatch(IMailService mailService) : ISendNotification
         </div>
 
         <p>Pour plus de détails et confirmer ta participation, connecte-toi à ton espace personnel :</p>
-        <a href='https://maraudr.eu/mon-compte' class='button'>Accéder à mon compte</a>
+        <a href='https://maraudr-front-737l.onrender.com' class='button'>Accéder à mon compte</a>
 
         <p>Si tu as des questions, n'hésite pas à contacter notre équipe de support.</p>
 
