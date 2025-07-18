@@ -170,11 +170,7 @@ app.MapGet("/itineraries", [Authorize] async (
 
 app.Map("/geo/live", async context =>
 {
-    if (!context.User.Identity?.IsAuthenticated ?? true)
-    {
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return;
-    }
+   
 
     var associationIdQuery = context.Request.Query["associationId"];
     if (!Guid.TryParse(associationIdQuery, out var associationId))
