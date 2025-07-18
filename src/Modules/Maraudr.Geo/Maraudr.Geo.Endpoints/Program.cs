@@ -174,24 +174,66 @@ app.Map("/geo/live", async context =>
     if (!Guid.TryParse(associationIdQuery, out var associationId))
     {
         context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        Console.WriteLine("[WS] ❌ Invalid or missing associationId.");
         return;
     }
 
-    if (context.WebSockets.IsWebSocketRequest)
-    {
-        var socket = await context.WebSockets.AcceptWebSocketAsync();
-        GeoWebSocketManager.Add(socket, associationId);
-
-        while (socket.State == WebSocketState.Open)
-        {
-            var buffer = new byte[1024];
-            await socket.ReceiveAsync(buffer, CancellationToken.None);
-        }
-    }
-    else
+    if (!context.WebSockets.IsWebSocketRequest)
     {
         context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        Console.WriteLine("[WS] ❌ Not a WebSocket request.");
+        return;
     }
+
+    var socket = await context.WebSockets.AcceptWebSocketAsync();
+    Console.WriteLine($"[WS] ✅ WebSocket connected for associationId: {associationId}");
+
+    GeoWebSocketManager.Add(socket, associationId);
+
+    var buffer = new byte[1024 * 4];
+
+    while (socket.State == WebSocketState.Open)
+    {
+        try
+        {
+            var receiveTask = socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(30));
+
+            var completedTask = await Task.WhenAny(receiveTask, timeoutTask);
+
+            if (completedTask == timeoutTask)
+            {
+                var pingMessage = System.Text.Encoding.UTF8.GetBytes("ping");
+                await socket.SendAsync(
+                    new ArraySegment<byte>(pingMessage),
+                    WebSocketMessageType.Text,
+                    true,
+                    CancellationToken.None);
+                Console.WriteLine($"[WS] 🔄 Sent keep-alive ping to {associationId}");
+                continue;
+            }
+
+            var result = await receiveTask;
+
+            if (result.MessageType == WebSocketMessageType.Close)
+            {
+                Console.WriteLine($"[WS] ❌ Client requested close for {associationId}");
+                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client closed", CancellationToken.None);
+            }
+            else
+            {
+                var message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+                Console.WriteLine($"[WS] 📩 Received from {associationId}: {message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[WS] ❌ Exception for {associationId}: {ex.Message}");
+            break;
+        }
+    }
+
+    Console.WriteLine($"[WS] 🔌 WebSocket closed for {associationId}");
 });
 
 
