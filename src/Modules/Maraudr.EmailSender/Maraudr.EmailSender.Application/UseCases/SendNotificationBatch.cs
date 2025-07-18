@@ -49,7 +49,7 @@ public class SendNotificationBatch(IMailService mailService) : ISendNotification
         <p>Pour plus de détails et confirmer ta participation, connecte-toi à ton espace personnel :</p>
         <a href='https://maraudr.eu/mon-compte' class='button'>Accéder à mon compte</a>
 
-        <p>Si tu as des questions, n'hésite pas à visiter notre <a href='https://maraudr.eu/aide'>centre d'aide</a> ou contacter notre équipe de support.</p>
+        <p>Si tu as des questions, n'hésite pas à contacter notre équipe de support.</p>
 
         <p>Merci et à bientôt sur Maraudr !<br>L'équipe Maraudr</p>
     </div>
