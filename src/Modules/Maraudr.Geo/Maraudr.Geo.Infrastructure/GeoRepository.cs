@@ -41,6 +41,7 @@ public async Task<(List<double[]> Coordinates, string GeoJson, double Distance, 
     var events = await _context.GeoEvents
         .Include(e => e.GeoStore)
         .Where(e => e.GeoStore.AssociationId == associationId)
+        .Where(e => e.IsActive)
         .Where(e =>
             EF.Property<Point>(e, "Location") != null &&
             EF.Property<Point>(e, "Location")!.Distance(centerPoint) <= radiusKm * 1000)
