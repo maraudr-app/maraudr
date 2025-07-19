@@ -52,10 +52,9 @@ namespace Maraudr.EmailSender.Application.UseCases.SendWelcomeEmail
             <div class='section'>
                 <h3>Prêt à commencer ?</h3>
                 <p>Complétez votre profil et rejoignez votre première association dès aujourd'hui !</p>
-                <a href='https://maraudr.eu/mon-compte' class='button'>Accéder à mon compte</a>
+                <a href='https://maraudr-front-737l.onrender.com' class='button'>Accéder à mon compte</a>
             </div>
             
-            <p>Si vous avez des questions, n'hésitez pas à consulter notre <a href='https://maraudr.eu/aide'>centre d'aide</a> ou à contacter notre équipe de support.</p>
             
             <p>À très bientôt sur Maraudr !</p>
             <p>L'équipe Maraudr</p>
