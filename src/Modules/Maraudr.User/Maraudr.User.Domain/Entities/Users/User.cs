@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Maraudr.User.Domain.ValueObjects.Users;
 
 namespace Maraudr.User.Domain.Entities.Users
@@ -5,10 +6,11 @@ namespace Maraudr.User.Domain.Entities.Users
 
     public class User : AbstractUser
     {
+        
+        public Guid? ManagerId { get; set; }
 
-        public override Role Role { get; protected set; } = Role.Member;
-
-        public Manager Manager { get; set; }
+        [ForeignKey(nameof(ManagerId))]
+        public Manager? Manager { get; set; }
 
         public User(string firstname, string lastname, DateTime createdAt,
             ContactInfo contactInfo, Address address, List<Language> languages,
@@ -19,7 +21,8 @@ namespace Maraudr.User.Domain.Entities.Users
             {
                 throw new ArgumentException("User role should be manager");
             }
-            this.Manager = (Manager)manager;
+            Manager = (Manager)manager;
+            Role = Role.Member;
         }
         
         public User(Guid id,string firstname, string lastname, DateTime createdAt,
@@ -27,7 +30,12 @@ namespace Maraudr.User.Domain.Entities.Users
             Manager manager)
             : base( id,firstname, lastname, createdAt, contactInfo, address, languages)
         {
-            this.Manager = manager;
+            if (!manager.IsUserManager())
+            {
+                throw new ArgumentException("User role should be manager");
+            }
+            Manager = manager;
+            Role = Role.Member;
         }
 
         public User() { }

@@ -1,0 +1,146 @@
+services:
+
+  maraudr-db:
+    image: postgis/postgis:15-3.4 
+    container_name: maraudr-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - maraudr-db-data:/var/lib/postgresql/data  
+
+  document:
+    build:
+      context: ./src/Modules/Maraudr.Document/
+      target: final
+    ports:
+      - "8087:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    depends_on:
+      - maraudr-db
+      
+  association:
+    build:
+      context: ./src/Modules/Maraudr.Association/
+      target: final
+    ports:
+      - "8080:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - ASSOCIATION_API_KEY=${ASSOCIATION_API_KEY}
+      - GEO_API_KEY=${GEO_API_KEY}
+      - STOCK_API_KEY=${STOCK_API_KEY}
+    depends_on:
+      - maraudr-db
+      
+  geo:
+    build:
+      context: ./src/Modules/Maraudr.Geo/
+      target: final
+    ports:
+      - "8084:8080"
+    environment:
+      - GEO_API_KEY=${GEO_API_KEY}
+      - GEOAPIFY_API_KEY=${GEOAPIFY_API_KEY}
+      - ORS_API_KEY=${ORS_API_KEY} 
+      - Jwt__Secret=${JWT_SECRET}
+    depends_on:
+      - maraudr-db
+
+  stock:
+    build:
+      context: ./src/Modules/Maraudr.Stock/
+      target: final
+    ports:
+      - "8081:8080"
+    environment:
+      - STOCK_API_KEY=${STOCK_API_KEY}
+      - Jwt__Secret=${JWT_SECRET}
+    depends_on:
+      - maraudr-db
+
+  user:
+    build:
+      context: ./src/Modules/Maraudr.User/
+      target: final
+    ports:
+      - "8082:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
+      - ApiSettings__EmailSenderApiKey=${EMAIL_SENDER_API_KEY}
+      - ApiSettings__UserApiKey=${USER_API_KEY}
+
+
+    depends_on:
+      - maraudr-db
+
+  email-sender:
+    build:
+      context: ./src/Modules/Maraudr.EmailSender/
+      target: final
+    ports:
+      - "8083:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - MailSettings__Password=${MAIL_PASSWORD}
+      - MailSettings__Mail=${MAIL_ADDRESS}
+      - MailSettings__Host=${MAIL_HOST}
+      - MailSettings__Port=${MAIL_PORT}
+      - ApiKey=${EMAIL_SENDER_API_KEY}
+
+    depends_on:
+      - maraudr-db
+
+  planning:
+    build:
+      context: ./src/Modules/Maraudr.Planning/
+      target: final
+    ports:
+      - "8085:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - ASSOCIATION_API_KEY=${ASSOCIATION_API_KEY}
+      - ApiSettings__UserApiKey=${USER_API_KEY}
+      - ApiSettings__EmailSenderApiUrl=${EMAIL_SENDER_API_URL}
+
+    depends_on:
+      - maraudr-db
+
+  redis:
+    image: redis:8
+    container_name: maraudr-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+  mcp:
+    build:
+      context: ./src/Modules/Maraudr.MCP/
+      target: final
+    ports:
+      - "8086:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - OpenRouter__ApiKey=${OPENROUTER_API_KEY}
+      - OpenRouter__BaseUrl=${OPENROUTER_BASE_URL}
+      - OpenRouter__ModelName=${OPENROUTER_MODEL_NAME}
+      - ApiSettings__StockApiUrl=${STOCK_API_URL}
+      - ApiSettings__PlanningApiUrl=${PLANNING_API_URL}
+      - ApiSettings__AssociationUrl=${ASSOCIATION_API_URL}
+      - ApiSettings__GeoUrl=${GEO_API_URL}
+      - ApiSettings__UserApiUrl=${USER_API_URL}
+    depends_on:
+      - maraudr-db
+
+volumes:
+  maraudr-db-data:
+  redis-data:

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Extensions.Hosting" Version="2.3.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+      <PackageReference Include="ModelContextProtocol" Version="0.3.0-preview.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Maraudr.MCP.Application\Maraudr.MCP.Application.csproj" />
+      <ProjectReference Include="..\Maraudr.MCP.Domain\Maraudr.MCP.Domain.csproj" />
+      <ProjectReference Include="..\Maraudr.MCP.Infrastructure\Maraudr.MCP.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

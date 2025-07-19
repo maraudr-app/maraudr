@@ -8,9 +8,16 @@ public static class DependencyInjection
         services.AddScoped<IQueryItemByType, QueryItemByType>();
         services.AddScoped<IQueryItemHandler, QueryItemHandler>();
         services.AddScoped<IDeleteItemHandler, DeleteItemHandler>();
-        services.AddScoped<ICreateMultipleItemsHandler, CreateMultipleItems>();
         services.AddScoped<ICreateItemFromBarcodeHandler, CreateItemFromBarcodeHandler>();
-
-        
+        services.AddScoped<IRemoveQuantityFromStockHandler, RemoveQuantityFromStockHandler>();
+        services.AddScoped<IQueryItemWithBarCodeHandler, QueryItemWithBarCodeHandler>();
+        services.AddScoped<ICreateStockHandler, CreateStock>();
+        services.AddScoped<IGetItemsOfAssociationHandler, GetItemsOfAssociationHandler>();
+        services.AddScoped<IDeleteItemFromStockHandler, DeleteItemFromStockHandler>();
+        services.AddScoped<IGetStockIdByAssociationHandler, GetStockIdByAssociationHandler>();
+        services.AddScoped<IQueryItemByAssociationHandler, QueryItemByAssociationHandler>();
+        services.AddScoped<IReduceQuantityFromItemHandler, ReduceQuantityFromItemHandler>();
+        services.AddScoped<IUpdateQuantityFromItemHandler, 
+            UpdateQuantityFromItemHandler>();
     }
 }

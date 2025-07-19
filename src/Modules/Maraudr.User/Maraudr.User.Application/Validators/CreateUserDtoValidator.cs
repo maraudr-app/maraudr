@@ -23,7 +23,7 @@ namespace Application.Validators
             
             RuleFor(user => user.Languages).NotNull().WithMessage("La liste des langues ne peut pas être null");
 
-            RuleFor(user => user.ManagerId)
+            RuleFor(user => user.ManagerToken)
                 .NotNull().When(user => !user.IsManager)
                 .WithMessage("Un manager doit être défini pour les utilisateurs non-managers");
             

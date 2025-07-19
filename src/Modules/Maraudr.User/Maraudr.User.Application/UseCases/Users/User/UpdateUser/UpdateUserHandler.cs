@@ -26,6 +26,7 @@ public class UpdateUserHandler(IUserRepository repository):IUpdateUserHandler
             updateUserDto.City,
             updateUserDto.State,
             updateUserDto.PostalCode,
+            updateUserDto.Biography,
             updateUserDto.Country,
             updateUserDto.Languages);
         

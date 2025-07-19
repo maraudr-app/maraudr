@@ -29,6 +29,8 @@ public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDto>
             !string.IsNullOrEmpty(dto.State) ||
             !string.IsNullOrEmpty(dto.PostalCode) ||
             !string.IsNullOrEmpty(dto.Country) ||
+            !string.IsNullOrEmpty(dto.Biography) ||
+
             (dto.Languages != null && dto.Languages.Any());
     }
 }

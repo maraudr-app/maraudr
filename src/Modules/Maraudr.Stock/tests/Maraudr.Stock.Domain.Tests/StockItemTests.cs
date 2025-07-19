@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Maraudr.Stock.Domain.Entities;
 using Maraudr.Stock.Domain.Enums;
 using Maraudr.Stock.Domain.Exceptions;
@@ -6,67 +7,103 @@ namespace Maraudr.Stock.Domain.Tests;
 
 public class StockItemTests
 {
+    
     [Fact]
-    public void ItemGuid_ShouldNotBeNull_WhenObjectIsInstatianted()
+    public void Constructor_WithAssociationId_ShouldCreateStock()
     {
-        var item = new StockItem("Sandwich");
+        // Arrange
+        var associationId = Guid.NewGuid();
 
-        Assert.NotEqual(Guid.Empty, item.Id);
+        // Act
+        var stock = new Entities.Stock(associationId);
+
+        // Assert
+        stock.Id.Should().NotBeEmpty();
+        stock.AssociationId.Should().Be(associationId);
+        stock.Items.Should().BeEmpty();
     }
 
     [Fact]
-    public void ItemGuid_ShouldBeDifferent_WhenMutlipleObjectAreInstatianted()
+    public void AddItem_ShouldAddItemToStock()
     {
-        var sandwich = new StockItem("Sandwich");
-        var water = new StockItem("Water");
+        // Arrange
+        var stock = new Entities.Stock(Guid.NewGuid());
+        var item = new StockItem("Test Item");
 
-        Assert.NotEqual(water.Id, sandwich.Id);
+        // Act
+        stock.AddItem(item);
+
+        // Assert
+        stock.Items.Should().Contain(item);
     }
 
     [Fact]
-    public void ItemName_ShouldNotBeNull_WhenSetTroughtConstructor()
+    public void RemoveItem_ShouldRemoveItemFromStock()
     {
-        var item = new StockItem("Sandwich");
+        // Arrange
+        var stock = new Entities.Stock(Guid.NewGuid());
+        var item = new StockItem("Test Item");
+        stock.AddItem(item);
 
-        Assert.Equal("Sandwich", item.Name);
+        // Act
+        stock.RemoveItem(item);
+
+        // Assert
+        stock.Items.Should().NotContain(item);
+    }
+    
+    
+    [Fact]
+    public void Constructor_WithValidName_ShouldCreateStockItem()
+    {
+        // Arrange
+        var name = "Test Item";
+        var description = "Test Description";
+
+        // Act
+        var item = new StockItem(name, description);
+
+        // Assert
+        item.Id.Should().NotBeEmpty();
+        item.Name.Should().Be(name);
+        item.Description.Should().Be(description);
+        item.Quantity.Should().Be(1);
+        item.EntryDate.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(1));
     }
 
     [Fact]
-    public void ItemName_ShouldShouldThrowException_WhenSetTroughtConstructor_IsNull()
+    public void Constructor_WithNullName_ShouldThrowInvalidItemNameException()
     {
-        Assert.Throws<InvalidItemNameException>(() => new StockItem(null!));
+        // Act & Assert
+        Assert.Throws<InvalidItemNameException>(() => new StockItem(null));
     }
 
     [Fact]
-    public void Description_ShouldNotBeNull_WhenSet()
+    public void RemoveAnItem_WithSufficientQuantity_ShouldReduceQuantity()
     {
-        var item = new StockItem("Water", "A bottle of water");
+        // Arrange
+        var item = new StockItem("Test Item");
+        item.Quantity = 10;
 
-        Assert.Equal("Water", item.Name);
-        Assert.Equal("A bottle of water", item.Description);
+        // Act
+        item.RemoveAnItem(3);
+
+        // Assert
+        item.Quantity.Should().Be(7);
     }
 
     [Fact]
-    public void Description_ShouldBeNull_WhenNotSet()
+    public void RemoveAnItem_WithInsufficientQuantity_ShouldSetQuantityToZero()
     {
-        var item = new StockItem();
-        
-        Assert.Null(item.Description);
-    }
+        // Arrange
+        var item = new StockItem("Test Item");
+        item.Quantity = 5;
 
-    [Fact]
-    public void ItemType_ShouldBeUknown_ByDefault()
-    {
-        var item = new StockItem("Water");
-        
-        Assert.Equal(Category.Unknown, item.Category);
-    }
+        // Act
+        item.RemoveAnItem(10);
 
-    [Fact]
-    public void ItemType_ShouldBeValid_WhenSetByMethod()
-    {
-        var item = new StockItem("Cookies", "", Category.Food);
-
-        Assert.Equal(Category.Food, item.Category);
+        // Assert
+        item.Quantity.Should().Be(0);
     }
 }
+

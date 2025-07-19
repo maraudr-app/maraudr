@@ -16,9 +16,29 @@ public static class DependencyInjection
             client.BaseAddress = new Uri("https://siva-integ1.cegedim.cloud/apim/api-asso/");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
+        
+        services.AddHttpClient("stock", client =>
+        {
+            client.BaseAddress = new Uri("http://stock:8080");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+        
+        services.AddHttpClient("geo", client =>
+        {
+            client.BaseAddress = new Uri("http://geo:8080");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+        
+        services.AddHttpClient("planning", client =>
+        {
+            client.BaseAddress = new Uri("http://planning:8080");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
 
         services.AddScoped<IGetAssociationHandler, GetAssociation>();
+        services.AddScoped<IGetAssocationsOfUserHandler, GetAssociationsOfUser>();
         services.AddScoped<IUnregisterAssociation, UnregisterAssociation>();
+        services.AddScoped<IAddMemberToAssociationHandler, AddMemberToAssociation>();
         services.AddScoped<ICreateAssociationHandlerSiretIncluded, CreateAssociationSiretIncluded>();
         services.AddScoped<ISearchAssociationsByNameHandler, SearchAssociationsByName>();
         services.AddScoped<IUpdateAssociationHandler, UpdateAssociation>();
@@ -26,6 +46,7 @@ public static class DependencyInjection
         services.AddScoped<IListAssociationsPaginatedHandler, ListAssociationsPaginated>();
         services.AddScoped<IValidator<AddressDto>, AddressDtoValidator>();
         services.AddScoped<IValidator<UpdateAssociationInformationDto>, UpdateAssociationInformationDtoValidator>();
-        
+        services.AddScoped<IIsUserMemberOfAssociationHandler, IsUserMemberOfAssociationHandler>();
+
     }
 }

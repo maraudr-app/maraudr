@@ -16,5 +16,7 @@ public class UpdateUserDto
     public string? State { get; set; } 
     public string? PostalCode { get; set; } 
     public string? Country { get; set; } 
+    
+    public string? Biography { get; set; }
     public List<string>? Languages { get; set; } = new();
 }

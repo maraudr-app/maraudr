@@ -6,6 +6,7 @@ namespace Maraudr.Associations.Domain.Entities;
 public class Association
 {
     public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid ManagerId { get; set; }
     public List<Guid> Members { get; init; } = [];
     public string? Country { get; set; }
     public string? City { get; set; }
@@ -22,12 +23,26 @@ public class Association
         Address = address;
     }
     
+    public Association(Guid id, string name)
+    {
+        Id = id;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+    }
+    
     private Association() { }
     
     public void UpdateInformation(string name, Address newAddress)
     {
         Name = name;
         Address = newAddress;
+    }
+    
+    public void AddMember(Guid userId)
+    {
+        if (Members.Contains(userId))
+            throw new InvalidOperationException("User already member of the association.");
+
+        Members.Add(userId);
     }
     
     private bool Equals(Association other)
